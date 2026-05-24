@@ -1,0 +1,90 @@
+<div class="public-layout">
+  <!-- Navbar -->
+  <header class="public-navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">
+        <a routerLink="/" class="logo">
+          <div class="logo-icon"><i class="ti ti-briefcase"></i></div>
+          <span class="logo-text">TheJobs</span>
+        </a>
+      </div>
+
+      <nav class="navbar-menu">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+        <a routerLink="/offres" routerLinkActive="active">Jobs</a>
+        <!-- Private candidate links -->
+        <ng-container *ngIf="isLoggedIn() && currentUser()?.role === 'CANDIDAT'">
+          <a routerLink="/candidat/dashboard" routerLinkActive="active">Dashboard</a>
+          <a routerLink="/candidat/candidatures" routerLinkActive="active">Mes Candidatures</a>
+          <a routerLink="/candidat/profile" routerLinkActive="active">Mon Profil</a>
+        </ng-container>
+      </nav>
+
+      <div class="navbar-actions">
+        <!-- Guest Actions -->
+        <ng-container *ngIf="!isLoggedIn()">
+          <a routerLink="/login" class="btn-login"><i class="ti ti-user"></i> LOGIN</a>
+          <a routerLink="/register" class="btn-signup">SIGN UP</a>
+        </ng-container>
+
+        <!-- Authenticated Actions -->
+        <ng-container *ngIf="isLoggedIn()">
+          <div class="user-dropdown">
+            <button class="btn-user">
+              <div class="avatar">{{ currentUser()?.prenom?.charAt(0) }}{{ currentUser()?.nom?.charAt(0) }}</div>
+              <span>{{ currentUser()?.prenom }}</span>
+              <i class="ti ti-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+              <div class="dropdown-header">
+                <strong>{{ currentUser()?.prenom }} {{ currentUser()?.nom }}</strong>
+                <small>{{ currentUser()?.email }}</small>
+              </div>
+              <ng-container *ngIf="currentUser()?.role === 'ENTREPRISE' || currentUser()?.role === 'SUPER_ADMIN'">
+                <a [routerLink]="currentUser()?.role === 'ENTREPRISE' ? '/entreprise/dashboard' : '/admin/dashboard'" class="dropdown-item">
+                  <i class="ti ti-layout-dashboard"></i> Backoffice
+                </a>
+              </ng-container>
+              <ng-container *ngIf="currentUser()?.role === 'CANDIDAT'">
+                <a routerLink="/candidat/profile" class="dropdown-item">
+                  <i class="ti ti-user"></i> Mon profil
+                </a>
+              </ng-container>
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item text-danger" (click)="logout()">
+                <i class="ti ti-logout"></i> Déconnexion
+              </button>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Content -->
+  <main class="public-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Footer -->
+  <footer class="public-footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="logo-icon"><i class="ti ti-briefcase"></i></div>
+          <span class="logo-text">TheJobs</span>
+        </div>
+        <p>Find Jobs, Employment & Career Opportunities.</p>
+        <div class="social-links">
+          <a href="#"><i class="ti ti-brand-facebook"></i></a>
+          <a href="#"><i class="ti ti-brand-twitter"></i></a>
+          <a href="#"><i class="ti ti-brand-linkedin"></i></a>
+          <a href="#"><i class="ti ti-brand-instagram"></i></a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 TheJobs Platform. Tous droits réservés.</p>
+      </div>
+    </div>
+  </footer>
+</div>

@@ -1,0 +1,100 @@
+<div class="home-hero">
+  <div class="hero-bg-overlay"></div>
+  <div class="hero-content">
+    <h1>3,000+ Browse Jobs</h1>
+    <p>Find Jobs, Employment & Career Opportunities</p>
+
+    <div class="hero-search-box">
+      <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+        <div class="search-inputs">
+          <div class="input-group">
+            <i class="ti ti-briefcase"></i>
+            <input type="text" formControlName="q" placeholder="Keywords, Job Title, Description, Tags" />
+          </div>
+          <div class="input-divider"></div>
+          <div class="input-group">
+            <i class="ti ti-map-pin"></i>
+            <input type="text" formControlName="localisation" placeholder="Location" />
+          </div>
+          <button type="submit" class="btn-search">
+            <i class="ti ti-search"></i> SEARCH
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="trending-keywords">
+      <span><i class="ti ti-trending-up"></i> Trending Keywords:</span>
+      <a routerLink="/offres" [queryParams]="{q: 'ui designer'}">ui designer</a>
+      <a routerLink="/offres" [queryParams]="{q: 'developer'}">developer</a>
+      <a routerLink="/offres" [queryParams]="{q: 'senior'}">senior</a>
+      <a routerLink="/offres" [queryParams]="{q: 'it company'}">it company</a>
+      <a routerLink="/offres" [queryParams]="{q: 'design'}">design</a>
+    </div>
+
+    <!-- Category boxes (visual only for now) -->
+    <div class="category-boxes">
+      <div class="cat-box">
+        <i class="ti ti-code"></i>
+        <span>Developer</span>
+        <small>320 Jobs</small>
+      </div>
+      <div class="cat-box active">
+        <i class="ti ti-device-desktop"></i>
+        <span>Technology</span>
+        <small>150 Jobs</small>
+      </div>
+      <div class="cat-box">
+        <i class="ti ti-chart-bar"></i>
+        <span>Accounting</span>
+        <small>210 Jobs</small>
+      </div>
+      <div class="cat-box">
+        <i class="ti ti-stethoscope"></i>
+        <span>Medical</span>
+        <small>120 Jobs</small>
+      </div>
+      <div class="cat-box">
+        <i class="ti ti-building-bank"></i>
+        <span>Government</span>
+        <small>80 Jobs</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="home-section">
+  <div class="section-container">
+    <div class="section-header">
+      <h2>Top Hiring Companies</h2>
+      <a routerLink="/offres" class="view-all">View All</a>
+    </div>
+    
+    <div class="companies-grid">
+      <div class="company-card">
+        <div class="company-logo"><i class="ti ti-brand-google"></i></div>
+        <div class="company-info">
+          <h4>Google</h4>
+          <p>Casablanca</p>
+        </div>
+        <a routerLink="/offres" [queryParams]="{entreprise: 'Google'}" class="btn-jobs">Open Jobs</a>
+      </div>
+      <div class="company-card">
+        <div class="company-logo"><i class="ti ti-brand-apple"></i></div>
+        <div class="company-info">
+          <h4>Apple</h4>
+          <p>Rabat</p>
+        </div>
+        <a routerLink="/offres" [queryParams]="{entreprise: 'Apple'}" class="btn-jobs">Open Jobs</a>
+      </div>
+      <div class="company-card">
+        <div class="company-logo"><i class="ti ti-brand-amazon"></i></div>
+        <div class="company-info">
+          <h4>Amazon</h4>
+          <p>Tanger</p>
+        </div>
+        <a routerLink="/offres" [queryParams]="{entreprise: 'Amazon'}" class="btn-jobs">Open Jobs</a>
+      </div>
+    </div>
+  </div>
+</div>

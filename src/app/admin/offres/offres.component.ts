@@ -30,7 +30,11 @@ export class OffresComponent implements OnInit {
     });
   }
 
-  remove(id: number): void {
+  remove(id: string): void {
+    if (!confirm('Voulez-vous supprimer cette offre ?')) {
+      return;
+    }
+
     this.adminService.deleteOffre(id).subscribe({
       next: () => this.load(),
       error: () => this.error.set('Suppression impossible')

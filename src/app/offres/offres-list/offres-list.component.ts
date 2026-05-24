@@ -6,6 +6,7 @@ import { CandidaturesService } from '../../core/services/candidatures.service';
 import { CandidatProfile, Cv, LettreMotivation, Offre, PaginatedResult, Role } from '../../shared/models/types';
 import { CandidatService } from '../../core/services/candidat.service';
 import { TokenService } from '../../core/services/token.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-offres-list',
@@ -41,8 +42,8 @@ export class OffresListComponent implements OnInit {
   });
 
   applyForm = this.fb.nonNullable.group({
-    cvId: [0, [Validators.min(1)]],
-    lettreId: [0, [Validators.min(1)]],
+    cvId: ['', [Validators.required]],
+    lettreId: ['', [Validators.required]],
     commentaire: ''
   });
 
@@ -51,12 +52,24 @@ export class OffresListComponent implements OnInit {
     private offresService: OffresService,
     private candidaturesService: CandidaturesService,
     private candidatService: CandidatService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.role.set(this.tokenService.getRole());
-    this.load();
+    
+    this.route.queryParams.subscribe(params => {
+      if (params['q'] || params['localisation'] || params['entreprise']) {
+        this.filterForm.patchValue({
+          q: params['q'] || '',
+          localisation: params['localisation'] || '',
+          entreprise: params['entreprise'] || ''
+        });
+      }
+      this.load();
+    });
+
     if (this.role() === 'CANDIDAT') {
       this.loadCandidatAssets();
     }
@@ -128,8 +141,8 @@ export class OffresListComponent implements OnInit {
     const firstCv = this.cvs()[0];
     const firstLettre = this.lettres()[0];
     this.applyForm.reset({
-      cvId: firstCv ? firstCv.idCV : 0,
-      lettreId: firstLettre ? firstLettre.idLettre : 0,
+      cvId: firstCv ? firstCv.idCV : '',
+      lettreId: firstLettre ? firstLettre.idLettre : '',
       commentaire: ''
     });
     this.showApplyModal.set(true);

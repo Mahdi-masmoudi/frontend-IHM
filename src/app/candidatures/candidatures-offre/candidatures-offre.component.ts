@@ -13,13 +13,13 @@ import { Candidature } from '../../shared/models/types';
 export class CandidaturesOffreComponent implements OnInit {
   candidatures = signal<Candidature[]>([]);
   error = signal<string | null>(null);
-  offreId = 0;
+  offreId: string | null = null;
 
   constructor(private route: ActivatedRoute, private candidaturesService: CandidaturesService) {}
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
-    this.offreId = idParam ? Number.parseInt(idParam, 10) : 0;
+    this.offreId = idParam;
     this.load();
   }
 
@@ -37,14 +37,14 @@ export class CandidaturesOffreComponent implements OnInit {
     });
   }
 
-  accept(id: number): void {
+  accept(id: string): void {
     this.candidaturesService.accept(id).subscribe({
       next: () => this.load(),
       error: () => this.error.set('Action impossible')
     });
   }
 
-  reject(id: number): void {
+  reject(id: string): void {
     this.candidaturesService.reject(id).subscribe({
       next: () => this.load(),
       error: () => this.error.set('Action impossible')

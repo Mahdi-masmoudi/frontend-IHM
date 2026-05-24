@@ -35,7 +35,7 @@ export class OffresService {
     return this.http.get<PaginatedResult<Offre>>(`${this.baseUrl}/offres`, { params });
   }
 
-  getById(id: number): Observable<Offre> {
+  getById(id: string): Observable<Offre> {
     return this.http.get<Offre>(`${this.baseUrl}/offres/${id}`);
   }
 
@@ -43,11 +43,11 @@ export class OffresService {
     return this.http.post<Offre>(`${this.baseUrl}/offres`, payload);
   }
 
-  update(id: number, payload: Partial<Offre>): Observable<Offre> {
+  update(id: string, payload: Partial<Offre>): Observable<Offre> {
     return this.http.put<Offre>(`${this.baseUrl}/offres/${id}`, payload);
   }
 
-  remove(id: number): Observable<void> {
+  remove(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/offres/${id}`);
   }
 }

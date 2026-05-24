@@ -14,7 +14,7 @@ import { Offre } from '../../shared/models/types';
 export class OffreFormComponent implements OnInit {
   error = signal<string | null>(null);
   loading = signal(false);
-  offreId: number | null = null;
+  offreId: string | null = null;
 
   form = this.fb.nonNullable.group({
     titre: ['', [Validators.required]],
@@ -37,12 +37,12 @@ export class OffreFormComponent implements OnInit {
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
-      this.offreId = Number.parseInt(idParam, 10);
+      this.offreId = idParam;
       this.loadOffre(this.offreId);
     }
   }
 
-  loadOffre(id: number): void {
+  loadOffre(id: string): void {
     this.offresService.getById(id).subscribe({
       next: (offre: Offre) => {
         this.form.patchValue({

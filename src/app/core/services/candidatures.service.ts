@@ -10,7 +10,7 @@ export class CandidaturesService {
 
   constructor(private http: HttpClient) {}
 
-  apply(offreId: number, cvId: number, lettreId: number, commentaire?: string): Observable<Candidature> {
+  apply(offreId: string, cvId: string, lettreId: string, commentaire?: string): Observable<Candidature> {
     return this.http.post<Candidature>(`${this.baseUrl}/candidatures`, { offreId, cvId, lettreId, commentaire });
   }
 
@@ -18,7 +18,7 @@ export class CandidaturesService {
     return this.http.get<Candidature[]>(`${this.baseUrl}/candidatures/me`);
   }
 
-  listByOffre(offreId: number): Observable<Candidature[]> {
+  listByOffre(offreId: string): Observable<Candidature[]> {
     return this.http.get<Candidature[]>(`${this.baseUrl}/candidatures/offre/${offreId}`);
   }
 
@@ -26,11 +26,11 @@ export class CandidaturesService {
     return this.http.get<Candidature[]>(`${this.baseUrl}/entreprises/candidatures`);
   }
 
-  accept(id: number): Observable<Candidature> {
+  accept(id: string): Observable<Candidature> {
     return this.http.put<Candidature>(`${this.baseUrl}/candidatures/${id}/accepter`, {});
   }
 
-  reject(id: number): Observable<Candidature> {
+  reject(id: string): Observable<Candidature> {
     return this.http.put<Candidature>(`${this.baseUrl}/candidatures/${id}/rejeter`, {});
   }
 }

@@ -25,7 +25,11 @@ export class CandidatsComponent implements OnInit {
     });
   }
 
-  remove(id: number): void {
+  remove(id: string): void {
+    if (!confirm('Voulez-vous supprimer ce candidat ?')) {
+      return;
+    }
+
     this.adminService.deleteUser(id).subscribe({
       next: () => this.load(),
       error: () => this.error.set('Suppression impossible')

@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Offre } from '../../shared/models/types';
 
-interface AdminUser {
-  id: number;
+export interface AdminUser {
+  id: string;
   nom: string;
   prenom: string;
   email: string;
@@ -14,7 +14,7 @@ interface AdminUser {
 }
 
 export interface AdminCandidat {
-  id: number;
+  id: string;
   nom: string;
   prenom: string;
   email: string;
@@ -26,7 +26,7 @@ export interface AdminCandidat {
 }
 
 export interface AdminEntreprise {
-  id: number;
+  id: string;
   nom: string;
   prenom: string;
   email: string;
@@ -48,7 +48,7 @@ export class AdminService {
     return this.http.get<AdminUser[]>(`${this.baseUrl}/admin/users`);
   }
 
-  deleteUser(id: number): Observable<void> {
+  deleteUser(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/admin/users/${id}`);
   }
 
@@ -56,7 +56,7 @@ export class AdminService {
     return this.http.get<Offre[]>(`${this.baseUrl}/admin/offres`);
   }
 
-  deleteOffre(id: number): Observable<void> {
+  deleteOffre(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/admin/offres/${id}`);
   }
 

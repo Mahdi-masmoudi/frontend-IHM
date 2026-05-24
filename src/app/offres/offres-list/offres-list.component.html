@@ -90,6 +90,9 @@
       <button class="btn-apply" *ngIf="role() === 'CANDIDAT'" (click)="openApply(offre)">
         <i class="ti ti-send"></i> Postuler
       </button>
+      <a class="btn-apply" *ngIf="!role()" routerLink="/login" style="text-decoration: none;">
+        <i class="ti ti-login"></i> Se connecter pour postuler
+      </a>
     </div>
   </div>
 </div>
@@ -131,7 +134,7 @@
       <div class="modal-form-group">
         <label>CV</label>
         <select class="filter-input" formControlName="cvId" [attr.disabled]="cvs().length === 0 ? '' : null">
-          <option [ngValue]="0">Sélectionner un CV</option>
+          <option [ngValue]="''">Sélectionner un CV</option>
           <option *ngFor="let cv of cvs()" [ngValue]="cv.idCV">{{ cv.nomFichier }}</option>
         </select>
         <div class="hint" *ngIf="cvs().length === 0">
@@ -141,7 +144,7 @@
       <div class="modal-form-group">
         <label>Lettre de motivation</label>
         <select class="filter-input" formControlName="lettreId" [attr.disabled]="lettres().length === 0 ? '' : null">
-          <option [ngValue]="0">Sélectionner une lettre</option>
+          <option [ngValue]="''">Sélectionner une lettre</option>
           <option *ngFor="let lettre of lettres()" [ngValue]="lettre.idLettre">
             {{ lettre.dateAjout | date:'short' }}
           </option>

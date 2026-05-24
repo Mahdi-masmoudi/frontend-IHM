@@ -31,14 +31,12 @@ export class OffresComponent implements OnInit {
     });
   }
 
-  remove(id: number): void {
+  remove(id: string): void {
+    if (!confirm('Supprimer cette offre ?')) return;
+
     this.offresService.remove(id).subscribe({
-      next: () => {
-        this.load();
-      },
-      error: () => {
-        this.error.set('Suppression impossible');
-      }
+      next: () => this.load(),
+      error: (err) => this.error.set(err?.error?.message || 'Impossible de supprimer')
     });
   }
 }

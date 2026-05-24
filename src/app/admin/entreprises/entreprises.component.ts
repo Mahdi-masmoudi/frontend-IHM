@@ -25,7 +25,11 @@ export class EntreprisesComponent implements OnInit {
     });
   }
 
-  remove(id: number): void {
+  remove(id: string): void {
+    if (!confirm('Voulez-vous supprimer cette entreprise ?')) {
+      return;
+    }
+
     this.adminService.deleteUser(id).subscribe({
       next: () => this.load(),
       error: () => this.error.set('Suppression impossible')

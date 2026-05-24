@@ -24,8 +24,8 @@ export class OffreDetailComponent implements OnInit {
   showApplyModal = signal(false);
 
   applyForm = this.fb.nonNullable.group({
-    cvId: [0, [Validators.min(1)]],
-    lettreId: [0, [Validators.min(1)]],
+    cvId: ['', [Validators.required]],
+    lettreId: ['', [Validators.required]],
     commentaire: ''
   });
 
@@ -41,7 +41,7 @@ export class OffreDetailComponent implements OnInit {
   ngOnInit(): void {
     this.role.set(this.tokenService.getRole());
     const idParam = this.route.snapshot.paramMap.get('id');
-    const idOffre = idParam ? Number.parseInt(idParam, 10) : 0;
+    const idOffre = idParam || '';
     if (idOffre) {
       this.loadOffre(idOffre);
     } else {
@@ -54,7 +54,7 @@ export class OffreDetailComponent implements OnInit {
     }
   }
 
-  loadOffre(id: number): void {
+  loadOffre(id: string): void {
     this.loading.set(true);
     this.offresService.getById(id).subscribe({
       next: (offre) => {
@@ -84,8 +84,8 @@ export class OffreDetailComponent implements OnInit {
     const firstCv = this.cvs()[0];
     const firstLettre = this.lettres()[0];
     this.applyForm.reset({
-      cvId: firstCv ? firstCv.idCV : 0,
-      lettreId: firstLettre ? firstLettre.idLettre : 0,
+      cvId: firstCv ? firstCv.idCV : '',
+      lettreId: firstLettre ? firstLettre.idLettre : '',
       commentaire: ''
     });
     this.showApplyModal.set(true);

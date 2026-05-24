@@ -1,15 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { SharedModule } from '../../theme/shared/shared.module';
-import { AdminService } from '../../core/services/admin.service';
-
-interface AdminUser {
-  id: number;
-  nom: string;
-  prenom: string;
-  email: string;
-  telephone: string;
-  role: string;
-}
+import { AdminService, AdminUser } from '../../core/services/admin.service';
 
 @Component({
   selector: 'app-admin-users',
@@ -38,7 +29,11 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  remove(id: number): void {
+  remove(id: string): void {
+    if (!confirm('Voulez-vous supprimer cet utilisateur ?')) {
+      return;
+    }
+
     this.adminService.deleteUser(id).subscribe({
       next: () => this.load(),
       error: () => this.error.set('Suppression impossible')

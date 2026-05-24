@@ -6,7 +6,12 @@
         {{ offre()?.nomEntreprise }} · {{ offre()?.localisation }} · {{ offre()?.typeContrat }}
       </p>
     </div>
-    <button class="btn btn-primary" *ngIf="role() === 'CANDIDAT'" (click)="openApply()">Postuler</button>
+          <button class="btn btn-primary" *ngIf="role() === 'CANDIDAT'" (click)="openApply()">
+            <i class="ti ti-send me-1"></i> Postuler maintenant
+          </button>
+          <a class="btn btn-primary" *ngIf="!role()" routerLink="/login">
+            <i class="ti ti-login me-1"></i> Se connecter pour postuler
+          </a>
   </div>
 
   <div class="row g-3">
@@ -64,7 +69,7 @@
       <div class="mb-3">
         <label class="form-label">CV</label>
         <select class="form-select" formControlName="cvId" [disabled]="cvs().length === 0">
-          <option [ngValue]="0">Selectionner un CV</option>
+          <option [ngValue]="''">Sélectionner un CV</option>
           <option *ngFor="let cv of cvs()" [ngValue]="cv.idCV">{{ cv.nomFichier }}</option>
         </select>
         <div class="text-muted small mt-1" *ngIf="cvs().length === 0">Ajoutez un CV depuis votre profil.</div>
@@ -72,7 +77,7 @@
       <div class="mb-3">
         <label class="form-label">Lettre de motivation</label>
         <select class="form-select" formControlName="lettreId" [disabled]="lettres().length === 0">
-          <option [ngValue]="0">Selectionner une lettre</option>
+          <option [ngValue]="''">Sélectionner une lettre</option>
           <option *ngFor="let lettre of lettres()" [ngValue]="lettre.idLettre">
             {{ lettre.dateAjout | date: 'short' }}
           </option>

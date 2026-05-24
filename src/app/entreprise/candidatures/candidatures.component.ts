@@ -26,14 +26,14 @@ export class CandidaturesComponent implements OnInit {
     });
   }
 
-  accept(id: number): void {
+  accept(id: string): void {
     this.candidaturesService.accept(id).subscribe({
       next: () => this.load(),
       error: () => this.error.set('Action impossible')
     });
   }
 
-  reject(id: number): void {
+  reject(id: string): void {
     this.candidaturesService.reject(id).subscribe({
       next: () => this.load(),
       error: () => this.error.set('Action impossible')

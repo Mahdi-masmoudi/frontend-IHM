@@ -26,7 +26,7 @@ export interface AuthRegisterRequest {
 export interface AuthResponse {
   token: string;
   user: {
-    id: number;
+    id: string;
     role: Role;
     nom: string;
     prenom: string;
@@ -35,7 +35,7 @@ export interface AuthResponse {
 }
 
 export interface AuthProfile {
-  id: number;
+  id: string;
   nom: string;
   prenom: string;
   email: string;
@@ -46,8 +46,8 @@ export interface AuthProfile {
 }
 
 export interface Offre {
-  idOffre: number;
-  entreprise_id?: number;
+  idOffre: string;
+  entreprise_id?: string;
   titre: string;
   description: string;
   typeContrat: string;
@@ -66,15 +66,15 @@ export interface Offre {
 }
 
 export interface Candidature {
-  idCandidature: number;
-  candidat_id?: number;
-  offre_id?: number;
-  candidatId?: number;
-  offreId?: number;
-  cv_id?: number | null;
-  lettre_id?: number | null;
-  cvId?: number | null;
-  lettreId?: number | null;
+  idCandidature: string;
+  candidat_id?: string;
+  offre_id?: string;
+  candidatId?: string;
+  offreId?: string;
+  cv_id?: string | null;
+  lettre_id?: string | null;
+  cvId?: string | null;
+  lettreId?: string | null;
   datePostulation: string;
   statut: 'EN_ATTENTE' | 'ACCEPTEE' | 'REJETEE';
   commentaire?: string | null;
@@ -93,19 +93,19 @@ export interface Candidature {
 }
 
 export interface Cv {
-  idCV: number;
+  idCV: string;
   nomFichier: string;
   dateAjout: string;
 }
 
 export interface LettreMotivation {
-  idLettre: number;
+  idLettre: string;
   contenu: string;
   dateAjout: string;
 }
 
 export interface CandidatProfile {
-  userId: number;
+  userId: string;
   nom: string;
   prenom: string;
   email: string;
@@ -119,7 +119,7 @@ export interface CandidatProfile {
 }
 
 export interface EntrepriseProfile {
-  userId: number;
+  userId: string;
   nomEntreprise: string;
   adresseEntreprise: string;
   secteurActivite: string;
