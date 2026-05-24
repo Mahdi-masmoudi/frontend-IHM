@@ -1,0 +1,125 @@
+<div class="auth-page">
+  <div class="auth-container">
+    <!-- Left Panel - Branding -->
+    <div class="auth-branding">
+      <div class="branding-content">
+        <div class="brand-icon">
+          <i class="ti ti-briefcase"></i>
+        </div>
+        <h1>RecruteIHM</h1>
+        <p>Votre plateforme de recrutement intelligente</p>
+        <div class="brand-features">
+          <div class="feature">
+            <i class="ti ti-search"></i>
+            <span>Recherche d'emploi intelligente</span>
+          </div>
+          <div class="feature">
+            <i class="ti ti-brain"></i>
+            <span>Analyse CV par IA</span>
+          </div>
+          <div class="feature">
+            <i class="ti ti-chart-bar"></i>
+            <span>Suivi candidatures en temps réel</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel - Form -->
+    <div class="auth-form-panel">
+      <div class="auth-form-wrapper">
+        <div class="form-header">
+          <h2>Bienvenue</h2>
+          <p>Connectez-vous à votre espace</p>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+          <!-- Email -->
+          <div class="form-group">
+            <label for="loginEmail">Adresse email</label>
+            <div class="input-wrapper">
+              <i class="ti ti-mail input-icon"></i>
+              <input
+                type="email"
+                id="loginEmail"
+                placeholder="votre@email.com"
+                formControlName="email"
+                [class.is-invalid]="form.get('email')?.invalid && form.get('email')?.touched"
+              />
+            </div>
+            <div class="field-error" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+              <i class="ti ti-alert-circle"></i> Adresse email valide requise
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label for="loginPassword">Mot de passe</label>
+            <div class="input-wrapper">
+              <i class="ti ti-lock input-icon"></i>
+              <input
+                [type]="showPassword() ? 'text' : 'password'"
+                id="loginPassword"
+                placeholder="Votre mot de passe"
+                formControlName="motDePasse"
+                [class.is-invalid]="form.get('motDePasse')?.invalid && form.get('motDePasse')?.touched"
+              />
+              <button type="button" class="toggle-password" (click)="togglePassword()">
+                <i class="ti" [class.ti-eye]="!showPassword()" [class.ti-eye-off]="showPassword()"></i>
+              </button>
+            </div>
+            <div class="field-error" *ngIf="form.get('motDePasse')?.invalid && form.get('motDePasse')?.touched">
+              <i class="ti ti-alert-circle"></i> 8 caractères minimum requis
+            </div>
+          </div>
+
+          <!-- Remember Me -->
+          <div class="form-options">
+            <label class="checkbox-wrapper">
+              <input type="checkbox" [checked]="rememberMe()" (change)="rememberMe.set(!rememberMe())" />
+              <span class="checkmark"></span>
+              Se souvenir de moi
+            </label>
+          </div>
+
+          <!-- Error Message -->
+          <div class="error-banner" *ngIf="error()">
+            <i class="ti ti-alert-triangle"></i>
+            {{ error() }}
+          </div>
+
+          <!-- Submit -->
+          <button class="btn-submit" type="submit" [disabled]="loading()">
+            <span *ngIf="!loading()">Se connecter</span>
+            <span *ngIf="loading()" class="loading-spinner">
+              <i class="ti ti-loader-2 spin"></i> Connexion...
+            </span>
+          </button>
+
+          <div class="form-footer">
+            <p>Pas encore de compte ? <a routerLink="/register">Créer un compte</a></p>
+          </div>
+        </form>
+
+        <!-- Demo Accounts -->
+        <div class="demo-accounts">
+          <div class="demo-title">Comptes démo</div>
+          <div class="demo-cards">
+            <div class="demo-card">
+              <span class="demo-role">Admin</span>
+              <small>admin&#64;recrutement.local / Admin123!</small>
+            </div>
+            <div class="demo-card">
+              <span class="demo-role candidat">Candidat</span>
+              <small>ahmed.benali&#64;email.com / Password123!</small>
+            </div>
+            <div class="demo-card">
+              <span class="demo-role entreprise">Entreprise</span>
+              <small>marie.dupont&#64;techcorp.ma / Password123!</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

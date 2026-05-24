@@ -1,0 +1,38 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="mb-3">Candidatures</h4>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Candidat</th>
+            <th>Email</th>
+            <th>CV</th>
+            <th>Lettre</th>
+            <th>Statut</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let candidature of candidatures()">
+            <td>{{ candidature.nom }} {{ candidature.prenom }}</td>
+            <td>{{ candidature.email }}</td>
+            <td>{{ candidature.cvNomFichier || '-' }}</td>
+            <td class="text-muted small">{{ candidature.lettreContenu | slice: 0: 40 }}</td>
+            <td><span [class]="statusClass(candidature.statut)">{{ candidature.statut }}</span></td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-outline-success" (click)="accept(candidature.idCandidature)">Accepter</button>
+              <button class="btn btn-sm btn-outline-danger ms-2" (click)="reject(candidature.idCandidature)">Rejeter</button>
+            </td>
+          </tr>
+          <tr *ngIf="candidatures().length === 0">
+            <td colspan="6" class="text-center text-muted">Aucune candidature</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert alert-danger mt-3" *ngIf="error()">
+      {{ error() }}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,152 @@
+<!-- Premium Sidebar Layout -->
+<div class="app-layout" [class.sidebar-collapsed]="!sidebarOpen()">
+  <!-- Sidebar -->
+  <aside class="app-sidebar" [class.open]="mobileMenuOpen()">
+    <div class="sidebar-header">
+      <a routerLink="/offres" class="sidebar-brand">
+        <span class="brand-icon">
+          <i class="ti ti-briefcase"></i>
+        </span>
+        <span class="brand-text" *ngIf="sidebarOpen()">RecruteIHM</span>
+      </a>
+      <button class="sidebar-toggle d-none d-lg-flex" (click)="toggleSidebar()">
+        <i class="ti" [class.ti-chevrons-left]="sidebarOpen()" [class.ti-chevrons-right]="!sidebarOpen()"></i>
+      </button>
+      <button class="sidebar-close d-lg-none" (click)="toggleMobileMenu()">
+        <i class="ti ti-x"></i>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <span class="nav-section-title" *ngIf="sidebarOpen()">Menu Principal</span>
+        <a class="nav-link" routerLink="/offres" routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: false }">
+          <i class="ti ti-search"></i>
+          <span *ngIf="sidebarOpen()">Offres d'emploi</span>
+        </a>
+      </div>
+
+      <!-- Candidat Menu -->
+      <div class="nav-section" *ngIf="isCandidat">
+        <span class="nav-section-title" *ngIf="sidebarOpen()">Espace Candidat</span>
+        <a class="nav-link" routerLink="/candidat/dashboard" routerLinkActive="active">
+          <i class="ti ti-dashboard"></i>
+          <span *ngIf="sidebarOpen()">Dashboard</span>
+        </a>
+        <a class="nav-link" routerLink="/candidat/candidatures" routerLinkActive="active">
+          <i class="ti ti-file-text"></i>
+          <span *ngIf="sidebarOpen()">Mes Candidatures</span>
+        </a>
+        <a class="nav-link" routerLink="/candidat/profile" routerLinkActive="active">
+          <i class="ti ti-user"></i>
+          <span *ngIf="sidebarOpen()">Mon Profil</span>
+        </a>
+      </div>
+
+      <!-- Entreprise Menu -->
+      <div class="nav-section" *ngIf="isEntreprise">
+        <span class="nav-section-title" *ngIf="sidebarOpen()">Espace Entreprise</span>
+        <a class="nav-link" routerLink="/entreprise/dashboard" routerLinkActive="active">
+          <i class="ti ti-dashboard"></i>
+          <span *ngIf="sidebarOpen()">Dashboard</span>
+        </a>
+        <a class="nav-link" routerLink="/entreprise/offres" routerLinkActive="active">
+          <i class="ti ti-briefcase"></i>
+          <span *ngIf="sidebarOpen()">Mes Offres</span>
+        </a>
+        <a class="nav-link" routerLink="/entreprise/candidatures" routerLinkActive="active">
+          <i class="ti ti-users"></i>
+          <span *ngIf="sidebarOpen()">Candidatures</span>
+        </a>
+      </div>
+
+      <!-- Admin Menu -->
+      <div class="nav-section" *ngIf="isAdmin">
+        <span class="nav-section-title" *ngIf="sidebarOpen()">Administration</span>
+        <a class="nav-link" routerLink="/admin/dashboard" routerLinkActive="active">
+          <i class="ti ti-dashboard"></i>
+          <span *ngIf="sidebarOpen()">Dashboard</span>
+        </a>
+        <a class="nav-link" routerLink="/admin/users" routerLinkActive="active">
+          <i class="ti ti-users"></i>
+          <span *ngIf="sidebarOpen()">Utilisateurs</span>
+        </a>
+        <a class="nav-link" routerLink="/admin/candidats" routerLinkActive="active">
+          <i class="ti ti-user-search"></i>
+          <span *ngIf="sidebarOpen()">Candidats</span>
+        </a>
+        <a class="nav-link" routerLink="/admin/entreprises" routerLinkActive="active">
+          <i class="ti ti-building"></i>
+          <span *ngIf="sidebarOpen()">Entreprises</span>
+        </a>
+        <a class="nav-link" routerLink="/admin/offres" routerLinkActive="active">
+          <i class="ti ti-list-details"></i>
+          <span *ngIf="sidebarOpen()">Offres</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Sidebar Footer - User Card -->
+    <div class="sidebar-footer" *ngIf="sidebarOpen()">
+      <div class="user-card">
+        <div class="user-avatar">{{ userInitials }}</div>
+        <div class="user-info">
+          <div class="user-name">{{ userName }}</div>
+          <div class="user-role">{{ roleLabel }}</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Mobile Overlay -->
+  <div class="sidebar-overlay d-lg-none" *ngIf="mobileMenuOpen()" (click)="toggleMobileMenu()"></div>
+
+  <!-- Main Content -->
+  <div class="app-main">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <button class="header-menu-btn d-lg-none" (click)="toggleMobileMenu()">
+          <i class="ti ti-menu-2"></i>
+        </button>
+      </div>
+      <div class="header-right">
+        <span class="role-badge" [attr.data-role]="role">
+          {{ roleLabel }}
+        </span>
+        <div class="header-profile" (click)="toggleProfileMenu()">
+          <div class="profile-avatar">{{ userInitials }}</div>
+          <div class="profile-dropdown" *ngIf="profileMenuOpen()" (click)="$event.stopPropagation()">
+            <div class="dropdown-header">
+              <div class="dropdown-avatar">{{ userInitials }}</div>
+              <div>
+                <div class="dropdown-name">{{ userName }}</div>
+                <div class="dropdown-role">{{ roleLabel }}</div>
+              </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" *ngIf="isCandidat" routerLink="/candidat/profile" (click)="closeProfileMenu()">
+              <i class="ti ti-user"></i> Mon Profil
+            </a>
+            <a class="dropdown-item" *ngIf="isCandidat" routerLink="/candidat/dashboard" (click)="closeProfileMenu()">
+              <i class="ti ti-dashboard"></i> Dashboard
+            </a>
+            <a class="dropdown-item" *ngIf="isEntreprise" routerLink="/entreprise/dashboard" (click)="closeProfileMenu()">
+              <i class="ti ti-dashboard"></i> Dashboard
+            </a>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item text-danger" (click)="logout()">
+              <i class="ti ti-logout"></i> Déconnexion
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="app-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

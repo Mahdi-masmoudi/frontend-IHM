@@ -1,0 +1,156 @@
+<!-- Skeleton Loading -->
+<div class="dashboard-skeleton" *ngIf="loading()">
+  <div class="skeleton-row">
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+  </div>
+  <div class="skeleton-large"></div>
+</div>
+
+<!-- Dashboard Content -->
+<div class="dashboard" *ngIf="!loading() && stats()">
+  <!-- Welcome Banner -->
+  <div class="welcome-banner">
+    <div class="welcome-content">
+      <h1>Bonjour, {{ profile()?.prenom }} 👋</h1>
+      <p>Voici un aperçu de votre activité sur RecruteIHM</p>
+    </div>
+    <a routerLink="/offres" class="welcome-cta">
+      <i class="ti ti-search"></i> Explorer les offres
+    </a>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="ti ti-file-text"></i></div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats()!.totalCandidatures }}</div>
+        <div class="stat-label">Candidatures</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon amber"><i class="ti ti-clock"></i></div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats()!.enAttente }}</div>
+        <div class="stat-label">En attente</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green"><i class="ti ti-circle-check"></i></div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats()!.acceptees }}</div>
+        <div class="stat-label">Acceptées</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red"><i class="ti ti-circle-x"></i></div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats()!.rejetees }}</div>
+        <div class="stat-label">Rejetées</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <!-- Profile Completion -->
+    <div class="card profile-completion-card">
+      <div class="card-header">
+        <h3><i class="ti ti-user-check"></i> Complétion du profil</h3>
+      </div>
+      <div class="card-body">
+        <div class="completion-circle">
+          <svg viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="#f1f5f9" stroke-width="8" />
+            <circle cx="60" cy="60" r="52" fill="none" stroke="url(#gradient)" stroke-width="8"
+              stroke-linecap="round"
+              [attr.stroke-dasharray]="326.73"
+              [attr.stroke-dashoffset]="326.73 - (326.73 * stats()!.profileCompletion / 100)"
+              transform="rotate(-90 60 60)" />
+            <defs>
+              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#6366f1" />
+                <stop offset="100%" stop-color="#8b5cf6" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="completion-value">{{ stats()!.profileCompletion }}%</div>
+        </div>
+
+        <div class="suggestions" *ngIf="stats()!.suggestions.length > 0">
+          <div class="suggestion" *ngFor="let s of stats()!.suggestions">
+            <i class="ti ti-plus"></i>
+            <span>{{ s.message }}</span>
+            <span class="suggestion-points">+{{ s.points }}%</span>
+          </div>
+        </div>
+
+        <div class="profile-complete" *ngIf="stats()!.profileCompletion >= 100">
+          <i class="ti ti-confetti"></i>
+          <span>Votre profil est complet !</span>
+        </div>
+
+        <a routerLink="/candidat/profile" class="btn-link">
+          <i class="ti ti-edit"></i> Modifier mon profil
+        </a>
+      </div>
+    </div>
+
+    <!-- Recent Candidatures -->
+    <div class="card recent-card">
+      <div class="card-header">
+        <h3><i class="ti ti-list-details"></i> Candidatures récentes</h3>
+        <a routerLink="/candidat/candidatures" class="see-all">Voir tout</a>
+      </div>
+      <div class="card-body">
+        <div class="candidature-list" *ngIf="stats()!.recentCandidatures.length > 0">
+          <div class="candidature-item" *ngFor="let c of stats()!.recentCandidatures">
+            <div class="candidature-icon" [style.background]="getStatusColor(c.statut) + '15'" [style.color]="getStatusColor(c.statut)">
+              <i class="ti" [class]="getStatusIcon(c.statut)"></i>
+            </div>
+            <div class="candidature-info">
+              <div class="candidature-title">{{ c.titre }}</div>
+              <div class="candidature-meta">
+                {{ c.nomEntreprise }} · {{ c.localisation }}
+              </div>
+            </div>
+            <div class="candidature-status">
+              <span class="status-badge" [style.background]="getStatusColor(c.statut) + '15'" [style.color]="getStatusColor(c.statut)">
+                {{ getStatusLabel(c.statut) }}
+              </span>
+              <div class="candidature-date">{{ c.datePostulation | date:'dd/MM/yyyy' }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="stats()!.recentCandidatures.length === 0">
+          <div class="empty-icon"><i class="ti ti-file-off"></i></div>
+          <h4>Aucune candidature</h4>
+          <p>Commencez par explorer les offres disponibles</p>
+          <a routerLink="/offres" class="btn-primary-sm">Explorer les offres</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <h3>Actions rapides</h3>
+    <div class="actions-grid">
+      <a routerLink="/offres" class="action-card">
+        <div class="action-icon blue"><i class="ti ti-search"></i></div>
+        <span>Rechercher offres</span>
+      </a>
+      <a routerLink="/candidat/profile" class="action-card">
+        <div class="action-icon purple"><i class="ti ti-user-edit"></i></div>
+        <span>Modifier profil</span>
+      </a>
+      <a routerLink="/candidat/candidatures" class="action-card">
+        <div class="action-icon green"><i class="ti ti-file-text"></i></div>
+        <span>Mes candidatures</span>
+      </a>
+    </div>
+  </div>
+</div>

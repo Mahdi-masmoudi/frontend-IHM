@@ -1,0 +1,50 @@
+<div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+  <div class="mb-4">
+    <h4 class="text-lg font-semibold text-slate-900">Entreprises</h4>
+    <p class="text-sm text-slate-500">Gestion des comptes entreprises.</p>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-sm">
+      <thead class="text-left text-slate-500">
+        <tr class="border-b border-slate-200">
+          <th class="py-3 font-medium">Entreprise</th>
+          <th class="py-3 font-medium">Contact</th>
+          <th class="py-3 font-medium">Secteur</th>
+          <th class="py-3 font-medium">Logo</th>
+          <th class="py-3 text-right font-medium">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let entreprise of entreprises()" class="border-b border-slate-100">
+          <td class="py-3">
+            <div class="font-semibold text-slate-900">{{ entreprise.nomEntreprise }}</div>
+            <div class="text-xs text-slate-400">{{ entreprise.adresseEntreprise }}</div>
+          </td>
+          <td class="py-3">
+            <div class="font-semibold text-slate-900">{{ entreprise.nom }} {{ entreprise.prenom }}</div>
+            <div class="text-xs text-slate-400">{{ entreprise.email }}</div>
+          </td>
+          <td class="py-3 text-slate-600">{{ entreprise.secteurActivite }}</td>
+          <td class="py-3">
+            <a *ngIf="entreprise.logo" class="text-blue-600 hover:underline" [href]="entreprise.logo" target="_blank">Voir</a>
+            <span *ngIf="!entreprise.logo" class="text-slate-400">-</span>
+          </td>
+          <td class="py-3 text-right">
+            <button
+              class="rounded-full border border-red-200 px-3 py-1 text-xs font-semibold text-red-600 hover:border-red-400"
+              (click)="remove(entreprise.id)"
+            >
+              Supprimer
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="entreprises().length === 0">
+          <td colspan="5" class="py-6 text-center text-slate-400">Aucune entreprise</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="mt-4 rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600" *ngIf="error()">
+    {{ error() }}
+  </div>
+</div>

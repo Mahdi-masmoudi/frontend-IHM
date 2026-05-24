@@ -1,0 +1,49 @@
+<div class="card candidatures-card">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <h4 class="mb-1">Candidatures recues</h4>
+        <p class="text-muted mb-0">Gerez vos candidats et prenez une decision rapide.</p>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Candidat</th>
+            <th>Offre</th>
+            <th>Date</th>
+            <th>Statut</th>
+            <th>CV</th>
+            <th>Lettre</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of candidatures()">
+            <td>
+              <div class="fw-semibold">{{ item.nom }} {{ item.prenom }}</div>
+              <div class="text-muted small">{{ item.email }}</div>
+            </td>
+            <td>
+              <div class="fw-semibold">{{ item.titre || 'Offre' }}</div>
+              <div class="text-muted small">{{ item.localisation }} · {{ item.typeContrat }}</div>
+            </td>
+            <td>{{ item.datePostulation | date: 'short' }}</td>
+            <td><span [class]="statusClass(item.statut)">{{ item.statut }}</span></td>
+            <td class="text-muted small">{{ item.cvNomFichier || '-' }}</td>
+            <td class="text-muted small">{{ item.lettreContenu | slice: 0: 40 }}</td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-outline-success me-2" (click)="accept(item.idCandidature)">Accepter</button>
+              <button class="btn btn-sm btn-outline-danger" (click)="reject(item.idCandidature)">Rejeter</button>
+            </td>
+          </tr>
+          <tr *ngIf="candidatures().length === 0">
+            <td colspan="7" class="text-center text-muted">Aucune candidature</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert alert-danger mt-3" *ngIf="error()">{{ error() }}</div>
+  </div>
+</div>

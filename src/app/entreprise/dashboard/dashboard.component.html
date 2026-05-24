@@ -1,0 +1,73 @@
+<div class="row">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="mb-3">Profil entreprise</h4>
+        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+          <div class="form-floating mb-3">
+            <input class="form-control" id="nomEntreprise" formControlName="nomEntreprise" />
+            <label for="nomEntreprise">Nom entreprise</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input class="form-control" id="adresseEntreprise" formControlName="adresseEntreprise" />
+            <label for="adresseEntreprise">Adresse entreprise</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input class="form-control" id="secteurActivite" formControlName="secteurActivite" />
+            <label for="secteurActivite">Secteur d'activite</label>
+          </div>
+          <div class="form-floating mb-3">
+            <textarea class="form-control" id="description" formControlName="description" style="height: 120px"></textarea>
+            <label for="description">Description</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input class="form-control" id="logo" formControlName="logo" />
+            <label for="logo">Logo (URL)</label>
+          </div>
+          <button class="btn btn-primary" type="submit">Mettre a jour</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="mb-0">Offres recentes</h4>
+          <div class="d-flex gap-2">
+            <a class="btn btn-outline-primary" [routerLink]="['/offres/nouveau']">Nouvelle offre</a>
+            <a class="btn btn-primary" [routerLink]="['/entreprise/candidatures']">Candidatures</a>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Titre</th>
+                <th>Statut</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let offre of offres()">
+                <td>{{ offre.titre }}</td>
+                <td>{{ offre.statut }}</td>
+                <td class="text-end">
+                  <a class="btn btn-sm btn-outline-secondary" [routerLink]="['/offres', offre.idOffre, 'edit']">Editer</a>
+                  <a class="btn btn-sm btn-outline-primary ms-2" [routerLink]="['/candidatures/offre', offre.idOffre]">Candidatures</a>
+                </td>
+              </tr>
+              <tr *ngIf="offres().length === 0">
+                <td colspan="3" class="text-center text-muted">Aucune offre</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="alert alert-danger mt-3" *ngIf="error()">
+      {{ error() }}
+    </div>
+  </div>
+</div>

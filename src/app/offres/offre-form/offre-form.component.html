@@ -1,0 +1,45 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="mb-3">{{ offreId ? 'Modifier offre' : 'Nouvelle offre' }}</h4>
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <div class="form-floating mb-3">
+        <input class="form-control" id="titre" formControlName="titre" />
+        <label for="titre">Titre</label>
+      </div>
+      <div class="form-floating mb-3">
+        <textarea class="form-control" id="description" formControlName="description" style="height: 140px"></textarea>
+        <label for="description">Description</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input class="form-control" id="typeContrat" formControlName="typeContrat" />
+        <label for="typeContrat">Type de contrat</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="number" class="form-control" id="salaire" formControlName="salaire" />
+        <label for="salaire">Salaire</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input class="form-control" id="localisation" formControlName="localisation" />
+        <label for="localisation">Localisation</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input class="form-control" id="statut" formControlName="statut" />
+        <label for="statut">Statut</label>
+      </div>
+      <div class="form-floating mb-3">
+        <textarea class="form-control" id="competences" formControlName="competences" style="height: 110px"></textarea>
+        <label for="competences">Competences</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="number" class="form-control" id="experienceDemandee" formControlName="experienceDemandee" />
+        <label for="experienceDemandee">Experience demandee</label>
+      </div>
+      <button class="btn btn-primary" type="submit" [disabled]="loading()">
+        {{ loading() ? 'Enregistrement...' : 'Enregistrer' }}
+      </button>
+      <div class="alert alert-danger mt-3" *ngIf="error()">
+        {{ error() }}
+      </div>
+    </form>
+  </div>
+</div>

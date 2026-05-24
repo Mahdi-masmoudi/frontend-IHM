@@ -1,0 +1,33 @@
+.offre-detail .card {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.offre-detail .highlight {
+  background: linear-gradient(135deg, #f3f7ff 0%, #edf8f3 100%);
+  border: none;
+}
+
+.offre-detail .divider {
+  height: 1px;
+  background: rgba(15, 23, 42, 0.08);
+  margin: 1.5rem 0;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 1rem;
+}
+
+.modal-panel {
+  width: min(560px, 100%);
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 30px 60px rgba(15, 23, 42, 0.25);
+}

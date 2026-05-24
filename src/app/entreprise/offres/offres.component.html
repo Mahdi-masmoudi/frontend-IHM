@@ -1,0 +1,37 @@
+<div class="card">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4 class="mb-0">Mes offres</h4>
+      <a class="btn btn-primary" [routerLink]="['/offres/nouveau']">Nouvelle offre</a>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Titre</th>
+            <th>Localisation</th>
+            <th>Statut</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let offre of offres()">
+            <td>{{ offre.titre }}</td>
+            <td>{{ offre.localisation }}</td>
+            <td>{{ offre.statut }}</td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-outline-secondary" [routerLink]="['/offres', offre.idOffre, 'edit']">Editer</a>
+              <button class="btn btn-sm btn-outline-danger ms-2" (click)="remove(offre.idOffre)">Supprimer</button>
+            </td>
+          </tr>
+          <tr *ngIf="offres().length === 0">
+            <td colspan="4" class="text-center text-muted">Aucune offre disponible</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert alert-danger mt-3" *ngIf="error()">
+      {{ error() }}
+    </div>
+  </div>
+</div>
