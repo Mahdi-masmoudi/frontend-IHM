@@ -23,6 +23,12 @@ export class AuthService {
     );
   }
 
+  parseCv(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<any>(`${this.baseUrl}/auth/parse-cv`, formData);
+  }
+
   getProfile(): Observable<AuthProfile> {
     return this.http.get<AuthProfile>(`${this.baseUrl}/auth/profile`);
   }

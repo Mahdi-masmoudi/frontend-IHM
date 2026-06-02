@@ -34,4 +34,8 @@ export class PublicComponent implements OnInit {
     this.currentUser.set(null);
     this.router.navigate(['/login']);
   }
+
+  get isAuthPage(): boolean {
+    return this.router.url.includes('/login') || this.router.url.includes('/register');
+  }
 }

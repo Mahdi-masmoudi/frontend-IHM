@@ -55,23 +55,27 @@
             <tbody>
               <tr *ngFor="let item of candidatures()" class="candidature-row">
                 <!-- Position details -->
-                <td class="position-cell">
-                  <div class="position-icon"><i class="ti ti-briefcase"></i></div>
-                  <div class="position-details">
-                    <span class="title">{{ item.titre || 'Offre d\'emploi' }}</span>
-                    <span class="subtext">{{ item.typeContrat }} · {{ item.localisation }}</span>
+                <td>
+                  <div class="position-cell">
+                    <div class="position-icon"><i class="ti ti-briefcase"></i></div>
+                    <div class="position-details">
+                      <span class="title">{{ item.titre || 'Offre d\'emploi' }}</span>
+                      <span class="subtext">{{ item.typeContrat }} · {{ item.localisation }}</span>
+                    </div>
                   </div>
                 </td>
 
                 <!-- Company -->
-                <td class="company-cell">
-                  <div class="company-avatar" *ngIf="item.logo">
-                    <img [src]="item.logo" alt="Logo" class="company-logo-img" />
+                <td>
+                  <div class="company-cell">
+                    <div class="company-avatar" *ngIf="item.logo">
+                      <img [src]="item.logo" alt="Logo" class="company-logo-img" />
+                    </div>
+                    <div class="company-avatar empty" *ngIf="!item.logo">
+                      {{ (item.nomEntreprise || 'E').charAt(0) | uppercase }}
+                    </div>
+                    <span class="company-name">{{ item.nomEntreprise || 'Entreprise' }}</span>
                   </div>
-                  <div class="company-avatar empty" *ngIf="!item.logo">
-                    {{ (item.nomEntreprise || 'E').charAt(0) | uppercase }}
-                  </div>
-                  <span class="company-name">{{ item.nomEntreprise || 'Entreprise' }}</span>
                 </td>
 
                 <!-- Postulation Date -->

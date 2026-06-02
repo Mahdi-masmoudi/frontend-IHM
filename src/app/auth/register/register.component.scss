@@ -1,22 +1,20 @@
 /* ── Premium Register Page ───────────────────────────────────────────── */
 
 .auth-page {
-  min-height: 100vh;
+  min-height: calc(100vh - 80px);
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f0f2f5;
-  padding: 16px;
+  align-items: stretch;
+  background: #fff;
+  padding: 0;
 }
 
 .auth-container {
   display: flex;
   width: 100%;
-  max-width: 1000px;
-  min-height: 640px;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  min-height: calc(100vh - 80px);
+  border-radius: 0;
+  box-shadow: none;
   animation: slideUp 0.5s ease-out;
 }
 
@@ -32,9 +30,9 @@
   min-width: 380px;
   background: linear-gradient(135deg, #1e293b 0%, #312e81 50%, #4c1d95 100%);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 40px;
+  padding: 80px 40px 40px;
   position: relative;
   overflow: hidden;
 
@@ -171,7 +169,7 @@
 
 .auth-form-wrapper {
   width: 100%;
-  max-width: 440px;
+  max-width: 800px;
 }
 
 .progress-bar-wrapper {
@@ -238,6 +236,12 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
+}
+
+.form-row-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
 }
 
 .form-group {
@@ -348,6 +352,8 @@
   transition: all 0.3s;
   cursor: pointer;
   background: #fafafa;
+  max-width: 440px;
+  margin: 0 auto;
 
   &:hover, &.dragover {
     border-color: #6366f1;

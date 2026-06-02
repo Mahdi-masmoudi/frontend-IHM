@@ -1,10 +1,10 @@
 <div class="auth-page">
   <div class="auth-container register-container">
-    <!-- Left Panel: Premium Branding -->
     <div class="auth-branding">
       <div class="branding-content">
-        <div class="brand-icon"><i class="ti ti-briefcase"></i></div>
-        <h1>RecruteIHM</h1>
+        <div class="brand-logo">
+          <img src="/assets/images/logoIHM.png" alt="RecruteIHM Logo" style="max-height: 60px; width: auto; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15)); margin-bottom: 16px;" />
+        </div>
         <p class="brand-tagline">Votre tremplin professionnel intelligent en Tunisie</p>
         <div class="brand-features">
           <div class="feature-item">
@@ -90,7 +90,7 @@
             <i class="ti ti-lock"></i> Informations de connexion
           </div>
 
-          <div class="form-row">
+          <div class="form-row-3">
             <div class="form-group">
               <label>Nom</label>
               <div class="input-wrapper">
@@ -107,14 +107,13 @@
                   [class.is-invalid]="candidatForm.get('prenom')?.invalid && candidatForm.get('prenom')?.touched" />
               </div>
             </div>
-          </div>
-
-          <div class="form-group">
-            <label>Email</label>
-            <div class="input-wrapper">
-              <i class="ti ti-mail input-icon"></i>
-              <input type="email" placeholder="nom@exemple.com" formControlName="email"
-                [class.is-invalid]="candidatForm.get('email')?.invalid && candidatForm.get('email')?.touched" />
+            <div class="form-group">
+              <label>Email</label>
+              <div class="input-wrapper">
+                <i class="ti ti-mail input-icon"></i>
+                <input type="email" placeholder="nom@exemple.com" formControlName="email"
+                  [class.is-invalid]="candidatForm.get('email')?.invalid && candidatForm.get('email')?.touched" />
+              </div>
             </div>
           </div>
 
@@ -153,7 +152,7 @@
             <i class="ti ti-briefcase"></i> Profil & Expérience Professionnelle
           </div>
 
-          <div class="form-row">
+          <div class="form-row-3">
             <div class="form-group">
               <label>Téléphone</label>
               <div class="input-wrapper">
@@ -168,19 +167,19 @@
                 <input type="text" placeholder="Ex: Lac I, Tunis" formControlName="adresse" />
               </div>
             </div>
-          </div>
-
-          <div class="form-row">
             <div class="form-group">
               <label>Niveau d'études</label>
               <div class="input-wrapper">
                 <i class="ti ti-school input-icon"></i>
                 <select formControlName="niveauEtude">
-                  <option value="">Sélectionner votre niveau</option>
+                  <option value="">Sélectionner</option>
                   <option *ngFor="let option of niveauOptions" [value]="option">{{ option }}</option>
                 </select>
               </div>
             </div>
+          </div>
+
+          <div class="form-row-3">
             <div class="form-group">
               <label>Expérience (années)</label>
               <div class="input-wrapper">
@@ -188,31 +187,23 @@
                 <input type="number" placeholder="Ex: 3" formControlName="experience" min="0" />
               </div>
             </div>
-          </div>
-
-          <div class="form-group">
-            <label>Compétences (séparées par des virgules)</label>
-            <div class="input-wrapper">
-              <i class="ti ti-cpu input-icon"></i>
-              <input type="text" placeholder="Ex: Angular, TypeScript, Node.js" formControlName="competencesText" />
+            <div class="form-group">
+              <label>Compétences (séparées par des virgules)</label>
+              <div class="input-wrapper">
+                <i class="ti ti-cpu input-icon"></i>
+                <input type="text" placeholder="Angular, Node.js..." formControlName="competencesText" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Langues (séparées par des virgules)</label>
+              <div class="input-wrapper">
+                <i class="ti ti-language input-icon"></i>
+                <input type="text" placeholder="Français, Anglais..." formControlName="languesText" />
+              </div>
             </div>
           </div>
 
-          <div class="form-group">
-            <label>Langues (séparées par des virgules)</label>
-            <div class="input-wrapper">
-              <i class="ti ti-language input-icon"></i>
-              <input type="text" placeholder="Ex: Français, Anglais, Arabe" formControlName="languesText" />
-            </div>
-          </div>
 
-          <div class="form-group">
-            <label>Expérience Professionnelle Détaillée</label>
-            <div class="input-wrapper">
-              <i class="ti ti-file-description input-icon" style="top: 14px;"></i>
-              <textarea placeholder="Décrivez votre parcours détaillé, projets, technologies..." formControlName="experienceDescription" rows="5" style="padding-left: 40px; padding-top: 10px; width: 100%; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; font-family: inherit; resize: vertical; min-height: 120px;"></textarea>
-            </div>
-          </div>
 
           <!-- Submit Button -->
           <button type="submit" class="btn-submit" [disabled]="loading()">

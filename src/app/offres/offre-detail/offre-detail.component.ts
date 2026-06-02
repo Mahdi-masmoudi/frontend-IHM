@@ -6,7 +6,7 @@ import { OffresService } from '../../core/services/offres.service';
 import { CandidaturesService } from '../../core/services/candidatures.service';
 import { CandidatService } from '../../core/services/candidat.service';
 import { TokenService } from '../../core/services/token.service';
-import { CandidatProfile, Cv, LettreMotivation, Offre, Role } from '../../shared/models/types';
+import { CandidatProfile, Candidature, Cv, LettreMotivation, Offre, Role } from '../../shared/models/types';
 
 @Component({
   selector: 'app-offre-detail',
@@ -23,6 +23,7 @@ export class OffreDetailComponent implements OnInit {
   lettres = signal<LettreMotivation[]>([]);
   showApplyModal = signal(false);
   similarOffres = signal<Offre[]>([]);
+  myCandidatures = signal<Candidature[]>([]);
 
   applyForm = this.fb.nonNullable.group({
     cvId: ['', [Validators.required]],
@@ -99,6 +100,25 @@ export class OffreDetailComponent implements OnInit {
         this.lettres.set(profile.lettres || []);
       }
     });
+
+    this.candidaturesService.listMine().subscribe({
+      next: (candidatures) => {
+        this.myCandidatures.set(candidatures || []);
+      }
+    });
+  }
+
+  hasApplied(offreId: string): boolean {
+    return this.myCandidatures().some(c => c.offreId === offreId);
+  }
+
+  getLettrePreview(contenu: string): string {
+    if (!contenu) return 'Lettre sans contenu';
+    const firstLine = contenu.split('\n')[0].trim();
+    if (firstLine.length > 50) {
+      return firstLine.substring(0, 50) + '...';
+    }
+    return firstLine || 'Lettre de motivation';
   }
 
   openApply(): void {
@@ -131,6 +151,7 @@ export class OffreDetailComponent implements OnInit {
       .subscribe({
         next: () => {
           this.closeApply();
+          this.loadCandidatAssets();
         },
         error: (err) => {
           this.error.set(err?.error?.message || 'Impossible de postuler');

@@ -39,8 +39,7 @@ export class RegisterComponent {
     niveauEtude: [''],
     experience: [0, [Validators.min(0)]],
     competencesText: [''],
-    languesText: [''],
-    experienceDescription: ['']
+    languesText: ['']
   });
 
   // Recruiter Form
@@ -110,30 +109,31 @@ export class RegisterComponent {
     this.cvAnalyzing.set(true);
     this.error.set(null);
 
-    // Styling AI spinner cooldown (2.5 seconds)
-    setTimeout(() => {
-      this.cvAnalyzing.set(false);
-      this.cvPrefilled.set(true);
-
-      // Prepopulate form with Tunisian profile details
-      this.candidatForm.patchValue({
-        nom: 'Gharbi',
-        prenom: 'Yassine',
-        email: 'yassine.gharbi@gmail.com',
-        telephone: '23456789',
-        adresse: 'Lac I, Tunis',
-        niveauEtude: 'Ingénieur (Bac+5)',
-        experience: 3,
-        competencesText: 'Angular, React, JavaScript, HTML/CSS, API REST, Node.js, Git',
-        languesText: 'Français (Courant), Anglais (Technique), Arabe (Maternelle)',
-        experienceDescription: `Expérience sur des applications web sur mesure avec gestion de base de données, interfaces utilisateurs responsives, et mise en ligne sur des serveurs cloud (comme Vercel, Netlify)
-Freelance | full-stack
-Développement Front-End de modules ERP cliniques
-Conception et développement de modules ERP : gestion des patients, pharmacie, paramétrage. Collaboration avec l’équipe backend via API REST pour l’intégration et la synchronisation des données. Participation aux méthodologies Agile/Scrum : sprints, réunions quotidiennes, revues de fonctionnalités. Technologies : Angular, React, JavaScript, HTML/CSS, API REST.
-Création de deux sites web professionnels
-Site institutionnel pour deux sociétés avec : Espace de réclamation en ligne. Systèm`
-      });
-    }, 2500);
+    this.authService.parseCv(file).subscribe({
+      next: (response) => {
+        this.cvAnalyzing.set(false);
+        this.cvPrefilled.set(true);
+        
+        const data = response.data;
+        if (data) {
+          this.candidatForm.patchValue({
+            nom: data.nom || '',
+            prenom: data.prenom || '',
+            email: data.email || '',
+            telephone: data.telephone || '',
+            adresse: data.adresse || '',
+            niveauEtude: data.niveauEtude || '',
+            experience: data.experience || 0,
+            competencesText: data.competences ? data.competences.join(', ') : '',
+            languesText: data.langues ? data.langues.join(', ') : ''
+          });
+        }
+      },
+      error: (err) => {
+        this.cvAnalyzing.set(false);
+        this.error.set(err?.error?.message || 'Erreur lors de l\'analyse du CV');
+      }
+    });
   }
 
   discardCvPrefill(): void {
@@ -167,7 +167,7 @@ Site institutionnel pour deux sociétés avec : Espace de réclamation en ligne.
         experience: val.experience || 0,
         competences: val.competencesText ? val.competencesText.split(',').map(s => s.trim()).filter(Boolean) : [],
         langues: val.languesText ? val.languesText.split(',').map(s => s.trim()).filter(Boolean) : [],
-        experienceDescription: val.experienceDescription || ''
+        experienceDescription: ''
       };
     } else {
       this.entrepriseForm.markAllAsTouched();

@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { SharedModule } from '../../theme/shared/shared.module';
 import { OffresService } from '../../core/services/offres.service';
 import { CandidaturesService } from '../../core/services/candidatures.service';
-import { CandidatProfile, Cv, LettreMotivation, Offre, PaginatedResult, Role } from '../../shared/models/types';
+import { CandidatProfile, Candidature, Cv, LettreMotivation, Offre, PaginatedResult, Role } from '../../shared/models/types';
 import { CandidatService } from '../../core/services/candidat.service';
 import { TokenService } from '../../core/services/token.service';
 import { ActivatedRoute } from '@angular/router';
@@ -25,6 +25,7 @@ export class OffresListComponent implements OnInit {
   selectedOffre = signal<Offre | null>(null);
   cvs = signal<Cv[]>([]);
   lettres = signal<LettreMotivation[]>([]);
+  myCandidatures = signal<Candidature[]>([]);
   role = signal<Role | null>(null);
 
   totalPages = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize)));
@@ -120,6 +121,16 @@ export class OffresListComponent implements OnInit {
         this.error.set('Impossible de charger les informations candidat');
       }
     });
+
+    this.candidaturesService.listMine().subscribe({
+      next: (candidatures: Candidature[]) => {
+        this.myCandidatures.set(candidatures || []);
+      }
+    });
+  }
+
+  hasApplied(offreId: string): boolean {
+    return this.myCandidatures().some(c => c.offreId === offreId);
   }
 
   resetFilters(): void {
@@ -170,6 +181,8 @@ export class OffresListComponent implements OnInit {
         next: () => {
           this.error.set(null);
           this.closeApply();
+          this.loadCandidatAssets();
+          this.load(this.page());
         },
         error: (err) => {
           this.error.set(err?.error?.message || 'Impossible de postuler');
@@ -186,6 +199,15 @@ export class OffresListComponent implements OnInit {
     if (diffDays === 0) return "Aujourd'hui";
     if (diffDays === 1) return '1 jour';
     return `${diffDays} jours`;
+  }
+
+  getLettrePreview(contenu: string): string {
+    if (!contenu) return 'Lettre sans contenu';
+    const firstLine = contenu.split('\n')[0].trim();
+    if (firstLine.length > 50) {
+      return firstLine.substring(0, 50) + '...';
+    }
+    return firstLine || 'Lettre de motivation';
   }
 
   prevPage(): void {

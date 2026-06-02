@@ -39,12 +39,12 @@
         </div>
 
         <div class="content-section">
-          <h4>Job Description</h4>
+          <h4>Description du poste</h4>
           <p>{{ offre()?.description }}</p>
         </div>
 
         <div class="content-section" *ngIf="offre()?.competences">
-          <h4>Essential Knowledge, Skills, and Experience</h4>
+          <h4>Compétences et expérience requises</h4>
           <div class="skills-list">
             <span *ngFor="let c of (offre()?.competences || '').split(',')">
               {{ c.trim() }}
@@ -53,8 +53,8 @@
         </div>
 
         <div class="content-section">
-          <h4>Experience Required</h4>
-          <p>{{ offre()?.experienceDemandee || 0 }} years minimum</p>
+          <h4>Expérience requise</h4>
+          <p>{{ offre()?.experienceDemandee || 0 }} ans minimum</p>
         </div>
 
       </div>
@@ -65,11 +65,16 @@
         <div class="job-sidebar-card">
           <div class="sidebar-box apply-box" *ngIf="role() === 'CANDIDAT' || !role()">
             <h5>Prêt à rejoindre l'équipe ?</h5>
-            <button class="btn-apply" *ngIf="role() === 'CANDIDAT'" (click)="openApply()">
-              Apply Now
+            <!-- Candidate: If already applied -->
+            <button class="btn-apply already-applied" *ngIf="role() === 'CANDIDAT' && hasApplied(offre()!.idOffre)" [disabled]="true" style="background: #f1f5f9; color: #94a3b8; border: 1px solid #e2e8f0; cursor: not-allowed; box-shadow: none;">
+              <i class="ti ti-check"></i> Déjà postulé
+            </button>
+            <!-- Candidate: If not applied yet -->
+            <button class="btn-apply" *ngIf="role() === 'CANDIDAT' && !hasApplied(offre()!.idOffre)" (click)="openApply()">
+              Postuler maintenant
             </button>
             <a class="btn-apply" *ngIf="!role()" routerLink="/login">
-              Login to Apply
+              Se connecter pour postuler
             </a>
           </div>
 
@@ -77,7 +82,7 @@
             <div class="detail-item">
               <div class="icon"><i class="ti ti-map-pin"></i></div>
               <div class="info">
-                <span class="label">Location</span>
+                <span class="label">Localisation</span>
                 <strong>{{ offre()?.localisation }}</strong>
               </div>
             </div>
@@ -85,7 +90,7 @@
             <div class="detail-item">
               <div class="icon"><i class="ti ti-currency-dollar"></i></div>
               <div class="info">
-                <span class="label">Salary</span>
+                <span class="label">Salaire</span>
                 <strong>{{ offre()?.salaire | number }} DT</strong>
               </div>
             </div>
@@ -93,7 +98,7 @@
             <div class="detail-item">
               <div class="icon"><i class="ti ti-briefcase"></i></div>
               <div class="info">
-                <span class="label">Job Type</span>
+                <span class="label">Type de contrat</span>
                 <strong>{{ offre()?.typeContrat }}</strong>
               </div>
             </div>
@@ -101,8 +106,8 @@
             <div class="detail-item">
               <div class="icon"><i class="ti ti-calendar"></i></div>
               <div class="info">
-                <span class="label">Date Posted</span>
-                <strong>{{ offre()?.datePublication | date:'mediumDate' }}</strong>
+                <span class="label">Publié le</span>
+                <strong>{{ offre()?.datePublication | date:'dd MMMM yyyy' }}</strong>
               </div>
             </div>
           </div>
@@ -137,11 +142,11 @@
 </div>
 
 <!-- Apply Modal -->
-<div class="modal-backdrop" *ngIf="showApplyModal()">
-  <div class="modal-panel">
+<div class="modal-backdrop" *ngIf="showApplyModal()" (click)="closeApply()">
+  <div class="modal-panel" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <div>
-        <h5>Apply for Job</h5>
+        <h5>Postuler à cette offre</h5>
         <div class="subtitle">{{ offre()?.titre }}</div>
       </div>
       <button class="btn-close" type="button" (click)="closeApply()">&times;</button>
@@ -149,39 +154,39 @@
 
     <form [formGroup]="applyForm" (ngSubmit)="submitApply()">
       <div class="form-group">
-        <label>Your CV</label>
+        <label>Votre CV</label>
         <select formControlName="cvId" [disabled]="cvs().length === 0">
-          <option [ngValue]="''">Select a CV</option>
+          <option [ngValue]="''">Sélectionner un CV</option>
           <option *ngFor="let cv of cvs()" [ngValue]="cv.idCV">{{ cv.nomFichier }}</option>
         </select>
         <div style="font-size:12px;color:red;margin-top:4px;" *ngIf="cvs().length === 0">
-          Please add a CV in your profile first.
+          Veuillez d'abord ajouter un CV dans votre profil.
         </div>
       </div>
 
       <div class="form-group">
-        <label>Cover Letter</label>
+        <label>Lettre de motivation</label>
         <select formControlName="lettreId" [disabled]="lettres().length === 0">
-          <option [ngValue]="''">Select a letter</option>
+          <option [ngValue]="''">Sélectionner une lettre</option>
           <option *ngFor="let lettre of lettres()" [ngValue]="lettre.idLettre">
-            {{ lettre.dateAjout | date: 'short' }}
+            {{ getLettrePreview(lettre.contenu) }}
           </option>
         </select>
         <div style="font-size:12px;color:red;margin-top:4px;" *ngIf="lettres().length === 0">
-          Please add a cover letter in your profile first.
+          Veuillez d'abord ajouter une lettre de motivation dans votre profil.
         </div>
       </div>
 
       <div class="form-group">
-        <label>Message (Optional)</label>
-        <textarea rows="4" formControlName="commentaire"></textarea>
+        <label>Message (optionnel)</label>
+        <textarea rows="4" formControlName="commentaire" placeholder="Expliquez pourquoi vous êtes le candidat idéal..."></textarea>
       </div>
 
       <div class="modal-actions">
-        <button class="btn-cancel" type="button" (click)="closeApply()">Cancel</button>
+        <button class="btn-cancel" type="button" (click)="closeApply()">Annuler</button>
         <button class="btn-submit" type="submit"
           [disabled]="applyForm.invalid || cvs().length === 0 || lettres().length === 0">
-          Submit Application
+          Envoyer ma candidature
         </button>
       </div>
     </form>

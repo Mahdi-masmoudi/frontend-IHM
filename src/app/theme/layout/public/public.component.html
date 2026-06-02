@@ -4,8 +4,7 @@
     <div class="navbar-container">
       <div class="navbar-brand">
         <a routerLink="/" class="logo">
-          <div class="logo-icon"><i class="ti ti-briefcase"></i></div>
-          <span class="logo-text">RecruteIHM</span>
+          <img src="/assets/images/logoIHM.png" alt="RecruteIHM Logo" class="brand-logo-img" />
         </a>
       </div>
 
@@ -67,14 +66,13 @@
   </main>
 
   <!-- Footer -->
-  <footer class="public-footer">
+  <footer class="public-footer" *ngIf="!isAuthPage">
     <div class="footer-container">
       <div class="footer-grid">
         <!-- Column 1: Brand & Social -->
         <div class="footer-col brand-col">
           <div class="footer-brand">
-            <div class="logo-icon"><i class="ti ti-briefcase"></i></div>
-            <span class="logo-text">RecruteIHM</span>
+            <img src="/assets/images/logoIHM.png" alt="RecruteIHM Logo" class="brand-logo-img" />
           </div>
           <p>Votre tremplin professionnel intelligent en Tunisie. Trouvez l'emploi de vos rêves en quelques clics.</p>
           <div class="social-links">
