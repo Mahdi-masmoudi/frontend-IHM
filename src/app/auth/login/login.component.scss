@@ -281,6 +281,11 @@
 
 .btn-submit {
   width: 100%;
+  max-width: 260px;
+  margin: 20px auto 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 13px;
   border: none;
   border-radius: 10px;
