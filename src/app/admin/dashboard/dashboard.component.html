@@ -1,12 +1,298 @@
-<div class="card">
-  <div class="card-body">
-    <h3 class="mb-2">Administration</h3>
-    <p class="text-muted">Gerez les utilisateurs et les offres de la plateforme.</p>
-    <div class="d-flex gap-2 flex-wrap">
-      <a class="btn btn-primary" [routerLink]="['/admin/users']">Utilisateurs</a>
-      <a class="btn btn-outline-primary" [routerLink]="['/admin/candidats']">Candidats</a>
-      <a class="btn btn-outline-primary" [routerLink]="['/admin/entreprises']">Entreprises</a>
-      <a class="btn btn-outline-secondary" [routerLink]="['/admin/offres']">Offres</a>
+<!-- Skeleton Loading -->
+<div class="admin-skeleton" *ngIf="loading()">
+  <div class="skeleton-hero"></div>
+  <div class="skeleton-grid-4">
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+  </div>
+  <div class="skeleton-grid-4">
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+  </div>
+  <div class="skeleton-grid-2">
+    <div class="skeleton-tall"></div>
+    <div class="skeleton-tall"></div>
+  </div>
+</div>
+
+<!-- Error State -->
+<div class="error-state" *ngIf="error() && !loading()">
+  <div class="error-icon"><i class="ti ti-alert-circle"></i></div>
+  <h3>Erreur de chargement</h3>
+  <p>{{ error() }}</p>
+  <button class="btn-retry" (click)="load()">
+    <i class="ti ti-refresh"></i> Réessayer
+  </button>
+</div>
+
+<!-- Dashboard Content -->
+<div class="admin-dashboard" *ngIf="!loading() && stats() && !error()">
+
+  <!-- ── Welcome Hero Banner ── -->
+  <div class="hero-banner">
+    <div class="hero-left">
+      <div class="hero-greeting">{{ getGreeting() }}, Super Admin 👋</div>
+      <h1>Vue globale de la plateforme RecruteIHM</h1>
+      <p>Surveillez en temps réel les KPIs clés : utilisateurs, offres, candidatures et bien plus.</p>
+      <div class="hero-pills">
+        <span class="hero-pill green">
+          <i class="ti ti-circle-check"></i> {{ stats()!.offresActives }} offres actives
+        </span>
+        <span class="hero-pill amber">
+          <i class="ti ti-clock"></i> {{ stats()!.candidaturesEnAttente }} en attente
+        </span>
+        <span class="hero-pill blue">
+          <i class="ti ti-percentage"></i> {{ taux }}% taux d'acceptation
+        </span>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <a routerLink="/admin/users" class="hero-btn primary">
+        <i class="ti ti-users"></i> Gérer Utilisateurs
+      </a>
+      <a routerLink="/admin/offres" class="hero-btn secondary">
+        <i class="ti ti-briefcase"></i> Gérer Offres
+      </a>
+    </div>
+    <div class="hero-orb orb-1"></div>
+    <div class="hero-orb orb-2"></div>
+  </div>
+
+  <!-- ── KPI Row 1: Users & Platform ── -->
+  <div class="section-label"><i class="ti ti-chart-bar"></i> Indicateurs Plateforme</div>
+  <div class="kpi-grid">
+    <!-- Total Users -->
+    <div class="kpi-card kpi-indigo">
+      <div class="kpi-icon"><i class="ti ti-users"></i></div>
+      <div class="kpi-body">
+        <div class="kpi-value">{{ stats()!.totalUsers }}</div>
+        <div class="kpi-label">Utilisateurs totaux</div>
+      </div>
+      <a routerLink="/admin/users" class="kpi-link">
+        <i class="ti ti-arrow-right"></i>
+      </a>
+      <div class="kpi-bg-icon"><i class="ti ti-users"></i></div>
+    </div>
+
+    <!-- Total Candidats -->
+    <div class="kpi-card kpi-blue">
+      <div class="kpi-icon"><i class="ti ti-user-check"></i></div>
+      <div class="kpi-body">
+        <div class="kpi-value">{{ stats()!.totalCandidats }}</div>
+        <div class="kpi-label">Candidats inscrits</div>
+      </div>
+      <a routerLink="/admin/candidats" class="kpi-link">
+        <i class="ti ti-arrow-right"></i>
+      </a>
+      <div class="kpi-bg-icon"><i class="ti ti-user-check"></i></div>
+    </div>
+
+    <!-- Total Entreprises -->
+    <div class="kpi-card kpi-teal">
+      <div class="kpi-icon"><i class="ti ti-building"></i></div>
+      <div class="kpi-body">
+        <div class="kpi-value">{{ stats()!.totalEntreprises }}</div>
+        <div class="kpi-label">Entreprises inscrites</div>
+      </div>
+      <a routerLink="/admin/entreprises" class="kpi-link">
+        <i class="ti ti-arrow-right"></i>
+      </a>
+      <div class="kpi-bg-icon"><i class="ti ti-building"></i></div>
+    </div>
+
+    <!-- Total Offres -->
+    <div class="kpi-card kpi-violet">
+      <div class="kpi-icon"><i class="ti ti-briefcase"></i></div>
+      <div class="kpi-body">
+        <div class="kpi-value">{{ stats()!.totalOffres }}</div>
+        <div class="kpi-label">Offres d'emploi</div>
+      </div>
+      <a routerLink="/admin/offres" class="kpi-link">
+        <i class="ti ti-arrow-right"></i>
+      </a>
+      <div class="kpi-bg-icon"><i class="ti ti-briefcase"></i></div>
     </div>
   </div>
+
+  <!-- ── KPI Row 2: Candidatures ── -->
+  <div class="kpi-grid" style="margin-top: 0;">
+    <div class="kpi-card kpi-emerald">
+      <div class="kpi-icon"><i class="ti ti-send"></i></div>
+      <div class="kpi-body">
+        <div class="kpi-value">{{ stats()!.totalCandidatures }}</div>
+        <div class="kpi-label">Candidatures totales</div>
+      </div>
+      <div class="kpi-bg-icon"><i class="ti ti-send"></i></div>
+    </div>
+    <div class="kpi-card kpi-amber">
+      <div class="kpi-icon"><i class="ti ti-clock"></i></div>
+      <div class="kpi-body">
+        <div class="kpi-value">{{ stats()!.candidaturesEnAttente }}</div>
+        <div class="kpi-label">En attente</div>
+      </div>
+      <div class="kpi-bg-icon"><i class="ti ti-clock"></i></div>
+    </div>
+    <div class="kpi-card kpi-green">
+      <div class="kpi-icon"><i class="ti ti-circle-check"></i></div>
+      <div class="kpi-body">
+        <div class="kpi-value">{{ stats()!.candidaturesAcceptees }}</div>
+        <div class="kpi-label">Acceptées</div>
+      </div>
+      <div class="kpi-bg-icon"><i class="ti ti-circle-check"></i></div>
+    </div>
+    <div class="kpi-card kpi-red">
+      <div class="kpi-icon"><i class="ti ti-circle-x"></i></div>
+      <div class="kpi-body">
+        <div class="kpi-value">{{ stats()!.candidaturesRejetees }}</div>
+        <div class="kpi-label">Rejetées</div>
+      </div>
+      <div class="kpi-bg-icon"><i class="ti ti-circle-x"></i></div>
+    </div>
+  </div>
+
+  <!-- ── Main Grid: Tables & Charts ── -->
+  <div class="main-grid">
+
+    <!-- LEFT: Recent Offres + Contract Types -->
+    <div class="left-col">
+
+      <!-- Recent Offres -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <h3><i class="ti ti-list-details"></i> Offres récentes</h3>
+            <p>Les {{ stats()!.recentOffres.length }} dernières offres publiées</p>
+          </div>
+          <a routerLink="/admin/offres" class="see-all-link">Voir tout <i class="ti ti-arrow-right"></i></a>
+        </div>
+        <div class="panel-body" *ngIf="stats()!.recentOffres.length > 0">
+          <div class="offre-row" *ngFor="let offre of stats()!.recentOffres">
+            <div class="offre-logo-placeholder">
+              <img *ngIf="offre.logo" [src]="offre.logo" [alt]="offre.nomEntreprise" />
+              <i *ngIf="!offre.logo" class="ti ti-building"></i>
+            </div>
+            <div class="offre-info">
+              <div class="offre-title">{{ offre.titre }}</div>
+              <div class="offre-meta">
+                <span>{{ offre.nomEntreprise }}</span>
+                <span class="dot-sep">·</span>
+                <span><i class="ti ti-map-pin"></i> {{ offre.localisation }}</span>
+              </div>
+            </div>
+            <div class="offre-badges">
+              <span class="contract-badge" [style.background]="getContractColor(offre.typeContrat) + '18'"
+                [style.color]="getContractColor(offre.typeContrat)">
+                {{ offre.typeContrat }}
+              </span>
+              <span class="status-dot" [class.active]="offre.statut === 'ACTIVE'">
+                {{ offre.statut === 'ACTIVE' ? 'Active' : 'Brouillon' }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="empty-panel" *ngIf="stats()!.recentOffres.length === 0">
+          <i class="ti ti-briefcase-off"></i>
+          <p>Aucune offre disponible</p>
+        </div>
+      </div>
+
+      <!-- Contract Type Distribution -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <h3><i class="ti ti-chart-donut"></i> Répartition par contrat</h3>
+            <p>Distribution des offres par type de contrat</p>
+          </div>
+        </div>
+        <div class="panel-body" *ngIf="stats()!.offresByType.length > 0">
+          <div class="contract-bars">
+            <div class="contract-bar-item" *ngFor="let item of stats()!.offresByType">
+              <div class="bar-label">
+                <span class="bar-type">{{ item.typeContrat }}</span>
+                <span class="bar-count">{{ item.count }}</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" [style.width]="(item.count / stats()!.totalOffres * 100) + '%'"
+                  [style.background]="getContractColor(item.typeContrat)">
+                </div>
+              </div>
+              <span class="bar-pct">{{ (item.count / stats()!.totalOffres * 100) | number:'1.0-0' }}%</span>
+            </div>
+          </div>
+        </div>
+        <div class="empty-panel" *ngIf="stats()!.offresByType.length === 0">
+          <i class="ti ti-chart-bar-off"></i>
+          <p>Aucune donnée disponible</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Top Entreprises + Candidatures/month -->
+    <div class="right-col">
+
+      <!-- Top Entreprises -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <h3><i class="ti ti-trophy"></i> Top Entreprises Recruteuses</h3>
+            <p>Classées par nombre d'offres publiées</p>
+          </div>
+          <a routerLink="/admin/entreprises" class="see-all-link">Voir tout <i class="ti ti-arrow-right"></i></a>
+        </div>
+        <div class="panel-body" *ngIf="stats()!.topEntreprises.length > 0">
+          <div class="entreprise-row" *ngFor="let e of stats()!.topEntreprises; let i = index">
+            <div class="rank-badge" [class]="'rank-' + (i + 1)">{{ i + 1 }}</div>
+            <div class="entreprise-logo-box">
+              <img *ngIf="e.logo" [src]="e.logo" [alt]="e.nomEntreprise" />
+              <i *ngIf="!e.logo" class="ti ti-building"></i>
+            </div>
+            <div class="entreprise-info">
+              <div class="ent-name">{{ e.nomEntreprise }}</div>
+              <div class="ent-sector">{{ e.secteurActivite || 'Secteur non renseigné' }}</div>
+            </div>
+            <div class="ent-offres-count">
+              <span class="offres-pill">{{ e.offresCount }} offre{{ e.offresCount > 1 ? 's' : '' }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="empty-panel" *ngIf="stats()!.topEntreprises.length === 0">
+          <i class="ti ti-building-off"></i>
+          <p>Aucune entreprise disponible</p>
+        </div>
+      </div>
+
+      <!-- Candidatures by Month -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <h3><i class="ti ti-calendar-stats"></i> Activité mensuelle</h3>
+            <p>Candidatures reçues par mois</p>
+          </div>
+        </div>
+        <div class="panel-body" *ngIf="stats()!.candidaturesByMonth.length > 0">
+          <div class="monthly-bars">
+            <div class="month-bar-item" *ngFor="let m of stats()!.candidaturesByMonth">
+              <div class="month-bar-track">
+                <div class="month-bar-fill" [style.height]="(m.count / getMaxMonthCount() * 100) + '%'">
+                </div>
+              </div>
+              <div class="month-label">{{ m.month | slice:5:7 }}/{{ m.month | slice:2:4 }}</div>
+              <div class="month-count">{{ m.count }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="empty-panel" *ngIf="stats()!.candidaturesByMonth.length === 0">
+          <i class="ti ti-calendar-off"></i>
+          <p>Aucune candidature enregistrée</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
 </div>

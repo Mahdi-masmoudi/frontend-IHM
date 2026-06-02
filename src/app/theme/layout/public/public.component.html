@@ -29,28 +29,33 @@
         <!-- Authenticated Actions -->
         <ng-container *ngIf="isLoggedIn()">
           <div class="user-dropdown">
-            <button class="btn-user">
+            <button class="btn-user" (click)="toggleProfileMenu($event)">
               <div class="avatar">{{ currentUser()?.prenom?.charAt(0) }}{{ currentUser()?.nom?.charAt(0) }}</div>
               <span>{{ currentUser()?.prenom }}</span>
               <i class="ti ti-chevron-down"></i>
             </button>
-            <div class="dropdown-menu">
+            <div class="dropdown-menu" [class.show]="profileMenuOpen()" (click)="$event.stopPropagation()">
               <div class="dropdown-header">
                 <strong>{{ currentUser()?.prenom }} {{ currentUser()?.nom }}</strong>
                 <small>{{ currentUser()?.email }}</small>
               </div>
-              <ng-container *ngIf="currentUser()?.role === 'ENTREPRISE' || currentUser()?.role === 'SUPER_ADMIN'">
-                <a [routerLink]="currentUser()?.role === 'ENTREPRISE' ? '/entreprise/dashboard' : '/admin/dashboard'" class="dropdown-item">
-                  <i class="ti ti-layout-dashboard"></i> Backoffice
+              <ng-container *ngIf="currentUser()?.role === 'SUPER_ADMIN'">
+                <a routerLink="/admin/dashboard" class="dropdown-item" (click)="closeProfileMenu()">
+                  <i class="ti ti-shield"></i> Retour Administration
+                </a>
+              </ng-container>
+              <ng-container *ngIf="currentUser()?.role === 'ENTREPRISE'">
+                <a routerLink="/entreprise/dashboard" class="dropdown-item" (click)="closeProfileMenu()">
+                  <i class="ti ti-layout-dashboard"></i> Retour Backoffice
                 </a>
               </ng-container>
               <ng-container *ngIf="currentUser()?.role === 'CANDIDAT'">
-                <a routerLink="/candidat/profile" class="dropdown-item">
+                <a routerLink="/candidat/profile" class="dropdown-item" (click)="closeProfileMenu()">
                   <i class="ti ti-user"></i> Mon profil
                 </a>
               </ng-container>
               <div class="dropdown-divider"></div>
-              <button class="dropdown-item text-danger" (click)="logout()">
+              <button class="dropdown-item text-danger" (click)="logout(); closeProfileMenu()">
                 <i class="ti ti-logout"></i> Déconnexion
               </button>
             </div>
