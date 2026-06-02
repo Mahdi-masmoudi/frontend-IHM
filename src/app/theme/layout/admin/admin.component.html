@@ -20,8 +20,7 @@
     <nav class="sidebar-nav">
       <div class="nav-section">
         <span class="nav-section-title" *ngIf="sidebarOpen()">Menu Principal</span>
-        <a class="nav-link" routerLink="/offres" routerLinkActive="active"
-           [routerLinkActiveOptions]="{ exact: false }">
+        <a class="nav-link" routerLink="/offres" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
           <i class="ti ti-search"></i>
           <span *ngIf="sidebarOpen()">Offres d'emploi</span>
         </a>
@@ -115,7 +114,7 @@
         <span class="role-badge" [attr.data-role]="role">
           {{ roleLabel }}
         </span>
-        <div class="header-profile" (click)="toggleProfileMenu()">
+        <div class="header-profile" (click)="toggleProfileMenu($event)">
           <div class="profile-avatar">{{ userInitials }}</div>
           <div class="profile-dropdown" *ngIf="profileMenuOpen()" (click)="$event.stopPropagation()">
             <div class="dropdown-header">
@@ -126,13 +125,17 @@
               </div>
             </div>
             <div class="dropdown-divider"></div>
+            <a class="dropdown-item" *ngIf="isAdmin" routerLink="/admin/dashboard" (click)="closeProfileMenu()">
+              <i class="ti ti-dashboard"></i> Dashboard
+            </a>
             <a class="dropdown-item" *ngIf="isCandidat" routerLink="/candidat/profile" (click)="closeProfileMenu()">
               <i class="ti ti-user"></i> Mon Profil
             </a>
             <a class="dropdown-item" *ngIf="isCandidat" routerLink="/candidat/dashboard" (click)="closeProfileMenu()">
               <i class="ti ti-dashboard"></i> Dashboard
             </a>
-            <a class="dropdown-item" *ngIf="isEntreprise" routerLink="/entreprise/dashboard" (click)="closeProfileMenu()">
+            <a class="dropdown-item" *ngIf="isEntreprise" routerLink="/entreprise/dashboard"
+              (click)="closeProfileMenu()">
               <i class="ti ti-dashboard"></i> Dashboard
             </a>
             <div class="dropdown-divider"></div>

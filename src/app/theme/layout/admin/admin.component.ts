@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, signal, HostListener } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { TokenService } from '../../../core/services/token.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -77,12 +77,20 @@ export class AdminComponent {
     this.mobileMenuOpen.update(v => !v);
   }
 
-  toggleProfileMenu(): void {
+  toggleProfileMenu(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
     this.profileMenuOpen.update(v => !v);
   }
 
   closeProfileMenu(): void {
     this.profileMenuOpen.set(false);
+  }
+
+  @HostListener('document:click')
+  onDocumentClick(): void {
+    this.closeProfileMenu();
   }
 
   logout(): void {

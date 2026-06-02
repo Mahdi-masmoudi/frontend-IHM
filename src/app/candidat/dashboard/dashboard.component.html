@@ -15,7 +15,7 @@
   <!-- Welcome Banner -->
   <div class="welcome-hero-banner">
     <div class="hero-content">
-      <h1>Marhaban, {{ profile()?.prenom }} 👋</h1>
+      <h1>Bonjour, {{ profile()?.prenom }} 👋</h1>
       <p>Propulsez votre carrière sur RecruteIHM. Complétez votre profil pour maximiser votre visibilité.</p>
       <div class="visibilité-score-pill">
         <i class="ti ti-eye"></i> Visibilité : <strong>{{ stats()!.profileCompletion }}%</strong>
@@ -74,8 +74,7 @@
           <div class="progress-ring-container">
             <svg class="progress-ring" viewBox="0 0 120 120">
               <circle class="ring-bg" cx="60" cy="60" r="50"></circle>
-              <circle class="ring-fg" cx="60" cy="60" r="50"
-                [attr.stroke-dasharray]="314.15"
+              <circle class="ring-fg" cx="60" cy="60" r="50" [attr.stroke-dasharray]="314.15"
                 [attr.stroke-dashoffset]="314.15 - (314.15 * stats()!.profileCompletion / 100)"></circle>
             </svg>
             <div class="progress-text">
@@ -95,13 +94,16 @@
           <!-- Quick Visibility Statement -->
           <div class="visibility-booster-banner">
             <p *ngIf="stats()!.profileCompletion < 50">
-              <i class="ti ti-alert-triangle"></i> Complétez votre profil à +50% pour apparaître dans la recherche des recruteurs !
+              <i class="ti ti-alert-triangle"></i> Complétez votre profil à +50% pour apparaître dans la recherche des
+              recruteurs !
             </p>
             <p *ngIf="stats()!.profileCompletion >= 50 && stats()!.profileCompletion < 90" class="good">
-              <i class="ti ti-discount-check"></i> Votre profil est visible ! Complétez le reste pour devenir <strong>Expert</strong>.
+              <i class="ti ti-discount-check"></i> Votre profil est visible ! Complétez le reste pour devenir
+              <strong>Expert</strong>.
             </p>
             <p *ngIf="stats()!.profileCompletion >= 90" class="expert">
-              <i class="ti ti-sparkles"></i> <strong>Profil Superstar !</strong> Votre profil est boosté en haut de liste !
+              <i class="ti ti-sparkles"></i> <strong>Profil Superstar !</strong> Votre profil est boosté en haut de
+              liste !
             </p>
           </div>
         </div>
@@ -154,7 +156,8 @@
     <!-- RIGHT PANEL: Onboarding and Actions -->
     <div class="dashboard-main-panel">
       <!-- 1. Interactive Onboarding Widget ("Compléter mon profil") -->
-      <div class="premium-card onboarding-widget-card" *ngIf="stats()!.suggestions.length > 0 && !cvAnalyzing() && !cvAnalyseData()">
+      <div class="premium-card onboarding-widget-card"
+        *ngIf="stats()!.suggestions.length > 0 && !cvAnalyzing() && !cvAnalyseData()">
         <div class="card-header-clean gradient-subtle">
           <div class="header-text">
             <h3><i class="ti ti-sparkles"></i> Objectif : Compléter mon profil</h3>
@@ -167,10 +170,8 @@
           <div class="onboarding-wizard">
             <!-- Sidebar suggestion quick selector -->
             <div class="onboarding-steps-list">
-              <button class="step-select-btn" 
-                *ngFor="let s of stats()!.suggestions"
-                [class.active]="activeOnboardingField() === s.field"
-                (click)="setActiveField(s.field)">
+              <button class="step-select-btn" *ngFor="let s of stats()!.suggestions"
+                [class.active]="activeOnboardingField() === s.field" (click)="setActiveField(s.field)">
                 <span class="points">+{{ s.points }}%</span>
                 <span class="msg">{{ s.message }}</span>
                 <i class="ti ti-chevron-right"></i>
@@ -182,18 +183,21 @@
               <!-- TELEPHONE -->
               <div class="wizard-form-step" *ngIf="activeOnboardingField() === 'telephone'">
                 <h4>Ajouter votre numéro de téléphone</h4>
-                <p class="step-desc">Permet aux entreprises de vous contacter directement pour planifier un entretien.</p>
+                <p class="step-desc">Permet aux entreprises de vous contacter directement pour planifier un entretien.
+                </p>
                 <div class="inline-input-group">
                   <div class="input-wrapper">
                     <i class="ti ti-phone input-icon"></i>
                     <input type="tel" placeholder="0612345678" formControlName="telephone" />
                   </div>
-                  <button class="btn-save-inline" (click)="saveOnboardingField('telephone')" [disabled]="onboardingLoading()">
+                  <button class="btn-save-inline" (click)="saveOnboardingField('telephone')"
+                    [disabled]="onboardingLoading()">
                     <span *ngIf="!onboardingLoading()">Enregistrer <i class="ti ti-check"></i></span>
                     <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
                   </button>
                 </div>
-                <div class="field-error" *ngIf="onboardingForm.get('telephone')?.invalid && onboardingForm.get('telephone')?.touched">
+                <div class="field-error"
+                  *ngIf="onboardingForm.get('telephone')?.invalid && onboardingForm.get('telephone')?.touched">
                   Format invalide (ex: 0612345678)
                 </div>
               </div>
@@ -201,13 +205,15 @@
               <!-- ADRESSE -->
               <div class="wizard-form-step" *ngIf="activeOnboardingField() === 'adresse'">
                 <h4>Votre ville / adresse de résidence</h4>
-                <p class="step-desc">Aide les recruteurs à cibler les offres proches de chez vous (ex: Tunis, Tunisie).</p>
+                <p class="step-desc">Aide les recruteurs à cibler les offres proches de chez vous (ex: Tunis, Tunisie).
+                </p>
                 <div class="inline-input-group">
                   <div class="input-wrapper">
                     <i class="ti ti-map-pin input-icon"></i>
                     <input type="text" placeholder="Ex: Lac I, Tunis" formControlName="adresse" />
                   </div>
-                  <button class="btn-save-inline" (click)="saveOnboardingField('adresse')" [disabled]="onboardingLoading()">
+                  <button class="btn-save-inline" (click)="saveOnboardingField('adresse')"
+                    [disabled]="onboardingLoading()">
                     <span *ngIf="!onboardingLoading()">Enregistrer <i class="ti ti-check"></i></span>
                     <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
                   </button>
@@ -223,7 +229,8 @@
                     <i class="ti ti-calendar input-icon"></i>
                     <input type="date" formControlName="dateNaissance" />
                   </div>
-                  <button class="btn-save-inline" (click)="saveOnboardingField('dateNaissance')" [disabled]="onboardingLoading()">
+                  <button class="btn-save-inline" (click)="saveOnboardingField('dateNaissance')"
+                    [disabled]="onboardingLoading()">
                     <span *ngIf="!onboardingLoading()">Enregistrer <i class="ti ti-check"></i></span>
                     <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
                   </button>
@@ -242,7 +249,8 @@
                       <option *ngFor="let opt of niveauOptions" [value]="opt">{{ opt }}</option>
                     </select>
                   </div>
-                  <button class="btn-save-inline" (click)="saveOnboardingField('niveauEtude')" [disabled]="onboardingLoading()">
+                  <button class="btn-save-inline" (click)="saveOnboardingField('niveauEtude')"
+                    [disabled]="onboardingLoading()">
                     <span *ngIf="!onboardingLoading()">Enregistrer <i class="ti ti-check"></i></span>
                     <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
                   </button>
@@ -258,7 +266,8 @@
                     <i class="ti ti-clock input-icon"></i>
                     <input type="number" min="0" placeholder="0" formControlName="experience" />
                   </div>
-                  <button class="btn-save-inline" (click)="saveOnboardingField('experience')" [disabled]="onboardingLoading()">
+                  <button class="btn-save-inline" (click)="saveOnboardingField('experience')"
+                    [disabled]="onboardingLoading()">
                     <span *ngIf="!onboardingLoading()">Enregistrer <i class="ti ti-check"></i></span>
                     <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
                   </button>
@@ -274,12 +283,14 @@
                     <i class="ti ti-hash input-icon"></i>
                     <input type="text" placeholder="Ex: React, Node.js, Vente" formControlName="newCompetence" />
                   </div>
-                  <button class="btn-save-inline" (click)="saveOnboardingField('competences')" [disabled]="onboardingLoading() || !onboardingForm.value.newCompetence">
+                  <button class="btn-save-inline" (click)="saveOnboardingField('competences')"
+                    [disabled]="onboardingLoading() || !onboardingForm.value.newCompetence">
                     <span *ngIf="!onboardingLoading()">Ajouter <i class="ti ti-plus"></i></span>
                     <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
                   </button>
                 </div>
-                <div class="competences-pills-list" *ngIf="candidatProfile() && candidatProfile()!.competences.length > 0">
+                <div class="competences-pills-list"
+                  *ngIf="candidatProfile() && candidatProfile()!.competences.length > 0">
                   <span class="comp-pill" *ngFor="let c of candidatProfile()!.competences">
                     {{ c }}
                   </span>
@@ -295,7 +306,8 @@
                     <i class="ti ti-language input-icon"></i>
                     <input type="text" placeholder="Ex: Anglais, Français" formControlName="newLangue" />
                   </div>
-                  <button class="btn-save-inline" (click)="saveOnboardingField('langues')" [disabled]="onboardingLoading() || !onboardingForm.value.newLangue">
+                  <button class="btn-save-inline" (click)="saveOnboardingField('langues')"
+                    [disabled]="onboardingLoading() || !onboardingForm.value.newLangue">
                     <span *ngIf="!onboardingLoading()">Ajouter <i class="ti ti-plus"></i></span>
                     <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
                   </button>
@@ -310,15 +322,17 @@
               <!-- CV UPLOAD (Suggestion `cv`) -->
               <div class="wizard-form-step" *ngIf="activeOnboardingField() === 'cv'">
                 <h4>Uploader votre CV pour booster votre visibilité (+25%)</h4>
-                <p class="step-desc">Faites glisser votre fichier CV. Notre technologie d'analyse en extraira les détails clés !</p>
-                <div class="drag-drop-cv-box" [class.dragover]="cvDragOver()"
-                  (dragover)="onCvDragOver($event)" (dragleave)="onCvDragLeave()" (drop)="onCvDrop($event)">
+                <p class="step-desc">Faites glisser votre fichier CV. Notre technologie d'analyse en extraira les
+                  détails clés !</p>
+                <div class="drag-drop-cv-box" [class.dragover]="cvDragOver()" (dragover)="onCvDragOver($event)"
+                  (dragleave)="onCvDragLeave()" (drop)="onCvDrop($event)">
                   <div class="box-content">
                     <div class="box-icon"><i class="ti ti-cloud-upload"></i></div>
                     <h5>Glissez votre CV ici</h5>
                     <p>PDF ou DOCX (Max 10 Mo)</p>
                     <span class="btn-browse-file">Parcourir...</span>
-                    <input type="file" class="hidden-file-input" accept=".pdf,.docx" (change)="onCvFileSelected($event)" />
+                    <input type="file" class="hidden-file-input" accept=".pdf,.docx"
+                      (change)="onCvFileSelected($event)" />
                   </div>
                 </div>
               </div>
@@ -353,7 +367,8 @@
           <div class="header-icon"><i class="ti ti-wand"></i></div>
           <div class="header-text">
             <h3>CV Analysé avec succès ! ✨</h3>
-            <p>Voici les informations que nous avons extraites de votre fichier. Confirmez pour les appliquer à votre profil.</p>
+            <p>Voici les informations que nous avons extraites de votre fichier. Confirmez pour les appliquer à votre
+              profil.</p>
           </div>
         </div>
 
@@ -382,15 +397,19 @@
             <div class="pills-flex" *ngIf="cvAnalyseData().competences && cvAnalyseData().competences.length > 0">
               <span class="comp-pill" *ngFor="let c of cvAnalyseData().competences">{{ c }}</span>
             </div>
-            <span class="empty-pill-text" *ngIf="!cvAnalyseData().competences || cvAnalyseData().competences.length === 0">Aucune compétence détectée</span>
+            <span class="empty-pill-text"
+              *ngIf="!cvAnalyseData().competences || cvAnalyseData().competences.length === 0">Aucune compétence
+              détectée</span>
           </div>
 
           <div class="extracted-pills-section">
             <h5>Langues détectées :</h5>
             <div class="pills-flex" *ngIf="cvAnalyseData().langues && cvAnalyseData().langues.length > 0">
-              <span class="comp-pill lang-pill" *ngFor="let l of cvAnalyseData().langues"><i class="ti ti-world"></i> {{ l }}</span>
+              <span class="comp-pill lang-pill" *ngFor="let l of cvAnalyseData().langues"><i class="ti ti-world"></i> {{
+                l }}</span>
             </div>
-            <span class="empty-pill-text" *ngIf="!cvAnalyseData().langues || cvAnalyseData().langues.length === 0">Aucune langue détectée</span>
+            <span class="empty-pill-text"
+              *ngIf="!cvAnalyseData().langues || cvAnalyseData().langues.length === 0">Aucune langue détectée</span>
           </div>
 
           <div class="confirmation-actions">
@@ -404,11 +423,13 @@
       </div>
 
       <!-- Profile Fully Completed State -->
-      <div class="premium-card profile-completed-success-card" *ngIf="stats()!.profileCompletion >= 100 && !cvAnalyzing() && !cvAnalyseData()">
+      <div class="premium-card profile-completed-success-card"
+        *ngIf="stats()!.profileCompletion >= 100 && !cvAnalyzing() && !cvAnalyseData()">
         <div class="celebration-content">
           <div class="celebration-icon"><i class="ti ti-sparkles"></i></div>
           <h3>Félicitations, votre profil est complété à 100% ! 🥳</h3>
-          <p>Vous êtes maintenant une <strong>Superstar</strong> ! Les recruteurs tunisiens peuvent voir l'intégralité de vos informations et vous contacter en priorité.</p>
+          <p>Vous êtes maintenant une <strong>Superstar</strong> ! Les recruteurs tunisiens peuvent voir l'intégralité
+            de vos informations et vous contacter en priorité.</p>
           <a routerLink="/offres" class="btn-cta-completed">Trouver un Job <i class="ti ti-arrow-right"></i></a>
         </div>
       </div>
@@ -423,15 +444,18 @@
         <div class="card-body">
           <div class="candidatures-custom-list" *ngIf="stats()!.recentCandidatures.length > 0">
             <div class="candidature-custom-item" *ngFor="let c of stats()!.recentCandidatures">
-              <div class="candidature-icon-badge" [style.background]="getStatusColor(c.statut) + '15'" [style.color]="getStatusColor(c.statut)">
+              <div class="candidature-icon-badge" [style.background]="getStatusColor(c.statut) + '15'"
+                [style.color]="getStatusColor(c.statut)">
                 <i class="ti" [class]="getStatusIcon(c.statut)"></i>
               </div>
               <div class="candidature-main-details">
                 <h4>{{ c.titre }}</h4>
-                <p class="company"><i class="ti ti-building"></i> {{ c.nomEntreprise }} · <i class="ti ti-map-pin"></i> {{ c.localisation }}</p>
+                <p class="company"><i class="ti ti-building"></i> {{ c.nomEntreprise }} · <i class="ti ti-map-pin"></i>
+                  {{ c.localisation }}</p>
               </div>
               <div class="candidature-status-col">
-                <span class="status-custom-badge" [style.background]="getStatusColor(c.statut) + '15'" [style.color]="getStatusColor(c.statut)">
+                <span class="status-custom-badge" [style.background]="getStatusColor(c.statut) + '15'"
+                  [style.color]="getStatusColor(c.statut)">
                   {{ getStatusLabel(c.statut) }}
                 </span>
                 <span class="postulated-date">Le {{ c.datePostulation | date:'dd/MM/yyyy' }}</span>
