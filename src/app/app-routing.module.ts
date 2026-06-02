@@ -6,7 +6,7 @@ import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
 
 const routes: Routes = [
-  // ── Public Site & Candidat (TheJobs Style) ──
+  // ── Public Home Route (Must be first to prevent greedy authGuard redirection on root '/') ──
   {
     path: '',
     component: PublicComponent,
@@ -15,45 +15,10 @@ const routes: Routes = [
         path: '',
         loadComponent: () => import('./home/home.component').then((c) => c.HomeComponent),
         pathMatch: 'full'
-      },
-      {
-        path: 'offres',
-        loadComponent: () => import('./offres/offres-list/offres-list.component').then((c) => c.OffresListComponent)
-      },
-      {
-        path: 'offres/:id',
-        loadComponent: () => import('./offres/offre-detail/offre-detail.component').then((c) => c.OffreDetailComponent)
-      },
-      {
-        path: 'login',
-        loadComponent: () => import('./auth/login/login.component').then((c) => c.LoginComponent)
-      },
-      {
-        path: 'register',
-        loadComponent: () => import('./auth/register/register.component').then((c) => c.RegisterComponent)
-      },
-      // Candidat Routes (Inside Public Layout, but protected)
-      {
-        path: 'candidat/dashboard',
-        loadComponent: () => import('./candidat/dashboard/dashboard.component').then((c) => c.DashboardComponent),
-        canActivate: [authGuard, roleGuard],
-        data: { roles: ['CANDIDAT'] }
-      },
-      {
-        path: 'candidat/candidatures',
-        loadComponent: () => import('./candidat/candidatures/candidatures.component').then((c) => c.CandidaturesComponent),
-        canActivate: [authGuard, roleGuard],
-        data: { roles: ['CANDIDAT'] }
-      },
-      {
-        path: 'candidat/profile',
-        loadComponent: () => import('./candidat/profile/profile.component').then((c) => c.ProfileComponent),
-        canActivate: [authGuard, roleGuard],
-        data: { roles: ['CANDIDAT'] }
       }
     ]
   },
-  
+
   // ── Backoffice (Entreprise & Admin) ──
   {
     path: '',
@@ -128,6 +93,49 @@ const routes: Routes = [
         loadComponent: () => import('./admin/offres/offres.component').then((c) => c.OffresComponent),
         canActivate: [roleGuard],
         data: { roles: ['SUPER_ADMIN'] }
+      }
+    ]
+  },
+
+  // ── Other Public Site & Candidat (TheJobs Style) ──
+  {
+    path: '',
+    component: PublicComponent,
+    children: [
+      {
+        path: 'offres',
+        loadComponent: () => import('./offres/offres-list/offres-list.component').then((c) => c.OffresListComponent)
+      },
+      {
+        path: 'offres/:id',
+        loadComponent: () => import('./offres/offre-detail/offre-detail.component').then((c) => c.OffreDetailComponent)
+      },
+      {
+        path: 'login',
+        loadComponent: () => import('./auth/login/login.component').then((c) => c.LoginComponent)
+      },
+      {
+        path: 'register',
+        loadComponent: () => import('./auth/register/register.component').then((c) => c.RegisterComponent)
+      },
+      // Candidat Routes (Inside Public Layout, but protected)
+      {
+        path: 'candidat/dashboard',
+        loadComponent: () => import('./candidat/dashboard/dashboard.component').then((c) => c.DashboardComponent),
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['CANDIDAT'] }
+      },
+      {
+        path: 'candidat/candidatures',
+        loadComponent: () => import('./candidat/candidatures/candidatures.component').then((c) => c.CandidaturesComponent),
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['CANDIDAT'] }
+      },
+      {
+        path: 'candidat/profile',
+        loadComponent: () => import('./candidat/profile/profile.component').then((c) => c.ProfileComponent),
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['CANDIDAT'] }
       }
     ]
   },

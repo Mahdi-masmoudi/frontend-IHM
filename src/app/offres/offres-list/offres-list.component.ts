@@ -58,7 +58,7 @@ export class OffresListComponent implements OnInit {
 
   ngOnInit(): void {
     this.role.set(this.tokenService.getRole());
-    
+
     this.route.queryParams.subscribe(params => {
       if (params['q'] || params['localisation'] || params['entreprise']) {
         this.filterForm.patchValue({
@@ -79,6 +79,8 @@ export class OffresListComponent implements OnInit {
     this.page.set(page);
     const filters = this.filterForm.value;
     this.loading.set(true);
+    this.error.set(null);
+
     this.offresService
       .list({
         q: filters.q || undefined,
@@ -95,13 +97,15 @@ export class OffresListComponent implements OnInit {
       })
       .subscribe({
         next: (result: PaginatedResult<Offre>) => {
-          this.offres.set(result.items);
-          this.total.set(result.total);
+          this.offres.set(result.items || []);
+          this.total.set(result.total || 0);
           this.loading.set(false);
         },
         error: () => {
-          this.error.set('Erreur lors du chargement des offres');
+          this.offres.set([]);
+          this.total.set(0);
           this.loading.set(false);
+          this.error.set('Impossible de charger les offres. Veuillez réessayer.');
         }
       });
   }
@@ -171,6 +175,17 @@ export class OffresListComponent implements OnInit {
           this.error.set(err?.error?.message || 'Impossible de postuler');
         }
       });
+  }
+
+  getDaysAgo(dateString: string): string {
+    const pubDate = new Date(dateString);
+    const today = new Date();
+    const diffTime = Math.abs(today.getTime() - pubDate.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return "Aujourd'hui";
+    if (diffDays === 1) return '1 jour';
+    return `${diffDays} jours`;
   }
 
   prevPage(): void {

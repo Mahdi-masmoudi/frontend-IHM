@@ -1,100 +1,323 @@
-<div class="home-hero">
-  <div class="hero-bg-overlay"></div>
-  <div class="hero-content">
-    <h1>3,000+ Browse Jobs</h1>
-    <p>Find Jobs, Employment & Career Opportunities</p>
+<!-- ── Section Hero Premium ── -->
+<div class="hero-dark">
+  <div class="hero-bg-image"></div>
+  <div class="hero-bg-gradient"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-particles" aria-hidden="true">
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+  </div>
+  <div class="hero-container">
 
-    <div class="hero-search-box">
-      <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
-        <div class="search-inputs">
-          <div class="input-group">
-            <i class="ti ti-briefcase"></i>
-            <input type="text" formControlName="q" placeholder="Keywords, Job Title, Description, Tags" />
-          </div>
-          <div class="input-divider"></div>
-          <div class="input-group">
-            <i class="ti ti-map-pin"></i>
-            <input type="text" formControlName="localisation" placeholder="Location" />
-          </div>
-          <button type="submit" class="btn-search">
-            <i class="ti ti-search"></i> SEARCH
-          </button>
-        </div>
-      </form>
+    <div class="hero-text-content">
+      <div class="hero-badge">
+        <i class="ti ti-sparkles"></i> Plateforme de Recrutement #1 en Tunisie
+      </div>
+      <h1>Trouvez l'emploi de <span class="highlight-gradient">vos rêves</span></h1>
+      <p class="subtitle">Explorez des milliers d'offres d'emploi et connectez-vous avec les meilleures entreprises de Tunisie.</p>
     </div>
 
+    <!-- Barre de recherche -->
+    <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="hero-search-bar" aria-label="Recherche d'emploi">
+      <div class="search-input-group">
+        <i class="ti ti-search input-icon" aria-hidden="true"></i>
+        <input type="text" formControlName="q" placeholder="Titre de poste, compétences, mots-clés..."
+          aria-label="Mots-clés">
+      </div>
+
+      <div class="search-input-group">
+        <i class="ti ti-map-pin input-icon" aria-hidden="true"></i>
+        <input type="text" formControlName="localisation" placeholder="Ville, région..." aria-label="Localisation">
+      </div>
+
+      <div class="search-input-group select-group">
+        <i class="ti ti-briefcase input-icon" aria-hidden="true"></i>
+        <select formControlName="contractType" aria-label="Type de contrat">
+          <option value="">Type de contrat</option>
+          <option value="CDI">CDI</option>
+          <option value="CDD">CDD</option>
+          <option value="Stage">Stage</option>
+          <option value="Freelance">Freelance</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn-search" aria-label="Lancer la recherche">
+        <i class="ti ti-search" aria-hidden="true"></i> Rechercher
+      </button>
+    </form>
+
+    <!-- Mots-clés tendances -->
     <div class="trending-keywords">
-      <span><i class="ti ti-trending-up"></i> Trending Keywords:</span>
-      <a routerLink="/offres" [queryParams]="{q: 'ui designer'}">ui designer</a>
-      <a routerLink="/offres" [queryParams]="{q: 'developer'}">developer</a>
-      <a routerLink="/offres" [queryParams]="{q: 'senior'}">senior</a>
-      <a routerLink="/offres" [queryParams]="{q: 'it company'}">it company</a>
-      <a routerLink="/offres" [queryParams]="{q: 'design'}">design</a>
+      <span class="label"><i class="ti ti-trending-up" aria-hidden="true"></i> Métiers :</span>
+      <a (click)="searchForm.patchValue({ q: 'Développeur' }); onSearch()">Développeur</a>
+      <a (click)="searchForm.patchValue({ q: 'Data Scientist' }); onSearch()">Data Scientist</a>
+      <a (click)="searchForm.patchValue({ q: 'DevOps' }); onSearch()">DevOps</a>
+      <a (click)="searchForm.patchValue({ q: 'UX Designer' }); onSearch()">UX Designer</a>
+    </div>
+    <div class="trending-keywords mt-2">
+      <span class="label"><i class="ti ti-map-pin" aria-hidden="true"></i> Villes :</span>
+      <a (click)="searchForm.patchValue({ localisation: 'Tunis' }); onSearch()">Tunis</a>
+      <a (click)="searchForm.patchValue({ localisation: 'Sfax' }); onSearch()">Sfax</a>
+      <a (click)="searchForm.patchValue({ localisation: 'Sousse' }); onSearch()">Sousse</a>
+      <a (click)="searchForm.patchValue({ localisation: 'Ariana' }); onSearch()">Ariana</a>
+      <a (click)="searchForm.patchValue({ localisation: 'Bizerte' }); onSearch()">Bizerte</a>
     </div>
 
-    <!-- Category boxes (visual only for now) -->
-    <div class="category-boxes">
-      <div class="cat-box">
-        <i class="ti ti-code"></i>
-        <span>Developer</span>
-        <small>320 Jobs</small>
-      </div>
-      <div class="cat-box active">
-        <i class="ti ti-device-desktop"></i>
-        <span>Technology</span>
-        <small>150 Jobs</small>
-      </div>
-      <div class="cat-box">
-        <i class="ti ti-chart-bar"></i>
-        <span>Accounting</span>
-        <small>210 Jobs</small>
-      </div>
-      <div class="cat-box">
-        <i class="ti ti-stethoscope"></i>
-        <span>Medical</span>
-        <small>120 Jobs</small>
-      </div>
-      <div class="cat-box">
-        <i class="ti ti-building-bank"></i>
-        <span>Government</span>
-        <small>80 Jobs</small>
-      </div>
+  </div>
+
+  <!-- Onglets catégories -->
+  <div class="category-tabs-container">
+    <div class="category-tabs">
+      <button *ngFor="let cat of categories" [class.active]="selectedCategory() === cat.name"
+        (click)="selectCategory(cat.name)" [attr.aria-label]="'Catégorie ' + cat.name">
+        <i [class]="'ti ' + cat.icon" aria-hidden="true"></i>
+        <div class="tab-info">
+          <span class="cat-name">{{ cat.name }}</span>
+          <span class="cat-count">{{ cat.count }}</span>
+        </div>
+      </button>
     </div>
   </div>
 </div>
 
-<div class="home-section">
-  <div class="section-container">
-    <div class="section-header">
-      <h2>Top Hiring Companies</h2>
-      <a routerLink="/offres" class="view-all">View All</a>
-    </div>
-    
-    <div class="companies-grid">
-      <div class="company-card">
-        <div class="company-logo"><i class="ti ti-brand-google"></i></div>
-        <div class="company-info">
-          <h4>Google</h4>
-          <p>Casablanca</p>
+<!-- ── Section Offres Récentes & Sidebars ── -->
+<div class="main-content-section">
+  <div class="content-container layout-with-sidebars">
+
+    <!-- ── Left Sidebar ── -->
+    <aside class="sidebar left-sidebar" aria-label="Filtres et Navigation">
+      <div class="sidebar-widget profile-widget">
+        <div class="widget-header">
+          <i class="ti ti-user-circle"></i>
+          <h3>Mon Espace</h3>
         </div>
-        <a routerLink="/offres" [queryParams]="{entreprise: 'Google'}" class="btn-jobs">Open Jobs</a>
-      </div>
-      <div class="company-card">
-        <div class="company-logo"><i class="ti ti-brand-apple"></i></div>
-        <div class="company-info">
-          <h4>Apple</h4>
-          <p>Rabat</p>
+        <div class="widget-body text-center">
+          <p>Connectez-vous pour voir les offres recommandées pour vous.</p>
+          <button class="btn-sidebar-primary">Se connecter</button>
+          <a routerLink="/auth/register" class="link-register">Créer un compte</a>
         </div>
-        <a routerLink="/offres" [queryParams]="{entreprise: 'Apple'}" class="btn-jobs">Open Jobs</a>
       </div>
-      <div class="company-card">
-        <div class="company-logo"><i class="ti ti-brand-amazon"></i></div>
-        <div class="company-info">
-          <h4>Amazon</h4>
-          <p>Tanger</p>
+
+      <div class="sidebar-widget sponsored-widget">
+        <div class="widget-header">
+          <i class="ti ti-star"></i>
+          <h3>Offres Sponsorisées</h3>
         </div>
-        <a routerLink="/offres" [queryParams]="{entreprise: 'Amazon'}" class="btn-jobs">Open Jobs</a>
+        <div class="widget-body">
+          <ul class="company-list">
+            <li>
+              <div class="comp-logo blue"><i class="ti ti-briefcase"></i></div>
+              <div class="comp-info">
+                <span class="comp-name">Ingénieur DevOps</span>
+                <span class="comp-jobs">TechCorp • Tunis</span>
+              </div>
+            </li>
+            <li>
+              <div class="comp-logo purple"><i class="ti ti-code"></i></div>
+              <div class="comp-info">
+                <span class="comp-name">Développeur Angular</span>
+                <span class="comp-jobs">InnovateIT • Sousse</span>
+              </div>
+            </li>
+            <li>
+              <div class="comp-logo amber"><i class="ti ti-database"></i></div>
+              <div class="comp-info">
+                <span class="comp-name">Data Analyst</span>
+                <span class="comp-jobs">Fintech SA • Sfax</span>
+              </div>
+            </li>
+          </ul>
+          <a href="#" class="widget-link">Toutes les offres <i class="ti ti-chevron-right"></i></a>
+        </div>
       </div>
-    </div>
+      
+      <div class="sidebar-widget alert-widget">
+        <div class="widget-icon-large">
+          <i class="ti ti-bell-ringing"></i>
+        </div>
+        <h4>Créer une alerte</h4>
+        <p>Recevez les dernières offres par email.</p>
+        <button class="btn-sidebar-outline">Créer une alerte</button>
+      </div>
+    </aside>
+
+    <!-- ── Main Feed ── -->
+    <main class="main-feed">
+
+    <!-- Offres à la une -->
+    <section class="featured-jobs-row" aria-label="Offres à la une">
+      <div class="section-header">
+        <div class="section-title-group">
+          <span class="section-label">À la une</span>
+          <h2>Offres récentes</h2>
+        </div>
+        <a routerLink="/offres" class="view-all-link">
+          Voir toutes les offres <i class="ti ti-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <!-- Chargement -->
+      <div class="skeleton-loader" *ngIf="loading()">
+        <div class="sk-item" *ngFor="let i of [1,2,3]"></div>
+      </div>
+
+      <div class="jobs-grid" *ngIf="!loading() && latestOffres().length > 0">
+        <article class="home-job-card" *ngFor="let job of latestOffres().slice(0, 6); let i = index"
+          [style.animation-delay]="(i * 80) + 'ms'">
+          <div class="card-top">
+            <div class="job-logo" [attr.aria-label]="'Logo ' + (job.nomEntreprise || 'Entreprise')">
+              {{ (job.nomEntreprise || 'E').charAt(0) | uppercase }}
+            </div>
+            <span class="badge-contract">{{ job.typeContrat }}</span>
+          </div>
+          <div class="card-body">
+            <h3><a [routerLink]="['/offres', job.idOffre]">{{ job.titre }}</a></h3>
+            <p class="company">{{ job.nomEntreprise }}</p>
+            <div class="card-meta">
+              <span><i class="ti ti-map-pin" aria-hidden="true"></i> {{ job.localisation }}</span>
+              <span><i class="ti ti-currency-dollar" aria-hidden="true"></i> {{ job.salaire | number }} DT</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="posted-time"><i class="ti ti-clock" aria-hidden="true"></i> Il y a {{
+              getDaysAgo(job.datePublication) }}</span>
+            <a class="btn-card-apply" [routerLink]="['/offres', job.idOffre]">Postuler</a>
+          </div>
+        </article>
+      </div>
+
+      <div class="no-jobs-card" *ngIf="!loading() && latestOffres().length === 0">
+        <i class="ti ti-briefcase-off" aria-hidden="true"></i>
+        <p>Aucune offre disponible pour le moment.</p>
+      </div>
+    </section>
+
+    <!-- Sections moved below -->
+
+    </main>
+
+    <!-- ── Right Sidebar ── -->
+    <aside class="sidebar right-sidebar" aria-label="Ressources et Entreprises">
+      <div class="sidebar-widget top-companies-widget">
+        <div class="widget-header">
+          <i class="ti ti-building-skyscraper"></i>
+          <h3>Top Employeurs</h3>
+        </div>
+        <div class="widget-body">
+          <ul class="company-list">
+            <li>
+              <div class="comp-logo"><i class="ti ti-brand-google"></i></div>
+              <div class="comp-info">
+                <span class="comp-name">TechCorp</span>
+                <span class="comp-jobs">12 offres</span>
+              </div>
+            </li>
+            <li>
+              <div class="comp-logo green"><i class="ti ti-brand-amazon"></i></div>
+              <div class="comp-info">
+                <span class="comp-name">InnovateIT</span>
+                <span class="comp-jobs">8 offres</span>
+              </div>
+            </li>
+            <li>
+              <div class="comp-logo orange"><i class="ti ti-brand-stripe"></i></div>
+              <div class="comp-info">
+                <span class="comp-name">Fintech SA</span>
+                <span class="comp-jobs">5 offres</span>
+              </div>
+            </li>
+          </ul>
+          <a href="#" class="widget-link">Voir plus d'entreprises <i class="ti ti-chevron-right"></i></a>
+        </div>
+      </div>
+
+      <div class="sidebar-widget tips-widget">
+        <div class="widget-header">
+          <i class="ti ti-bulb"></i>
+          <h3>Conseils Carrière</h3>
+        </div>
+        <div class="widget-body">
+          <a href="#" class="tip-card">
+            <div class="tip-img bg-gradient-1"></div>
+            <div class="tip-content">
+              <h4>Comment réussir son entretien en ligne</h4>
+              <span>Il y a 2 jours</span>
+            </div>
+          </a>
+          <a href="#" class="tip-card">
+            <div class="tip-img bg-gradient-2"></div>
+            <div class="tip-content">
+              <h4>Améliorer son CV en 5 étapes</h4>
+              <span>Il y a 1 semaine</span>
+            </div>
+          </a>
+        </div>
+      </div>
+      
+      <div class="sidebar-widget ad-widget">
+        <div class="ad-content">
+          <span class="ad-badge">Sponsorisé</span>
+          <h4>Boostez votre carrière avec notre Masterclass IT</h4>
+          <button class="btn-ad">Découvrir</button>
+        </div>
+      </div>
+    </aside>
+
+  </div> <!-- End layout-with-sidebars -->
+
+  <!-- Statistiques & Partenaires (Moved from feed to bottom) -->
+  <div class="full-width-sections">
+    <!-- Statistiques -->
+    <section class="stats-section" aria-label="Statistiques de la plateforme">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="ti ti-briefcase" aria-hidden="true"></i></div>
+        <div class="stat-value">3,000+</div>
+        <div class="stat-label">Offres publiées</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon accent"><i class="ti ti-users" aria-hidden="true"></i></div>
+        <div class="stat-value">1,500+</div>
+        <div class="stat-label">Candidats actifs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon success"><i class="ti ti-building" aria-hidden="true"></i></div>
+        <div class="stat-value">200+</div>
+        <div class="stat-label">Entreprises partenaires</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon warning"><i class="ti ti-check" aria-hidden="true"></i></div>
+        <div class="stat-value">850+</div>
+        <div class="stat-label">Recrutements réussis</div>
+      </div>
+    </section>
+
+    <!-- Partenaires -->
+    <section class="partners-section" aria-label="Nos entreprises partenaires en Tunisie">
+      <div class="partners-header">
+        <span class="partners-label">Confiance</span>
+        <h2>Ils recrutent sur RecruteIHM</h2>
+        <p>Les plus grandes entreprises et administrations de la République nous font confiance pour recruter leurs futurs collaborateurs.</p>
+      </div>
+      <div class="partners-slider-container">
+        <div class="partners-slider-track">
+          <!-- Slide items -->
+          <div class="slide"><img src="https://logo.clearbit.com/poulinagroupholding.com" alt="Poulina Group" onerror="this.src='https://ui-avatars.com/api/?name=Poulina+Group&background=e0e7ff&color=4f46e5&size=100'"></div>
+          <div class="slide"><img src="https://logo.clearbit.com/biat.com.tn" alt="BIAT" onerror="this.src='https://ui-avatars.com/api/?name=BIAT&background=ffedd5&color=ea580c&size=100'"></div>
+          <div class="slide"><img src="https://logo.clearbit.com/bt.com.tn" alt="Banque de Tunisie" onerror="this.src='https://ui-avatars.com/api/?name=Banque+de+Tunisie&background=dcfce7&color=16a34a&size=100'"></div>
+          <div class="slide"><img src="https://logo.clearbit.com/tunisietelecom.tn" alt="Tunisie Telecom" onerror="this.src='https://ui-avatars.com/api/?name=Tunisie+Telecom&background=dbeafe&color=2563eb&size=100'"></div>
+          <div class="slide"><img src="https://logo.clearbit.com/tunisair.com" alt="Tunisair" onerror="this.src='https://ui-avatars.com/api/?name=Tunisair&background=f3e8ff&color=9333ea&size=100'"></div>
+          <div class="slide"><img src="https://logo.clearbit.com/steg.com.tn" alt="STEG Tunisie" onerror="this.src='https://ui-avatars.com/api/?name=STEG+Tunisie&background=fef3c7&color=d97706&size=100'"></div>
+          
+          <!-- Duplicate for infinite scrolling -->
+          <div class="slide"><img src="https://logo.clearbit.com/poulinagroupholding.com" alt="Poulina Group" onerror="this.src='https://ui-avatars.com/api/?name=Poulina+Group&background=e0e7ff&color=4f46e5&size=100'"></div>
+          <div class="slide"><img src="https://logo.clearbit.com/biat.com.tn" alt="BIAT" onerror="this.src='https://ui-avatars.com/api/?name=BIAT&background=ffedd5&color=ea580c&size=100'"></div>
+          <div class="slide"><img src="https://logo.clearbit.com/bt.com.tn" alt="Banque de Tunisie" onerror="this.src='https://ui-avatars.com/api/?name=Banque+de+Tunisie&background=dcfce7&color=16a34a&size=100'"></div>
+          <div class="slide"><img src="https://logo.clearbit.com/tunisietelecom.tn" alt="Tunisie Telecom" onerror="this.src='https://ui-avatars.com/api/?name=Tunisie+Telecom&background=dbeafe&color=2563eb&size=100'"></div>
+          <div class="slide"><img src="https://logo.clearbit.com/tunisair.com" alt="Tunisair" onerror="this.src='https://ui-avatars.com/api/?name=Tunisair&background=f3e8ff&color=9333ea&size=100'"></div>
+          <div class="slide"><img src="https://logo.clearbit.com/steg.com.tn" alt="STEG Tunisie" onerror="this.src='https://ui-avatars.com/api/?name=STEG+Tunisie&background=fef3c7&color=d97706&size=100'"></div>
+        </div>
+      </div>
+    </section>
   </div>
 </div>

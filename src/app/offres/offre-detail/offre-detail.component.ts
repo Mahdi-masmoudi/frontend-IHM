@@ -22,6 +22,7 @@ export class OffreDetailComponent implements OnInit {
   cvs = signal<Cv[]>([]);
   lettres = signal<LettreMotivation[]>([]);
   showApplyModal = signal(false);
+  similarOffres = signal<Offre[]>([]);
 
   applyForm = this.fb.nonNullable.group({
     cvId: ['', [Validators.required]],
@@ -40,14 +41,17 @@ export class OffreDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.role.set(this.tokenService.getRole());
-    const idParam = this.route.snapshot.paramMap.get('id');
-    const idOffre = idParam || '';
-    if (idOffre) {
-      this.loadOffre(idOffre);
-    } else {
-      this.loading.set(false);
-      this.error.set('Offre introuvable');
-    }
+    
+    // Subscribe to param changes to reload when clicking on a similar job!
+    this.route.paramMap.subscribe(params => {
+      const idOffre = params.get('id') || '';
+      if (idOffre) {
+        this.loadOffre(idOffre);
+      } else {
+        this.loading.set(false);
+        this.error.set('Offre introuvable');
+      }
+    });
 
     if (this.role() === 'CANDIDAT') {
       this.loadCandidatAssets();
@@ -60,10 +64,30 @@ export class OffreDetailComponent implements OnInit {
       next: (offre) => {
         this.offre.set(offre);
         this.loading.set(false);
+        this.loadSimilarOffres(offre);
       },
       error: () => {
         this.loading.set(false);
         this.error.set('Erreur lors du chargement de l\'offre');
+      }
+    });
+  }
+
+  loadSimilarOffres(offre: Offre): void {
+    const searchKeyword = (offre.competences || '').split(',')[0]?.trim() || offre.titre.split(' ')[0];
+    this.offresService.list({ page: 1, pageSize: 4, q: searchKeyword }).subscribe({
+      next: (res) => {
+        let filtered = (res.items || []).filter(item => item.idOffre !== offre.idOffre);
+        if (filtered.length === 0) {
+          // Fetch latest jobs as fallback
+          this.offresService.list({ page: 1, pageSize: 4 }).subscribe({
+            next: (fallbackRes) => {
+              this.similarOffres.set((fallbackRes.items || []).filter(item => item.idOffre !== offre.idOffre).slice(0, 3));
+            }
+          });
+        } else {
+          this.similarOffres.set(filtered.slice(0, 3));
+        }
       }
     });
   }

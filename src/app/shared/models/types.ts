@@ -16,11 +16,14 @@ export interface AuthRegisterRequest {
   dateNaissance?: string;
   niveauEtude?: string;
   experience?: number;
+  competences?: string[];
+  langues?: string[];
   nomEntreprise?: string;
   adresseEntreprise?: string;
   secteurActivite?: string;
   description?: string;
   logo?: string;
+  experienceDescription?: string;
 }
 
 export interface AuthResponse {
@@ -90,6 +93,14 @@ export interface Candidature {
   datePublication?: string;
   cvNomFichier?: string | null;
   lettreContenu?: string | null;
+  logo?: string;
+  createdAt?: string;
+  experienceDescription?: string;
+  competences?: string[];
+  langues?: string[];
+  adresse?: string;
+  niveauEtude?: string;
+  experience?: number;
 }
 
 export interface Cv {
@@ -116,6 +127,9 @@ export interface CandidatProfile {
   experience: number;
   cvs: Cv[];
   lettres: LettreMotivation[];
+  competences: string[];
+  langues: string[];
+  experienceDescription?: string;
 }
 
 export interface EntrepriseProfile {

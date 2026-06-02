@@ -22,7 +22,7 @@ export class OffreFormComponent implements OnInit {
     typeContrat: ['', [Validators.required]],
     salaire: [0, [Validators.required, Validators.min(0)]],
     localisation: ['', [Validators.required]],
-    statut: ['OUVERTE', [Validators.required]],
+    statut: ['ACTIVE', [Validators.required]],
     competences: [''],
     experienceDemandee: [0, [Validators.min(0)]]
   });

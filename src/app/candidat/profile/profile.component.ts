@@ -20,7 +20,8 @@ export class ProfileComponent implements OnInit {
     adresse: ['', [Validators.required]],
     dateNaissance: ['', [Validators.required]],
     niveauEtude: ['', [Validators.required]],
-    experience: [0, [Validators.required, Validators.min(0)]]
+    experience: [0, [Validators.required, Validators.min(0)]],
+    experienceDescription: ['']
   });
 
   lettreForm = this.fb.nonNullable.group({
@@ -28,6 +29,16 @@ export class ProfileComponent implements OnInit {
   });
 
   constructor(private fb: FormBuilder, private candidatService: CandidatService) {}
+
+  get compCount(): number {
+    return this.profile()?.competences?.length || 0;
+  }
+  get cvCount(): number {
+    return this.profile()?.cvs?.length || 0;
+  }
+  get lettreCount(): number {
+    return this.profile()?.lettres?.length || 0;
+  }
 
   ngOnInit(): void {
     this.loadProfile();
@@ -42,7 +53,8 @@ export class ProfileComponent implements OnInit {
           adresse: profile.adresse,
           dateNaissance: profile.dateNaissance,
           niveauEtude: profile.niveauEtude,
-          experience: profile.experience
+          experience: profile.experience,
+          experienceDescription: profile.experienceDescription || ''
         });
         this.loading.set(false);
       },

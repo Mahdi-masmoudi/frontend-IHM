@@ -1,73 +1,298 @@
-<div class="row">
-  <div class="col-lg-6">
-    <div class="card">
-      <div class="card-body">
-        <h4 class="mb-3">Profil entreprise</h4>
-        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
-          <div class="form-floating mb-3">
-            <input class="form-control" id="nomEntreprise" formControlName="nomEntreprise" />
-            <label for="nomEntreprise">Nom entreprise</label>
-          </div>
-          <div class="form-floating mb-3">
-            <input class="form-control" id="adresseEntreprise" formControlName="adresseEntreprise" />
-            <label for="adresseEntreprise">Adresse entreprise</label>
-          </div>
-          <div class="form-floating mb-3">
-            <input class="form-control" id="secteurActivite" formControlName="secteurActivite" />
-            <label for="secteurActivite">Secteur d'activite</label>
-          </div>
-          <div class="form-floating mb-3">
-            <textarea class="form-control" id="description" formControlName="description" style="height: 120px"></textarea>
-            <label for="description">Description</label>
-          </div>
-          <div class="form-floating mb-3">
-            <input class="form-control" id="logo" formControlName="logo" />
-            <label for="logo">Logo (URL)</label>
-          </div>
-          <button class="btn btn-primary" type="submit">Mettre a jour</button>
-        </form>
+<!-- Skeleton Loading -->
+<div class="dashboard-skeleton" *ngIf="loading()">
+  <div class="skeleton-header"></div>
+  <div class="skeleton-row">
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+  </div>
+  <div class="skeleton-large"></div>
+</div>
+
+<!-- Dashboard Content -->
+<div class="dashboard-wrapper" *ngIf="!loading() && stats()">
+  <!-- Welcome Banner -->
+  <div class="welcome-hero-banner recruiter-banner">
+    <div class="hero-content">
+      <h1>Bonjour, {{ profile()?.nomEntreprise }} 🏢</h1>
+      <p>Gérez vos offres d'emploi, suivez les candidatures de vos talents, et trouvez les profils parfaits en Tunisie.</p>
+      <div class="visibilité-score-pill">
+        <i class="ti ti-building"></i> Complétion Profil : <strong>{{ stats()!.profileCompletion }}%</strong>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <div class="d-flex gap-2">
+        <a routerLink="/offres/nouveau" class="hero-btn-primary">
+          <i class="ti ti-plus"></i> Créer une offre
+        </a>
+        <a routerLink="/entreprise/candidatures" class="hero-btn-secondary">
+          <i class="ti ti-users"></i> Candidatures
+        </a>
+      </div>
+    </div>
+    <div class="hero-bg-accent"></div>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="stats-counter-grid">
+    <div class="counter-card card-blue">
+      <div class="card-icon"><i class="ti ti-briefcase"></i></div>
+      <div class="card-info">
+        <h3>{{ stats()!.totalOffres }}</h3>
+        <p>Offres totales</p>
+      </div>
+    </div>
+    <div class="counter-card card-green">
+      <div class="card-icon"><i class="ti ti-discount-check"></i></div>
+      <div class="card-info">
+        <h3>{{ stats()!.offresActives }}</h3>
+        <p>Offres actives</p>
+      </div>
+    </div>
+    <div class="counter-card card-amber">
+      <div class="card-icon"><i class="ti ti-users"></i></div>
+      <div class="card-info">
+        <h3>{{ stats()!.totalCandidatures }}</h3>
+        <p>Candidatures reçues</p>
+      </div>
+    </div>
+    <div class="counter-card card-red">
+      <div class="card-icon"><i class="ti ti-clock"></i></div>
+      <div class="card-info">
+        <h3>{{ stats()!.enAttente }}</h3>
+        <p>En attente d'évaluation</p>
       </div>
     </div>
   </div>
 
-  <div class="col-lg-6">
-    <div class="card">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h4 class="mb-0">Offres recentes</h4>
-          <div class="d-flex gap-2">
-            <a class="btn btn-outline-primary" [routerLink]="['/offres/nouveau']">Nouvelle offre</a>
-            <a class="btn btn-primary" [routerLink]="['/entreprise/candidatures']">Candidatures</a>
+  <div class="main-dashboard-grid">
+    <!-- LEFT PANEL: Score and Badges -->
+    <div class="dashboard-side-panel">
+      <!-- Profile Completion & Gamification Level -->
+      <div class="premium-card completion-card">
+        <div class="card-header-clean">
+          <h3>Statut Recruteur</h3>
+        </div>
+        <div class="card-body-centered">
+          <!-- Circular Progress Meter -->
+          <div class="progress-ring-container">
+            <svg class="progress-ring" viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="50"></circle>
+              <circle class="ring-fg" cx="60" cy="60" r="50"
+                [attr.stroke-dasharray]="314.15"
+                [attr.stroke-dashoffset]="314.15 - (314.15 * stats()!.profileCompletion / 100)"></circle>
+            </svg>
+            <div class="progress-text">
+              <span class="pct">{{ stats()!.profileCompletion }}%</span>
+              <span class="lbl">Complété</span>
+            </div>
+          </div>
+
+          <!-- Gamified Level Badge -->
+          <div class="level-badge-container">
+            <div class="level-label">Statut Recruteur :</div>
+            <div class="level-badge" [class]="getNiveauBadgeClass(stats()!.niveau)">
+              <i class="ti ti-trophy"></i> {{ stats()!.niveau }}
+            </div>
+          </div>
+
+          <!-- Visibility Statement -->
+          <div class="visibility-booster-banner">
+            <p *ngIf="stats()!.profileCompletion < 50">
+              <i class="ti ti-alert-triangle"></i> Complétez votre profil à +50% pour donner plus de confiance aux candidats !
+            </p>
+            <p *ngIf="stats()!.profileCompletion >= 50 && stats()!.profileCompletion < 90" class="good">
+              <i class="ti ti-discount-check"></i> Votre profil entreprise est attractif ! Ajoutez le logo pour +15%.
+            </p>
+            <p *ngIf="stats()!.profileCompletion >= 90" class="expert">
+              <i class="ti ti-sparkles"></i> <strong>Recruteur Superstar !</strong> Votre marque entreprise est extrêmement attractive.
+            </p>
           </div>
         </div>
-        <div class="table-responsive">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Titre</th>
-                <th>Statut</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let offre of offres()">
-                <td>{{ offre.titre }}</td>
-                <td>{{ offre.statut }}</td>
-                <td class="text-end">
-                  <a class="btn btn-sm btn-outline-secondary" [routerLink]="['/offres', offre.idOffre, 'edit']">Editer</a>
-                  <a class="btn btn-sm btn-outline-primary ms-2" [routerLink]="['/candidatures/offre', offre.idOffre]">Candidatures</a>
-                </td>
-              </tr>
-              <tr *ngIf="offres().length === 0">
-                <td colspan="3" class="text-center text-muted">Aucune offre</td>
-              </tr>
-            </tbody>
-          </table>
+      </div>
+
+      <!-- Quick branding instructions -->
+      <div class="premium-card badges-card">
+        <div class="card-header-clean">
+          <h3>Logo de l'Entreprise</h3>
+        </div>
+        <div class="card-body text-center">
+          <div class="logo-preview-box-dashboard" *ngIf="profile() && profile()!.logo">
+            <img [src]="profile()!.logo" alt="Logo" class="dashboard-logo-img" />
+          </div>
+          <div class="logo-preview-box-dashboard empty" *ngIf="!profile() || !profile()!.logo">
+            <i class="ti ti-photo"></i>
+          </div>
+          <p class="logo-desc-text mt-3">Un logo permet à votre entreprise de se démarquer dans la liste des offres.</p>
+          <div class="logo-upload-btn-wrapper">
+            <span class="btn-primary-sm-pill pointer">Changer le logo</span>
+            <input type="file" accept="image/*" class="hidden-logo-input" (change)="onLogoSelected($event)" />
+          </div>
         </div>
       </div>
+
+      <!-- Advertising Recruiter Promo Banner -->
+      <div class="premium-promo-ad-card" style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #1e293b 100%);">
+        <div class="ad-badge" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); color: #10b981;">Recruteur</div>
+        <div class="ad-content">
+          <h4>Recruter Plus Vite <i class="ti ti-bolt"></i></h4>
+          <p>Boostez la visibilité de vos offres d'emploi pour toucher 100% de profils tunisiens qualifiés.</p>
+          <a href="#" class="ad-btn" style="background: #10b981; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); color: #ffffff;">Booster <i class="ti ti-arrow-right"></i></a>
+        </div>
+        <div class="ad-pattern"></div>
+      </div>
+
     </div>
-    <div class="alert alert-danger mt-3" *ngIf="error()">
-      {{ error() }}
+
+    <!-- RIGHT PANEL: Onboarding and Actions -->
+    <div class="dashboard-main-panel">
+      <!-- 1. Recruiter Onboarding Widget -->
+      <div class="premium-card onboarding-widget-card" *ngIf="stats()!.suggestions.length > 0">
+        <div class="card-header-clean gradient-subtle">
+          <div class="header-text">
+            <h3><i class="ti ti-sparkles"></i> Objectif : Compléter la marque employeur</h3>
+            <p>Donnez envie aux meilleurs talents tunisiens de vous rejoindre en complétant ces détails.</p>
+          </div>
+          <span class="widget-step-indicator">{{ stats()!.suggestions.length }} étapes manquantes</span>
+        </div>
+
+        <div class="card-body">
+          <div class="onboarding-wizard">
+            <div class="onboarding-steps-list">
+              <button class="step-select-btn" 
+                *ngFor="let s of stats()!.suggestions"
+                [class.active]="activeOnboardingField() === s.field"
+                (click)="setActiveField(s.field)">
+                <span class="points">+{{ s.points }}%</span>
+                <span class="msg">{{ s.message }}</span>
+                <i class="ti ti-chevron-right"></i>
+              </button>
+            </div>
+
+            <!-- Active Form Content -->
+            <div class="onboarding-form-area" [formGroup]="onboardingForm">
+              <!-- ADRESSE ENTREPRISE -->
+              <div class="wizard-form-step" *ngIf="activeOnboardingField() === 'adresseEntreprise'">
+                <h4>Adresse de l'entreprise</h4>
+                <p class="step-desc">Indiquez la ville ou l'adresse du siège social (ex: Avenue Habib Bourguiba, Tunis).</p>
+                <div class="inline-input-group">
+                  <div class="input-wrapper">
+                    <i class="ti ti-map-pin input-icon"></i>
+                    <input type="text" placeholder="Ex: Lac I, Tunis" formControlName="adresseEntreprise" />
+                  </div>
+                  <button class="btn-save-inline" (click)="saveOnboardingField('adresseEntreprise')" [disabled]="onboardingLoading()">
+                    <span *ngIf="!onboardingLoading()">Enregistrer <i class="ti ti-check"></i></span>
+                    <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- SECTEUR ACTIVITE -->
+              <div class="wizard-form-step" *ngIf="activeOnboardingField() === 'secteurActivite'">
+                <h4>Secteur d'activité</h4>
+                <p class="step-desc">Permet aux candidats de filtrer vos offres par secteur.</p>
+                <div class="inline-input-group">
+                  <div class="input-wrapper">
+                    <i class="ti ti-category input-icon"></i>
+                    <select formControlName="secteurActivite">
+                      <option value="">Sélectionner</option>
+                      <option *ngFor="let opt of secteurOptions" [value]="opt">{{ opt }}</option>
+                    </select>
+                  </div>
+                  <button class="btn-save-inline" (click)="saveOnboardingField('secteurActivite')" [disabled]="onboardingLoading()">
+                    <span *ngIf="!onboardingLoading()">Enregistrer <i class="ti ti-check"></i></span>
+                    <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- DESCRIPTION -->
+              <div class="wizard-form-step" *ngIf="activeOnboardingField() === 'description'">
+                <h4>Description de l'entreprise (min 100 caractères)</h4>
+                <p class="step-desc">Rédigez une présentation attractive de votre entreprise, votre culture et vos valeurs.</p>
+                <textarea class="form-textarea-dashboard" rows="4" placeholder="Présentez votre entreprise en 100 caractères minimum..." formControlName="description"></textarea>
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                  <span class="char-counter" [class.valid]="onboardingForm.value.description!.length >= 100">
+                    Caractères : {{ onboardingForm.value.description?.length || 0 }} / 100
+                  </span>
+                  <button class="btn-save-inline" (click)="saveOnboardingField('description')" [disabled]="onboardingLoading() || onboardingForm.value.description!.length < 100">
+                    <span *ngIf="!onboardingLoading()">Enregistrer <i class="ti ti-check"></i></span>
+                    <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- LOGO -->
+              <div class="wizard-form-step" *ngIf="activeOnboardingField() === 'logo'">
+                <h4>Télécharger le logo de votre entreprise</h4>
+                <p class="step-desc">Ajoutez le logo de l'entreprise dans le volet latéral gauche pour compléter cette action.</p>
+                <div class="logo-reminder-box">
+                  <i class="ti ti-photo-up"></i>
+                  <p>Utilisez le bouton "Changer le logo" sous l'aperçu à gauche.</p>
+                </div>
+              </div>
+
+              <!-- Success Overlay inside widget -->
+              <div class="onboarding-success-overlay" *ngIf="onboardingSuccess()">
+                <div class="success-icon"><i class="ti ti-circle-check"></i></div>
+                <p>{{ onboardingSuccess() }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Job Offers -->
+      <div class="premium-card recent-candidatures-card">
+        <div class="card-header-clean has-action">
+          <h3><i class="ti ti-list-details"></i> Nos Offres Récentes</h3>
+          <a routerLink="/offres" class="see-all-link">Voir toutes les offres</a>
+        </div>
+
+        <div class="card-body">
+          <div class="table-responsive" *ngIf="offres().length > 0">
+            <table class="table table-hover align-middle custom-dashboard-table">
+              <thead>
+                <tr>
+                  <th>Titre de l'offre</th>
+                  <th>Statut</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let offre of offres()">
+                  <td class="offre-title-cell">
+                    <strong>{{ offre.titre }}</strong>
+                    <span class="d-block text-muted small">{{ offre.typeContrat }} · {{ offre.localisation }}</span>
+                  </td>
+                  <td>
+                    <span class="custom-status-badge" [class.badge-active]="offre.statut === 'ACTIVE'">
+                      {{ offre.statut === 'ACTIVE' ? 'Active' : 'Brouillon' }}
+                    </span>
+                  </td>
+                  <td class="text-end">
+                    <div class="btn-group-custom">
+                      <a class="btn-table btn-table-secondary" [routerLink]="['/offres', offre.idOffre, 'edit']">
+                        <i class="ti ti-edit"></i> Éditer
+                      </a>
+                      <a class="btn-table btn-table-primary" [routerLink]="['/candidatures/offre', offre.idOffre]">
+                        <i class="ti ti-users"></i> Candidats
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="empty-state-dashboard" *ngIf="offres().length === 0">
+            <div class="empty-icon"><i class="ti ti-briefcase"></i></div>
+            <h4>Aucune offre d'emploi publiée</h4>
+            <p>Commencez à recruter les meilleurs profils en publiant votre première opportunité.</p>
+            <a routerLink="/offres/nouveau" class="btn-primary-sm-pill">Publier une offre</a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

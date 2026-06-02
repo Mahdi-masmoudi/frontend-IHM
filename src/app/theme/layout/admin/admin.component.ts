@@ -62,7 +62,10 @@ export class AdminComponent {
   loadProfile(): void {
     this.authService.getProfile().subscribe({
       next: (profile) => this.userProfile.set(profile),
-      error: () => {}
+      error: () => {
+        // Don't logout here — it causes an infinite loop.
+        // The auth guard already protects routes.
+      }
     });
   }
 

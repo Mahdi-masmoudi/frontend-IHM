@@ -1,168 +1,278 @@
-<!-- Filter Section -->
-<div class="filter-card">
-  <div class="card-body" style="padding: 20px;">
-    <div class="filter-header">
-      <div>
-        <h4>Trouver une offre</h4>
-        <p>Recherche intelligente avec filtres avancés</p>
+<div class="offres-page">
+  <!-- ── En-tête de page ── -->
+  <div class="page-header-section">
+    <div class="header-content">
+      <h1>Offres d'emploi</h1>
+      <p class="header-subtitle">Découvrez les meilleures opportunités professionnelles</p>
+      <div class="breadcrumb" aria-label="fil d'Ariane">
+        <a routerLink="/home">Accueil</a>
+        <span class="separator" aria-hidden="true">›</span>
+        <span class="current" aria-current="page">Offres d'emploi</span>
       </div>
-      <button class="btn-reset" type="button" (click)="resetFilters()">
-        <i class="ti ti-refresh"></i> Réinitialiser
-      </button>
     </div>
-    <form [formGroup]="filterForm" (ngSubmit)="load(1)">
-      <div class="filter-grid">
-        <input class="filter-input" placeholder="🔍 Titre, description, compétences..." formControlName="q" />
-        <input class="filter-input" placeholder="📍 Localisation" formControlName="localisation" />
-        <input class="filter-input" placeholder="🏢 Entreprise" formControlName="entreprise" />
-        <select class="filter-input" formControlName="typeContrat">
-          <option value="">Tous les contrats</option>
-          <option value="CDI">CDI</option>
-          <option value="CDD">CDD</option>
-          <option value="Stage">Stage</option>
-          <option value="Freelance">Freelance</option>
-        </select>
-      </div>
-      <div class="filter-row2">
-        <input type="number" class="filter-input" placeholder="Salaire min" formControlName="salaireMin" />
-        <input type="number" class="filter-input" placeholder="Salaire max" formControlName="salaireMax" />
-        <select class="filter-input" formControlName="sortBy">
-          <option value="datePublication">Tri: Date</option>
-          <option value="salaire">Tri: Salaire</option>
-        </select>
-        <select class="filter-input" formControlName="sortDirection">
-          <option value="desc">Descendant</option>
-          <option value="asc">Ascendant</option>
-        </select>
-        <select class="filter-input" formControlName="statut">
-          <option value="">Tous statuts</option>
-          <option value="ACTIVE">Active</option>
-          <option value="FERMEE">Fermée</option>
-        </select>
-        <button class="btn-search" type="submit">
-          <i class="ti ti-search"></i> Rechercher
-        </button>
-      </div>
-    </form>
+  </div>
+
+  <!-- ── Conteneur principal ── -->
+  <div class="jobs-layout-container">
+    <!-- Alerte erreur -->
+    <div class="alert-error" *ngIf="error()" role="alert">
+      <i class="ti ti-alert-circle" aria-hidden="true"></i>
+      <span>{{ error() }}</span>
+    </div>
+
+    <div class="jobs-layout">
+      <!-- ── Sidebar Filtres ── -->
+      <aside class="filters-sidebar" aria-label="Filtres de recherche">
+        <div class="filter-card">
+          <div class="filter-header">
+            <h2>Filtres</h2>
+            <button class="btn-reset" type="button" (click)="resetFilters()"
+              aria-label="Réinitialiser tous les filtres">
+              <i class="ti ti-refresh" aria-hidden="true"></i> Effacer
+            </button>
+          </div>
+
+          <form [formGroup]="filterForm" (ngSubmit)="load(1)" aria-label="Formulaire de filtres">
+            <div class="filter-group">
+              <label for="filter-q">Mots-clés</label>
+              <div class="input-wrapper">
+                <i class="ti ti-search input-icon" aria-hidden="true"></i>
+                <input id="filter-q" type="text" formControlName="q" placeholder="Titre, entreprise, compétences...">
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <label for="filter-loc">Localisation</label>
+              <div class="input-wrapper">
+                <i class="ti ti-map-pin input-icon" aria-hidden="true"></i>
+                <input id="filter-loc" type="text" formControlName="localisation" placeholder="Ville, région...">
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <label for="filter-type">Type de contrat</label>
+              <div class="input-wrapper select-wrapper">
+                <i class="ti ti-briefcase input-icon" aria-hidden="true"></i>
+                <select id="filter-type" formControlName="typeContrat">
+                  <option value="">Tous les contrats</option>
+                  <option value="CDI">CDI</option>
+                  <option value="CDD">CDD</option>
+                  <option value="Stage">Stage</option>
+                  <option value="Freelance">Freelance</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <label for="filter-entreprise">Entreprise</label>
+              <div class="input-wrapper">
+                <i class="ti ti-building input-icon" aria-hidden="true"></i>
+                <input id="filter-entreprise" type="text" formControlName="entreprise"
+                  placeholder="Nom d'entreprise...">
+              </div>
+            </div>
+
+            <div class="filter-group-row">
+              <div class="filter-group">
+                <label for="filter-sal-min">Salaire min</label>
+                <input id="filter-sal-min" type="number" formControlName="salaireMin" placeholder="DT">
+              </div>
+              <div class="filter-group">
+                <label for="filter-sal-max">Salaire max</label>
+                <input id="filter-sal-max" type="number" formControlName="salaireMax" placeholder="DT">
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <label for="filter-sort">Trier par</label>
+              <div class="input-wrapper select-wrapper">
+                <i class="ti ti-arrows-sort input-icon" aria-hidden="true"></i>
+                <select id="filter-sort" formControlName="sortBy">
+                  <option value="datePublication">Date de publication</option>
+                  <option value="salaire">Salaire</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <label for="filter-dir">Ordre</label>
+              <div class="input-wrapper select-wrapper">
+                <i class="ti ti-sort-ascending input-icon" aria-hidden="true"></i>
+                <select id="filter-dir" formControlName="sortDirection">
+                  <option value="desc">Plus récent d'abord</option>
+                  <option value="asc">Plus ancien d'abord</option>
+                </select>
+              </div>
+            </div>
+
+            <button class="btn-filter-submit" type="submit">
+              <i class="ti ti-search" aria-hidden="true"></i> Rechercher
+            </button>
+          </form>
+        </div>
+
+        <!-- Premium Advertising Banner -->
+        <div class="premium-promo-ad-card mt-4" style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #1e293b 100%); margin-left: 0; width: 100%;">
+          <div class="ad-badge" style="background: rgba(99, 102, 241, 0.15); border-color: rgba(99, 102, 241, 0.3); color: #818cf8;">RecruteIHM AI</div>
+          <div class="ad-content">
+            <h4>CV Analysé par IA 🚀</h4>
+            <p>Notre algorithme analyse votre profil et recommande vos compétences clés en priorité aux recruteurs tunisiens.</p>
+            <a routerLink="/candidat/profile" class="ad-btn text-decoration-none" style="background: #6366f1; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); color: #ffffff; display: inline-flex; align-items: center; gap: 6px; font-weight: 700; width: fit-content;">Optimiser mon profil <i class="ti ti-arrow-right"></i></a>
+          </div>
+          <div class="ad-pattern"></div>
+        </div>
+      </aside>
+
+      <!-- ── Liste des offres ── -->
+      <main class="jobs-list-main" aria-label="Résultats des offres d'emploi">
+        <div class="results-meta">
+          <h2>
+            <span class="count-highlight">{{ total() }}</span>
+            offre{{ total() > 1 ? 's' : '' }} trouvée{{ total() > 1 ? 's' : '' }}
+          </h2>
+        </div>
+
+        <!-- Squelettes de chargement -->
+        <div class="skeleton-list" *ngIf="loading()" aria-busy="true" aria-label="Chargement des offres">
+          <div class="sk-horizontal-card" *ngFor="let i of [1,2,3,4]">
+            <div class="sk-logo"></div>
+            <div class="sk-body">
+              <div class="sk-line w-50"></div>
+              <div class="sk-line w-75"></div>
+              <div class="sk-line w-25"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cartes d'offres -->
+        <div class="jobs-list" *ngIf="!loading()">
+          <article class="job-item-card" *ngFor="let offre of offres(); let i = index"
+            [style.animation-delay]="(i * 60) + 'ms'">
+            <div class="card-logo-area">
+              <div class="logo-box" [attr.aria-label]="'Logo ' + (offre.nomEntreprise || 'Entreprise')">
+                {{ (offre.nomEntreprise || 'E').charAt(0) | uppercase }}
+              </div>
+            </div>
+
+            <div class="card-details-area">
+              <div class="title-row">
+                <h3 class="job-title">{{ offre.titre }}</h3>
+                <span class="badge-type" [attr.aria-label]="'Type de contrat: ' + offre.typeContrat">{{
+                  offre.typeContrat }}</span>
+              </div>
+
+              <p class="company-name">{{ offre.nomEntreprise || 'Entreprise' }}</p>
+
+              <div class="meta-row">
+                <span><i class="ti ti-map-pin" aria-hidden="true"></i> {{ offre.localisation }}</span>
+                <span><i class="ti ti-currency-dollar" aria-hidden="true"></i> {{ offre.salaire | number }} DT</span>
+                <span><i class="ti ti-calendar" aria-hidden="true"></i> Il y a {{ getDaysAgo(offre.datePublication)
+                  }}</span>
+              </div>
+
+              <div class="skills-row" *ngIf="offre.competences">
+                <span class="skill-badge" *ngFor="let s of (offre.competences || '').split(',').slice(0, 4)">
+                  {{ s.trim() }}
+                </span>
+                <span class="skill-badge more" *ngIf="(offre.competences || '').split(',').length > 4">
+                  +{{ (offre.competences || '').split(',').length - 4 }}
+                </span>
+              </div>
+            </div>
+
+            <div class="card-actions-area">
+              <a class="btn-view" [routerLink]="['/offres', offre.idOffre]"
+                aria-label="Voir les détails de l'offre {{ offre.titre }}">
+                <i class="ti ti-eye" aria-hidden="true"></i> Détails
+              </a>
+              <button class="btn-apply-now" *ngIf="role() === 'CANDIDAT'" (click)="openApply(offre)"
+                aria-label="Postuler à {{ offre.titre }}">
+                <i class="ti ti-send" aria-hidden="true"></i> Postuler
+              </button>
+              <a class="btn-apply-now" *ngIf="!role()" routerLink="/login" aria-label="Se connecter pour postuler">
+                <i class="ti ti-login" aria-hidden="true"></i> Connexion
+              </a>
+            </div>
+          </article>
+        </div>
+
+        <!-- État vide -->
+        <div class="empty-state-card" *ngIf="!loading() && offres().length === 0" role="status">
+          <div class="empty-icon-wrapper">
+            <i class="ti ti-briefcase-off icon" aria-hidden="true"></i>
+          </div>
+          <h3>Aucune offre trouvée</h3>
+          <p>Essayez de modifier vos critères de recherche pour trouver plus d'offres.</p>
+          <button class="btn-reset-large" (click)="resetFilters()">
+            <i class="ti ti-refresh" aria-hidden="true"></i> Réinitialiser les filtres
+          </button>
+        </div>
+
+        <!-- Pagination -->
+        <nav class="pagination-area" *ngIf="totalPages() > 1" aria-label="Pagination des offres">
+          <button class="btn-nav" (click)="prevPage()" [disabled]="page() <= 1" aria-label="Page précédente">
+            <i class="ti ti-chevron-left" aria-hidden="true"></i> Précédent
+          </button>
+          <span class="page-indicator" aria-live="polite">Page {{ page() }} sur {{ totalPages() }}</span>
+          <button class="btn-nav" (click)="nextPage()" [disabled]="page() >= totalPages()" aria-label="Page suivante">
+            Suivant <i class="ti ti-chevron-right" aria-hidden="true"></i>
+          </button>
+        </nav>
+      </main>
+    </div>
   </div>
 </div>
 
-<!-- Results -->
-<div class="results-header">
-  <h4>Offres disponibles</h4>
-  <div class="total">{{ total() }} résultat{{ total() > 1 ? 's' : '' }}</div>
-</div>
-
-<!-- Loading Skeleton -->
-<div class="offres-grid" *ngIf="loading()">
-  <div class="skeleton-card"></div>
-  <div class="skeleton-card"></div>
-  <div class="skeleton-card"></div>
-</div>
-
-<!-- Offres Grid -->
-<div class="offres-grid" *ngIf="!loading()">
-  <div class="offre-card" *ngFor="let offre of offres()">
-    <div class="offre-header">
-      <div>
-        <div class="offre-title">{{ offre.titre }}</div>
-        <div class="offre-company">{{ offre.nomEntreprise || 'Entreprise' }}</div>
-      </div>
-      <span class="contract-badge">{{ offre.typeContrat }}</span>
-    </div>
-
-    <div class="offre-meta">
-      <span><i class="ti ti-map-pin"></i> {{ offre.localisation }}</span>
-      <span><i class="ti ti-currency-dollar"></i> {{ offre.salaire | number }} MAD</span>
-      <span><i class="ti ti-calendar"></i> {{ offre.datePublication | date:'dd/MM/yyyy' }}</span>
-    </div>
-
-    <div class="offre-description">{{ offre.description }}</div>
-
-    <div class="offre-competences" *ngIf="offre.competences">
-      <span class="comp-tag" *ngFor="let c of (offre.competences || '').split(',').slice(0, 4)">{{ c.trim() }}</span>
-    </div>
-
-    <div class="offre-footer">
-      <a class="btn-detail" [routerLink]="['/offres', offre.idOffre]">
-        Voir détails <i class="ti ti-arrow-right"></i>
-      </a>
-      <button class="btn-apply" *ngIf="role() === 'CANDIDAT'" (click)="openApply(offre)">
-        <i class="ti ti-send"></i> Postuler
-      </button>
-      <a class="btn-apply" *ngIf="!role()" routerLink="/login" style="text-decoration: none;">
-        <i class="ti ti-login"></i> Se connecter pour postuler
-      </a>
-    </div>
-  </div>
-</div>
-
-<!-- Empty State -->
-<div class="empty-card" *ngIf="!loading() && offres().length === 0">
-  <div class="empty-icon"><i class="ti ti-search-off"></i></div>
-  <h4>Aucune offre trouvée</h4>
-  <p>Essayez de modifier vos critères de recherche</p>
-</div>
-
-<!-- Pagination -->
-<div class="pagination" *ngIf="totalPages() > 1">
-  <button class="btn-page" (click)="prevPage()" [disabled]="page() <= 1">
-    <i class="ti ti-chevron-left"></i> Précédent
-  </button>
-  <span class="page-info">Page {{ page() }} / {{ totalPages() }}</span>
-  <button class="btn-page" (click)="nextPage()" [disabled]="page() >= totalPages()">
-    Suivant <i class="ti ti-chevron-right"></i>
-  </button>
-</div>
-
-<!-- Error -->
-<div class="error-alert" *ngIf="error()">
-  <i class="ti ti-alert-triangle"></i> {{ error() }}
-</div>
-
-<!-- Apply Modal -->
-<div class="modal-backdrop" *ngIf="showApplyModal()">
-  <div class="modal-panel">
+<!-- ── Modal Candidature ── -->
+<div class="modal-backdrop" *ngIf="showApplyModal()" (click)="closeApply()" role="dialog" aria-modal="true"
+  aria-labelledby="modal-title">
+  <div class="modal-panel" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <div>
-        <h5>Postuler</h5>
-        <div class="modal-subtitle">{{ selectedOffre()?.titre }}</div>
+        <h2 id="modal-title">Postuler à cette offre</h2>
+        <p class="modal-subtitle">{{ selectedOffre()?.titre }}</p>
       </div>
-      <button class="btn-close-modal" type="button" (click)="closeApply()">Fermer</button>
+      <button class="btn-close" (click)="closeApply()" aria-label="Fermer la fenêtre">&times;</button>
     </div>
+
     <form [formGroup]="applyForm" (ngSubmit)="submitApply()">
-      <div class="modal-form-group">
-        <label>CV</label>
-        <select class="filter-input" formControlName="cvId" [attr.disabled]="cvs().length === 0 ? '' : null">
+      <div class="form-group">
+        <label for="apply-cv">Votre CV</label>
+        <select id="apply-cv" formControlName="cvId" [disabled]="cvs().length === 0">
           <option [ngValue]="''">Sélectionner un CV</option>
           <option *ngFor="let cv of cvs()" [ngValue]="cv.idCV">{{ cv.nomFichier }}</option>
         </select>
-        <div class="hint" *ngIf="cvs().length === 0">
-          <i class="ti ti-info-circle"></i> Ajoutez un CV depuis votre profil
-        </div>
+        <p class="error-hint" *ngIf="cvs().length === 0">
+          <i class="ti ti-info-circle" aria-hidden="true"></i>
+          Veuillez d'abord ajouter un CV dans votre profil.
+        </p>
       </div>
-      <div class="modal-form-group">
-        <label>Lettre de motivation</label>
-        <select class="filter-input" formControlName="lettreId" [attr.disabled]="lettres().length === 0 ? '' : null">
+
+      <div class="form-group">
+        <label for="apply-lettre">Lettre de motivation</label>
+        <select id="apply-lettre" formControlName="lettreId" [disabled]="lettres().length === 0">
           <option [ngValue]="''">Sélectionner une lettre</option>
           <option *ngFor="let lettre of lettres()" [ngValue]="lettre.idLettre">
-            {{ lettre.dateAjout | date:'short' }}
+            {{ lettre.dateAjout | date:'mediumDate' }}
           </option>
         </select>
-        <div class="hint" *ngIf="lettres().length === 0">
-          <i class="ti ti-info-circle"></i> Ajoutez une lettre depuis votre profil
-        </div>
+        <p class="error-hint" *ngIf="lettres().length === 0">
+          <i class="ti ti-info-circle" aria-hidden="true"></i>
+          Veuillez d'abord ajouter une lettre de motivation dans votre profil.
+        </p>
       </div>
-      <div class="modal-form-group">
-        <label>Commentaire (optionnel)</label>
-        <textarea class="filter-input" rows="3" formControlName="commentaire"
-          placeholder="Pourquoi souhaitez-vous postuler ?"></textarea>
+
+      <div class="form-group">
+        <label for="apply-msg">Message (optionnel)</label>
+        <textarea id="apply-msg" formControlName="commentaire" rows="3"
+          placeholder="Expliquez pourquoi vous êtes le candidat idéal..."></textarea>
       </div>
-      <div class="modal-footer">
-        <button class="btn-reset" type="button" (click)="closeApply()">Annuler</button>
-        <button class="btn-apply" type="submit"
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" (click)="closeApply()">Annuler</button>
+        <button type="submit" class="btn-submit"
           [disabled]="applyForm.invalid || cvs().length === 0 || lettres().length === 0">
-          <i class="ti ti-send"></i> Envoyer ma candidature
+          <i class="ti ti-send" aria-hidden="true"></i> Envoyer ma candidature
         </button>
       </div>
     </form>

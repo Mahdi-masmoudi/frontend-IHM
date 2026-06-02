@@ -1,5 +1,6 @@
 <!-- Skeleton Loading -->
 <div class="dashboard-skeleton" *ngIf="loading()">
+  <div class="skeleton-header"></div>
   <div class="skeleton-row">
     <div class="skeleton-card"></div>
     <div class="skeleton-card"></div>
@@ -10,147 +11,442 @@
 </div>
 
 <!-- Dashboard Content -->
-<div class="dashboard" *ngIf="!loading() && stats()">
+<div class="dashboard-wrapper" *ngIf="!loading() && stats()">
   <!-- Welcome Banner -->
-  <div class="welcome-banner">
-    <div class="welcome-content">
-      <h1>Bonjour, {{ profile()?.prenom }} 👋</h1>
-      <p>Voici un aperçu de votre activité sur RecruteIHM</p>
+  <div class="welcome-hero-banner">
+    <div class="hero-content">
+      <h1>Marhaban, {{ profile()?.prenom }} 👋</h1>
+      <p>Propulsez votre carrière sur RecruteIHM. Complétez votre profil pour maximiser votre visibilité.</p>
+      <div class="visibilité-score-pill">
+        <i class="ti ti-eye"></i> Visibilité : <strong>{{ stats()!.profileCompletion }}%</strong>
+      </div>
     </div>
-    <a routerLink="/offres" class="welcome-cta">
-      <i class="ti ti-search"></i> Explorer les offres
-    </a>
+    <div class="hero-actions">
+      <a routerLink="/offres" class="hero-btn-primary">
+        <i class="ti ti-search"></i> Découvrir les offres
+      </a>
+    </div>
+    <div class="hero-bg-accent"></div>
   </div>
 
-  <!-- Stats Cards -->
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-icon blue"><i class="ti ti-file-text"></i></div>
-      <div class="stat-content">
-        <div class="stat-value">{{ stats()!.totalCandidatures }}</div>
-        <div class="stat-label">Candidatures</div>
+  <!-- Stats Grid -->
+  <div class="stats-counter-grid">
+    <div class="counter-card card-blue">
+      <div class="card-icon"><i class="ti ti-file-text"></i></div>
+      <div class="card-info">
+        <h3>{{ stats()!.totalCandidatures }}</h3>
+        <p>Candidatures postulées</p>
       </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-icon amber"><i class="ti ti-clock"></i></div>
-      <div class="stat-content">
-        <div class="stat-value">{{ stats()!.enAttente }}</div>
-        <div class="stat-label">En attente</div>
+    <div class="counter-card card-amber">
+      <div class="card-icon"><i class="ti ti-clock"></i></div>
+      <div class="card-info">
+        <h3>{{ stats()!.enAttente }}</h3>
+        <p>En attente de réponse</p>
       </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-icon green"><i class="ti ti-circle-check"></i></div>
-      <div class="stat-content">
-        <div class="stat-value">{{ stats()!.acceptees }}</div>
-        <div class="stat-label">Acceptées</div>
+    <div class="counter-card card-green">
+      <div class="card-icon"><i class="ti ti-circle-check"></i></div>
+      <div class="card-info">
+        <h3>{{ stats()!.acceptees }}</h3>
+        <p>Entretiens acceptés</p>
       </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-icon red"><i class="ti ti-circle-x"></i></div>
-      <div class="stat-content">
-        <div class="stat-value">{{ stats()!.rejetees }}</div>
-        <div class="stat-label">Rejetées</div>
+    <div class="counter-card card-red">
+      <div class="card-icon"><i class="ti ti-circle-x"></i></div>
+      <div class="card-info">
+        <h3>{{ stats()!.rejetees }}</h3>
+        <p>Candidatures refusées</p>
       </div>
     </div>
   </div>
 
-  <div class="dashboard-grid">
-    <!-- Profile Completion -->
-    <div class="card profile-completion-card">
-      <div class="card-header">
-        <h3><i class="ti ti-user-check"></i> Complétion du profil</h3>
-      </div>
-      <div class="card-body">
-        <div class="completion-circle">
-          <svg viewBox="0 0 120 120">
-            <circle cx="60" cy="60" r="52" fill="none" stroke="#f1f5f9" stroke-width="8" />
-            <circle cx="60" cy="60" r="52" fill="none" stroke="url(#gradient)" stroke-width="8"
-              stroke-linecap="round"
-              [attr.stroke-dasharray]="326.73"
-              [attr.stroke-dashoffset]="326.73 - (326.73 * stats()!.profileCompletion / 100)"
-              transform="rotate(-90 60 60)" />
-            <defs>
-              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#6366f1" />
-                <stop offset="100%" stop-color="#8b5cf6" />
-              </linearGradient>
-            </defs>
-          </svg>
-          <div class="completion-value">{{ stats()!.profileCompletion }}%</div>
+  <div class="main-dashboard-grid">
+    <!-- LEFT PANEL: Score and Badges -->
+    <div class="dashboard-side-panel">
+      <!-- Profile Completion & Gamification Level -->
+      <div class="premium-card completion-card">
+        <div class="card-header-clean">
+          <h3>Niveau de Profil</h3>
         </div>
+        <div class="card-body-centered">
+          <!-- Circular Progress Meter -->
+          <div class="progress-ring-container">
+            <svg class="progress-ring" viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="50"></circle>
+              <circle class="ring-fg" cx="60" cy="60" r="50"
+                [attr.stroke-dasharray]="314.15"
+                [attr.stroke-dashoffset]="314.15 - (314.15 * stats()!.profileCompletion / 100)"></circle>
+            </svg>
+            <div class="progress-text">
+              <span class="pct">{{ stats()!.profileCompletion }}%</span>
+              <span class="lbl">Complété</span>
+            </div>
+          </div>
 
-        <div class="suggestions" *ngIf="stats()!.suggestions.length > 0">
-          <div class="suggestion" *ngFor="let s of stats()!.suggestions">
-            <i class="ti ti-plus"></i>
-            <span>{{ s.message }}</span>
-            <span class="suggestion-points">+{{ s.points }}%</span>
+          <!-- Gamified Level Badge -->
+          <div class="level-badge-container">
+            <div class="level-label">Niveau Actuel :</div>
+            <div class="level-badge" [class]="getNiveauBadgeClass(stats()!.niveau)">
+              <i class="ti ti-trophy"></i> {{ stats()!.niveau }}
+            </div>
+          </div>
+
+          <!-- Quick Visibility Statement -->
+          <div class="visibility-booster-banner">
+            <p *ngIf="stats()!.profileCompletion < 50">
+              <i class="ti ti-alert-triangle"></i> Complétez votre profil à +50% pour apparaître dans la recherche des recruteurs !
+            </p>
+            <p *ngIf="stats()!.profileCompletion >= 50 && stats()!.profileCompletion < 90" class="good">
+              <i class="ti ti-discount-check"></i> Votre profil est visible ! Complétez le reste pour devenir <strong>Expert</strong>.
+            </p>
+            <p *ngIf="stats()!.profileCompletion >= 90" class="expert">
+              <i class="ti ti-sparkles"></i> <strong>Profil Superstar !</strong> Votre profil est boosté en haut de liste !
+            </p>
           </div>
         </div>
-
-        <div class="profile-complete" *ngIf="stats()!.profileCompletion >= 100">
-          <i class="ti ti-confetti"></i>
-          <span>Votre profil est complet !</span>
-        </div>
-
-        <a routerLink="/candidat/profile" class="btn-link">
-          <i class="ti ti-edit"></i> Modifier mon profil
-        </a>
       </div>
+
+      <!-- Gamification Badges Earned -->
+      <div class="premium-card badges-card">
+        <div class="card-header-clean">
+          <h3>Mes Badges</h3>
+        </div>
+        <div class="card-body">
+          <div class="badges-flex">
+            <div class="badge-item" [class.locked]="stats()!.profileCompletion < 20">
+              <div class="badge-icon"><i class="ti ti-id-badge"></i></div>
+              <span>Nouveau</span>
+            </div>
+            <div class="badge-item" [class.locked]="stats()!.totalCvs === 0">
+              <div class="badge-icon"><i class="ti ti-file-certificate"></i></div>
+              <span>CV Uploadé</span>
+            </div>
+            <div class="badge-item" [class.locked]="!candidatProfile() || !candidatProfile()!.telephone">
+              <div class="badge-icon"><i class="ti ti-phone-call"></i></div>
+              <span>Contactable</span>
+            </div>
+            <div class="badge-item" [class.locked]="!candidatProfile() || candidatProfile()!.competences.length < 3">
+              <div class="badge-icon"><i class="ti ti-code"></i></div>
+              <span>Compétent</span>
+            </div>
+            <div class="badge-item" [class.locked]="stats()!.profileCompletion < 95">
+              <div class="badge-icon"><i class="ti ti-crown"></i></div>
+              <span>Superstar</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Advertising Promo Banner -->
+      <div class="premium-promo-ad-card">
+        <div class="ad-badge">Partenaire</div>
+        <div class="ad-content">
+          <h4>Formations Offertes <i class="ti ti-gift"></i></h4>
+          <p>Accélérez votre carrière avec des certifications 100% financées par l'État tunisien.</p>
+          <a href="https://www.cnss.tn" target="_blank" class="ad-btn">Découvrir <i class="ti ti-arrow-right"></i></a>
+        </div>
+        <div class="ad-pattern"></div>
+      </div>
+
     </div>
 
-    <!-- Recent Candidatures -->
-    <div class="card recent-card">
-      <div class="card-header">
-        <h3><i class="ti ti-list-details"></i> Candidatures récentes</h3>
-        <a routerLink="/candidat/candidatures" class="see-all">Voir tout</a>
-      </div>
-      <div class="card-body">
-        <div class="candidature-list" *ngIf="stats()!.recentCandidatures.length > 0">
-          <div class="candidature-item" *ngFor="let c of stats()!.recentCandidatures">
-            <div class="candidature-icon" [style.background]="getStatusColor(c.statut) + '15'" [style.color]="getStatusColor(c.statut)">
-              <i class="ti" [class]="getStatusIcon(c.statut)"></i>
+    <!-- RIGHT PANEL: Onboarding and Actions -->
+    <div class="dashboard-main-panel">
+      <!-- 1. Interactive Onboarding Widget ("Compléter mon profil") -->
+      <div class="premium-card onboarding-widget-card" *ngIf="stats()!.suggestions.length > 0 && !cvAnalyzing() && !cvAnalyseData()">
+        <div class="card-header-clean gradient-subtle">
+          <div class="header-text">
+            <h3><i class="ti ti-sparkles"></i> Objectif : Compléter mon profil</h3>
+            <p>Remplissez les champs ci-dessous pour booster votre visibilité auprès des recruteurs en Tunisie.</p>
+          </div>
+          <span class="widget-step-indicator">{{ stats()!.suggestions.length }} actions en attente</span>
+        </div>
+
+        <div class="card-body">
+          <div class="onboarding-wizard">
+            <!-- Sidebar suggestion quick selector -->
+            <div class="onboarding-steps-list">
+              <button class="step-select-btn" 
+                *ngFor="let s of stats()!.suggestions"
+                [class.active]="activeOnboardingField() === s.field"
+                (click)="setActiveField(s.field)">
+                <span class="points">+{{ s.points }}%</span>
+                <span class="msg">{{ s.message }}</span>
+                <i class="ti ti-chevron-right"></i>
+              </button>
             </div>
-            <div class="candidature-info">
-              <div class="candidature-title">{{ c.titre }}</div>
-              <div class="candidature-meta">
-                {{ c.nomEntreprise }} · {{ c.localisation }}
+
+            <!-- Active Form Content -->
+            <div class="onboarding-form-area" [formGroup]="onboardingForm">
+              <!-- TELEPHONE -->
+              <div class="wizard-form-step" *ngIf="activeOnboardingField() === 'telephone'">
+                <h4>Ajouter votre numéro de téléphone</h4>
+                <p class="step-desc">Permet aux entreprises de vous contacter directement pour planifier un entretien.</p>
+                <div class="inline-input-group">
+                  <div class="input-wrapper">
+                    <i class="ti ti-phone input-icon"></i>
+                    <input type="tel" placeholder="0612345678" formControlName="telephone" />
+                  </div>
+                  <button class="btn-save-inline" (click)="saveOnboardingField('telephone')" [disabled]="onboardingLoading()">
+                    <span *ngIf="!onboardingLoading()">Enregistrer <i class="ti ti-check"></i></span>
+                    <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
+                  </button>
+                </div>
+                <div class="field-error" *ngIf="onboardingForm.get('telephone')?.invalid && onboardingForm.get('telephone')?.touched">
+                  Format invalide (ex: 0612345678)
+                </div>
+              </div>
+
+              <!-- ADRESSE -->
+              <div class="wizard-form-step" *ngIf="activeOnboardingField() === 'adresse'">
+                <h4>Votre ville / adresse de résidence</h4>
+                <p class="step-desc">Aide les recruteurs à cibler les offres proches de chez vous (ex: Tunis, Tunisie).</p>
+                <div class="inline-input-group">
+                  <div class="input-wrapper">
+                    <i class="ti ti-map-pin input-icon"></i>
+                    <input type="text" placeholder="Ex: Lac I, Tunis" formControlName="adresse" />
+                  </div>
+                  <button class="btn-save-inline" (click)="saveOnboardingField('adresse')" [disabled]="onboardingLoading()">
+                    <span *ngIf="!onboardingLoading()">Enregistrer <i class="ti ti-check"></i></span>
+                    <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- DATE NAISSANCE -->
+              <div class="wizard-form-step" *ngIf="activeOnboardingField() === 'dateNaissance'">
+                <h4>Renseigner votre date de naissance</h4>
+                <p class="step-desc">Ajoute de la complétion et personnalise votre profil candidat.</p>
+                <div class="inline-input-group">
+                  <div class="input-wrapper">
+                    <i class="ti ti-calendar input-icon"></i>
+                    <input type="date" formControlName="dateNaissance" />
+                  </div>
+                  <button class="btn-save-inline" (click)="saveOnboardingField('dateNaissance')" [disabled]="onboardingLoading()">
+                    <span *ngIf="!onboardingLoading()">Enregistrer <i class="ti ti-check"></i></span>
+                    <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- NIVEAU ETUDE -->
+              <div class="wizard-form-step" *ngIf="activeOnboardingField() === 'niveauEtude'">
+                <h4>Votre niveau d'études le plus élevé</h4>
+                <p class="step-desc">Les diplômes sont très recherchés par nos entreprises partenaires.</p>
+                <div class="inline-input-group">
+                  <div class="input-wrapper">
+                    <i class="ti ti-school input-icon"></i>
+                    <select formControlName="niveauEtude">
+                      <option value="">Sélectionner</option>
+                      <option *ngFor="let opt of niveauOptions" [value]="opt">{{ opt }}</option>
+                    </select>
+                  </div>
+                  <button class="btn-save-inline" (click)="saveOnboardingField('niveauEtude')" [disabled]="onboardingLoading()">
+                    <span *ngIf="!onboardingLoading()">Enregistrer <i class="ti ti-check"></i></span>
+                    <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- EXPERIENCE -->
+              <div class="wizard-form-step" *ngIf="activeOnboardingField() === 'experience'">
+                <h4>Années d'expérience professionnelle</h4>
+                <p class="step-desc">Précisez le nombre d'années d'expérience cumulées (saisir 0 pour débutant).</p>
+                <div class="inline-input-group">
+                  <div class="input-wrapper">
+                    <i class="ti ti-clock input-icon"></i>
+                    <input type="number" min="0" placeholder="0" formControlName="experience" />
+                  </div>
+                  <button class="btn-save-inline" (click)="saveOnboardingField('experience')" [disabled]="onboardingLoading()">
+                    <span *ngIf="!onboardingLoading()">Enregistrer <i class="ti ti-check"></i></span>
+                    <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- COMPETENCES -->
+              <div class="wizard-form-step" *ngIf="activeOnboardingField() === 'competences'">
+                <h4>Ajouter des compétences clés (min 3)</h4>
+                <p class="step-desc">Saisissez une compétence technique ou soft skill (ex: Angular, SQL, Figma).</p>
+                <div class="inline-input-group">
+                  <div class="input-wrapper">
+                    <i class="ti ti-hash input-icon"></i>
+                    <input type="text" placeholder="Ex: React, Node.js, Vente" formControlName="newCompetence" />
+                  </div>
+                  <button class="btn-save-inline" (click)="saveOnboardingField('competences')" [disabled]="onboardingLoading() || !onboardingForm.value.newCompetence">
+                    <span *ngIf="!onboardingLoading()">Ajouter <i class="ti ti-plus"></i></span>
+                    <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
+                  </button>
+                </div>
+                <div class="competences-pills-list" *ngIf="candidatProfile() && candidatProfile()!.competences.length > 0">
+                  <span class="comp-pill" *ngFor="let c of candidatProfile()!.competences">
+                    {{ c }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- LANGUES -->
+              <div class="wizard-form-step" *ngIf="activeOnboardingField() === 'langues'">
+                <h4>Vos langues parlées (min 1)</h4>
+                <p class="step-desc">Exemples: Arabe, Français, Anglais, Espagnol.</p>
+                <div class="inline-input-group">
+                  <div class="input-wrapper">
+                    <i class="ti ti-language input-icon"></i>
+                    <input type="text" placeholder="Ex: Anglais, Français" formControlName="newLangue" />
+                  </div>
+                  <button class="btn-save-inline" (click)="saveOnboardingField('langues')" [disabled]="onboardingLoading() || !onboardingForm.value.newLangue">
+                    <span *ngIf="!onboardingLoading()">Ajouter <i class="ti ti-plus"></i></span>
+                    <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
+                  </button>
+                </div>
+                <div class="competences-pills-list" *ngIf="candidatProfile() && candidatProfile()!.langues.length > 0">
+                  <span class="comp-pill lang-pill" *ngFor="let l of candidatProfile()!.langues">
+                    <i class="ti ti-world"></i> {{ l }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- CV UPLOAD (Suggestion `cv`) -->
+              <div class="wizard-form-step" *ngIf="activeOnboardingField() === 'cv'">
+                <h4>Uploader votre CV pour booster votre visibilité (+25%)</h4>
+                <p class="step-desc">Faites glisser votre fichier CV. Notre technologie d'analyse en extraira les détails clés !</p>
+                <div class="drag-drop-cv-box" [class.dragover]="cvDragOver()"
+                  (dragover)="onCvDragOver($event)" (dragleave)="onCvDragLeave()" (drop)="onCvDrop($event)">
+                  <div class="box-content">
+                    <div class="box-icon"><i class="ti ti-cloud-upload"></i></div>
+                    <h5>Glissez votre CV ici</h5>
+                    <p>PDF ou DOCX (Max 10 Mo)</p>
+                    <span class="btn-browse-file">Parcourir...</span>
+                    <input type="file" class="hidden-file-input" accept=".pdf,.docx" (change)="onCvFileSelected($event)" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Success Overlay inside widget -->
+              <div class="onboarding-success-overlay" *ngIf="onboardingSuccess()">
+                <div class="success-icon"><i class="ti ti-circle-check"></i></div>
+                <p>{{ onboardingSuccess() }}</p>
               </div>
             </div>
-            <div class="candidature-status">
-              <span class="status-badge" [style.background]="getStatusColor(c.statut) + '15'" [style.color]="getStatusColor(c.statut)">
-                {{ getStatusLabel(c.statut) }}
-              </span>
-              <div class="candidature-date">{{ c.datePostulation | date:'dd/MM/yyyy' }}</div>
-            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CV ANALYSING LOADER (AI SIMULATION) -->
+      <div class="premium-card ai-loading-card" *ngIf="cvAnalyzing()">
+        <div class="pulse-wave-wrapper">
+          <div class="pulse-wave wave-1"></div>
+          <div class="pulse-wave wave-2"></div>
+          <div class="ai-brain-icon"><i class="ti ti-cpu"></i></div>
+        </div>
+        <h3>Analyse intelligente par IA en cours...</h3>
+        <p>Notre parseur sémantique extrait les compétences, l'expérience et le parcours de votre CV.</p>
+        <div class="loader-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <!-- CV ANALYSIS CONFIRMATION (AI RESULT) -->
+      <div class="premium-card cv-analyse-result-card" *ngIf="!cvAnalyzing() && cvAnalyseData()">
+        <div class="result-header">
+          <div class="header-icon"><i class="ti ti-wand"></i></div>
+          <div class="header-text">
+            <h3>CV Analysé avec succès ! ✨</h3>
+            <p>Voici les informations que nous avons extraites de votre fichier. Confirmez pour les appliquer à votre profil.</p>
           </div>
         </div>
 
-        <div class="empty-state" *ngIf="stats()!.recentCandidatures.length === 0">
-          <div class="empty-icon"><i class="ti ti-file-off"></i></div>
-          <h4>Aucune candidature</h4>
-          <p>Commencez par explorer les offres disponibles</p>
-          <a routerLink="/offres" class="btn-primary-sm">Explorer les offres</a>
+        <div class="result-body">
+          <div class="extracted-fields-grid">
+            <div class="field-item-ext">
+              <span class="label">Téléphone</span>
+              <span class="val">{{ cvAnalyseData().telephone || 'Non détecté' }}</span>
+            </div>
+            <div class="field-item-ext">
+              <span class="label">Adresse / Ville</span>
+              <span class="val">{{ cvAnalyseData().adresse || 'Non détecté' }}</span>
+            </div>
+            <div class="field-item-ext">
+              <span class="label">Niveau d'études</span>
+              <span class="val">{{ cvAnalyseData().niveauEtude || 'Non détecté' }}</span>
+            </div>
+            <div class="field-item-ext">
+              <span class="label">Expérience estimée</span>
+              <span class="val">{{ cvAnalyseData().experience }} ans</span>
+            </div>
+          </div>
+
+          <div class="extracted-pills-section">
+            <h5>Compétences détectées :</h5>
+            <div class="pills-flex" *ngIf="cvAnalyseData().competences && cvAnalyseData().competences.length > 0">
+              <span class="comp-pill" *ngFor="let c of cvAnalyseData().competences">{{ c }}</span>
+            </div>
+            <span class="empty-pill-text" *ngIf="!cvAnalyseData().competences || cvAnalyseData().competences.length === 0">Aucune compétence détectée</span>
+          </div>
+
+          <div class="extracted-pills-section">
+            <h5>Langues détectées :</h5>
+            <div class="pills-flex" *ngIf="cvAnalyseData().langues && cvAnalyseData().langues.length > 0">
+              <span class="comp-pill lang-pill" *ngFor="let l of cvAnalyseData().langues"><i class="ti ti-world"></i> {{ l }}</span>
+            </div>
+            <span class="empty-pill-text" *ngIf="!cvAnalyseData().langues || cvAnalyseData().langues.length === 0">Aucune langue détectée</span>
+          </div>
+
+          <div class="confirmation-actions">
+            <button class="btn-discard" (click)="discardCvAnalysis()">Recommencer</button>
+            <button class="btn-apply" (click)="applyCvAnalysis()" [disabled]="onboardingLoading()">
+              <span *ngIf="!onboardingLoading()">Appliquer à mon profil <i class="ti ti-circle-check"></i></span>
+              <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Quick Actions -->
-  <div class="quick-actions">
-    <h3>Actions rapides</h3>
-    <div class="actions-grid">
-      <a routerLink="/offres" class="action-card">
-        <div class="action-icon blue"><i class="ti ti-search"></i></div>
-        <span>Rechercher offres</span>
-      </a>
-      <a routerLink="/candidat/profile" class="action-card">
-        <div class="action-icon purple"><i class="ti ti-user-edit"></i></div>
-        <span>Modifier profil</span>
-      </a>
-      <a routerLink="/candidat/candidatures" class="action-card">
-        <div class="action-icon green"><i class="ti ti-file-text"></i></div>
-        <span>Mes candidatures</span>
-      </a>
+      <!-- Profile Fully Completed State -->
+      <div class="premium-card profile-completed-success-card" *ngIf="stats()!.profileCompletion >= 100 && !cvAnalyzing() && !cvAnalyseData()">
+        <div class="celebration-content">
+          <div class="celebration-icon"><i class="ti ti-sparkles"></i></div>
+          <h3>Félicitations, votre profil est complété à 100% ! 🥳</h3>
+          <p>Vous êtes maintenant une <strong>Superstar</strong> ! Les recruteurs tunisiens peuvent voir l'intégralité de vos informations et vous contacter en priorité.</p>
+          <a routerLink="/offres" class="btn-cta-completed">Trouver un Job <i class="ti ti-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <!-- Recent Candidatures -->
+      <div class="premium-card recent-candidatures-card">
+        <div class="card-header-clean has-action">
+          <h3><i class="ti ti-list-details"></i> Mes Candidatures Récentes</h3>
+          <a routerLink="/candidat/candidatures" class="see-all-link">Voir toutes les candidatures</a>
+        </div>
+
+        <div class="card-body">
+          <div class="candidatures-custom-list" *ngIf="stats()!.recentCandidatures.length > 0">
+            <div class="candidature-custom-item" *ngFor="let c of stats()!.recentCandidatures">
+              <div class="candidature-icon-badge" [style.background]="getStatusColor(c.statut) + '15'" [style.color]="getStatusColor(c.statut)">
+                <i class="ti" [class]="getStatusIcon(c.statut)"></i>
+              </div>
+              <div class="candidature-main-details">
+                <h4>{{ c.titre }}</h4>
+                <p class="company"><i class="ti ti-building"></i> {{ c.nomEntreprise }} · <i class="ti ti-map-pin"></i> {{ c.localisation }}</p>
+              </div>
+              <div class="candidature-status-col">
+                <span class="status-custom-badge" [style.background]="getStatusColor(c.statut) + '15'" [style.color]="getStatusColor(c.statut)">
+                  {{ getStatusLabel(c.statut) }}
+                </span>
+                <span class="postulated-date">Le {{ c.datePostulation | date:'dd/MM/yyyy' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="empty-state-dashboard" *ngIf="stats()!.recentCandidatures.length === 0">
+            <div class="empty-icon"><i class="ti ti-file-off"></i></div>
+            <h4>Aucune candidature postulée pour le moment</h4>
+            <p>Trouvez des opportunités qui correspondent à vos ambitions et postulez en 1 clic.</p>
+            <a routerLink="/offres" class="btn-primary-sm-pill">Rechercher des offres</a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

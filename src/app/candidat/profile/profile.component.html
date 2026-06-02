@@ -1,61 +1,202 @@
-<div class="row">
-  <div class="col-lg-6">
-    <div class="card">
-      <div class="card-body">
-        <h4 class="mb-3">Profil candidat</h4>
-        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
-          <div class="form-floating mb-3">
-            <input class="form-control" id="adresse" formControlName="adresse" />
-            <label for="adresse">Adresse</label>
-          </div>
-          <div class="form-floating mb-3">
-            <input type="date" class="form-control" id="dateNaissance" formControlName="dateNaissance" />
-            <label for="dateNaissance">Date de naissance</label>
-          </div>
-          <div class="form-floating mb-3">
-            <input class="form-control" id="niveauEtude" formControlName="niveauEtude" />
-            <label for="niveauEtude">Niveau d'etude</label>
-          </div>
-          <div class="form-floating mb-3">
-            <input type="number" class="form-control" id="experience" formControlName="experience" />
-            <label for="experience">Experience (annees)</label>
-          </div>
-          <button type="submit" class="btn btn-primary">Mettre a jour</button>
-        </form>
+<div class="candidat-profile-page">
+  <div class="profile-container">
+    <!-- Header -->
+    <div class="header-row mb-4">
+      <div class="header-info">
+        <a routerLink="/candidat/dashboard" class="back-link"><i class="ti ti-arrow-left"></i> Retour au tableau de bord</a>
+        <h2>Mon Profil Candidat 👤</h2>
+        <p>Gérez vos coordonnées, importez vos CVs et rédigez vos lettres de motivation.</p>
       </div>
     </div>
 
-    <div class="card mt-3">
-      <div class="card-body">
-        <h4 class="mb-3">CV</h4>
-        <input type="file" class="form-control" (change)="onFileSelected($event)" accept="application/pdf" />
-        <button class="btn btn-outline-primary mt-3" (click)="uploadCv()">Uploader</button>
-        <ul class="mt-3" *ngIf="profile()?.cvs?.length">
-          <li *ngFor="let cv of profile()?.cvs">{{ cv.nomFichier }} - {{ cv.dateAjout | date: 'short' }}</li>
-        </ul>
+    <!-- 3 Dashboard Stats Cards -->
+    <div class="stats-counter-grid compact-stats mb-4" *ngIf="profile()">
+      <div class="counter-card card-blue">
+        <div class="card-icon"><i class="ti ti-code"></i></div>
+        <div class="card-info">
+          <h3>{{ compCount }}</h3>
+          <p>Compétences déclarées</p>
+        </div>
+      </div>
+      <div class="counter-card card-amber">
+        <div class="card-icon"><i class="ti ti-file-text"></i></div>
+        <div class="card-info">
+          <h3>{{ cvCount }}</h3>
+          <p>CVs importés</p>
+        </div>
+      </div>
+      <div class="counter-card card-green">
+        <div class="card-icon"><i class="ti ti-quote"></i></div>
+        <div class="card-info">
+          <h3>{{ lettreCount }}</h3>
+          <p>Lettres de motivation</p>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="col-lg-6">
-    <div class="card">
-      <div class="card-body">
-        <h4 class="mb-3">Lettre de motivation</h4>
-        <form [formGroup]="lettreForm" (ngSubmit)="addLettre()">
-          <div class="form-floating mb-3">
-            <textarea class="form-control" id="lettre" formControlName="contenu" style="height: 150px"></textarea>
-            <label for="lettre">Contenu</label>
+    <!-- Main Grid -->
+    <div class="row" *ngIf="profile()">
+      <!-- LEFT SIDEBAR: Overview & Ad -->
+      <div class="col-lg-4 mb-4">
+        <!-- Overview Card -->
+        <div class="premium-card mb-4">
+          <div class="card-header-clean">
+            <h3>Identité du Candidat</h3>
           </div>
-          <button class="btn btn-primary" type="submit">Ajouter</button>
-        </form>
-        <ul class="mt-3" *ngIf="profile()?.lettres?.length">
-          <li *ngFor="let lettre of profile()?.lettres">{{ lettre.dateAjout | date: 'short' }}</li>
-        </ul>
+          <div class="card-body">
+            <div class="profile-avatar-center mb-3">
+              <div class="avatar-large">
+                {{ (profile()!.prenom || 'C').charAt(0) | uppercase }}{{ (profile()!.nom || 'N').charAt(0) | uppercase }}
+              </div>
+              <h4 class="mt-2 mb-0">{{ profile()!.prenom }} {{ profile()!.nom }}</h4>
+              <span class="badge bg-indigo-soft mt-1">Candidat RecruteIHM</span>
+            </div>
+
+            <ul class="profile-details-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;">
+              <li style="font-size: 13px; display: flex; align-items: center; gap: 8px;">
+                <i class="ti ti-mail" style="color: #6366f1; font-size: 16px;"></i>
+                <span style="color: #475569;">{{ profile()!.email }}</span>
+              </li>
+              <li style="font-size: 13px; display: flex; align-items: center; gap: 8px;">
+                <i class="ti ti-phone" style="color: #6366f1; font-size: 16px;"></i>
+                <span style="color: #475569;">{{ profile()!.telephone || 'Non renseigné' }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Advertising Card -->
+        <div class="premium-promo-ad-card">
+          <div class="ad-badge">Coaching</div>
+          <div class="ad-content">
+            <h4>Réussir vos Entretiens <i class="ti ti-award"></i></h4>
+            <p>Passez des simulations d'entretien d'embauche avec des experts RH de RecruteIHM.</p>
+            <a href="http://www.emploi.nat.tn" target="_blank" class="ad-btn">Réserver <i class="ti ti-arrow-right"></i></a>
+          </div>
+          <div class="ad-pattern"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL: Forms (Compact & Organized) -->
+      <div class="col-lg-8">
+        <!-- Edit Profile Card -->
+        <div class="premium-card mb-4">
+          <div class="card-header-clean d-flex justify-content-between align-items-center">
+            <h3>Modifier mes Informations</h3>
+            <span style="font-size: 11px; font-weight: 600; color: #6366f1; text-transform: uppercase;">Champs obligatoires *</span>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="compact-saas-form">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="adresse" class="form-label-saas">Adresse de résidence *</label>
+                  <div class="input-wrapper-saas">
+                    <i class="ti ti-map-pin"></i>
+                    <input type="text" id="adresse" formControlName="adresse" placeholder="Ex: Lac I, Tunis" />
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="dateNaissance" class="form-label-saas">Date de naissance *</label>
+                  <div class="input-wrapper-saas">
+                    <i class="ti ti-calendar"></i>
+                    <input type="date" id="dateNaissance" formControlName="dateNaissance" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="niveauEtude" class="form-label-saas">Niveau d'études *</label>
+                  <div class="input-wrapper-saas">
+                    <i class="ti ti-school"></i>
+                    <input type="text" id="niveauEtude" formControlName="niveauEtude" placeholder="Ex: Ingénieur (Bac+5)" />
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="experience" class="form-label-saas">Années d'expérience *</label>
+                  <div class="input-wrapper-saas">
+                    <i class="ti ti-clock"></i>
+                    <input type="number" id="experience" formControlName="experience" min="0" placeholder="Ex: 3" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="experienceDescription" class="form-label-saas">Expérience Professionnelle Détaillée (CV)</label>
+                <textarea id="experienceDescription" formControlName="experienceDescription" rows="4" placeholder="Décrivez vos réalisations professionnelles détaillées..."></textarea>
+              </div>
+
+              <div class="text-end">
+                <button type="submit" class="btn btn-primary px-4 py-2" [disabled]="loading()" style="font-weight: 700; border-radius: 8px;">
+                  Enregistrer les modifications
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="row">
+          <!-- CV Card -->
+          <div class="col-md-6 mb-4">
+            <div class="premium-card" style="height: 100%;">
+              <div class="card-header-clean">
+                <h3>Mes Documents CV</h3>
+              </div>
+              <div class="card-body">
+                <div class="cv-upload-compact mb-3">
+                  <input type="file" class="form-control form-control-sm" (change)="onFileSelected($event)" accept="application/pdf" />
+                  <button class="btn btn-outline-primary btn-sm w-100 mt-2" (click)="uploadCv()" [disabled]="!selectedFile" style="font-weight: 700;">
+                    <i class="ti ti-upload"></i> Uploader le CV
+                  </button>
+                </div>
+
+                <ul class="cv-compact-list" *ngIf="profile()?.cvs?.length" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+                  <li *ngFor="let cv of profile()?.cvs" class="cv-compact-item" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 12px;">
+                    <span style="font-weight: 600; color: #475569; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px;">
+                      <i class="ti ti-file-text" style="color: #6366f1; margin-right: 4px;"></i> {{ cv.nomFichier }}
+                    </span>
+                    <span style="color: #94a3b8;">{{ cv.dateAjout | date: 'dd/MM' }}</span>
+                  </li>
+                </ul>
+                <div class="text-center text-muted py-3 small" *ngIf="!profile()?.cvs?.length">
+                  Aucun CV importé pour le moment.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cover Letter Card -->
+          <div class="col-md-6 mb-4">
+            <div class="premium-card" style="height: 100%;">
+              <div class="card-header-clean">
+                <h3>Lettre de motivation</h3>
+              </div>
+              <div class="card-body">
+                <form [formGroup]="lettreForm" (ngSubmit)="addLettre()">
+                  <div class="mb-2">
+                    <textarea class="form-control" id="lettre" formControlName="contenu" rows="3" placeholder="Saisissez ou collez votre lettre de motivation..." style="font-size: 12.5px; border-radius: 8px;"></textarea>
+                  </div>
+                  <button class="btn btn-primary btn-sm w-100" type="submit" [disabled]="lettreForm.invalid" style="font-weight: 700;">
+                    <i class="ti ti-plus"></i> Enregistrer la lettre
+                  </button>
+                </form>
+
+                <ul class="cv-compact-list mt-3" *ngIf="profile()?.lettres?.length" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+                  <li *ngFor="let lettre of profile()?.lettres" class="cv-compact-item" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 12px;">
+                    <span style="color: #475569;"><i class="ti ti-quote" style="color: #10b981; margin-right: 4px;"></i> Lettre de motivation</span>
+                    <span style="color: #94a3b8;">{{ lettre.dateAjout | date: 'dd/MM' }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-danger mt-3" *ngIf="error()">
+          {{ error() }}
+        </div>
       </div>
     </div>
 
-    <div class="alert alert-danger mt-3" *ngIf="error()">
-      {{ error() }}
-    </div>
   </div>
 </div>

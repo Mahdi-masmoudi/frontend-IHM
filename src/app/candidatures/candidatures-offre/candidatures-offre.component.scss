@@ -1,0 +1,413 @@
+/* ── Recruiter Candidature Review Style (RecruteIHM Style) ────────────── */
+
+.candidatures-page {
+  min-height: calc(100vh - 100px);
+  padding: 40px 24px;
+  background: radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.03), transparent 40%),
+              radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.03), transparent 40%),
+              #f8fafc;
+}
+
+.candidatures-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-row {
+  margin-bottom: 32px;
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #6366f1;
+    text-decoration: none;
+    margin-bottom: 16px;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateX(-4px);
+    }
+  }
+
+  h2 {
+    font-size: 26px;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0 0 6px;
+    letter-spacing: -0.5px;
+  }
+
+  p {
+    font-size: 14.5px;
+    color: #64748b;
+    margin: 0;
+  }
+}
+
+/* ── Premium Card ───────────────────────────────────────────────────── */
+
+.premium-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px) saturate(180%);
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.04);
+  overflow: hidden;
+}
+
+.card-header-clean {
+  padding: 24px 32px;
+  border-bottom: 1.5px solid #f1f5f9;
+
+  h3 {
+    font-size: 16.5px;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0;
+  }
+}
+
+.card-body {
+  padding: 24px 32px;
+}
+
+/* ── Custom Table ───────────────────────────────────────────────────── */
+
+.custom-candidatures-table {
+  margin: 0;
+
+  thead th {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1.5px solid #f1f5f9;
+    padding: 16px 20px;
+  }
+
+  tbody td {
+    padding: 20px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+    color: #334155;
+  }
+}
+
+.candidature-row {
+  transition: background-color 0.2s ease;
+  &:hover {
+    background-color: rgba(99, 102, 241, 0.01);
+  }
+}
+
+/* Candidate cell */
+.candidate-cell {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  .avatar-bubble {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 15px;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+  }
+
+  .candidate-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    .name {
+      font-weight: 700;
+      color: #1e293b;
+    }
+    .subtext {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+  }
+}
+
+/* Email text */
+.email-text {
+  font-weight: 500;
+  color: #475569;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  i {
+    font-size: 16px;
+    color: #94a3b8;
+  }
+}
+
+/* Attachment Badge */
+.attachment-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(99, 102, 241, 0.06);
+  border: 1px dashed rgba(99, 102, 241, 0.2);
+  border-radius: 8px;
+  color: #4f46e5;
+  font-weight: 600;
+  font-size: 12.5px;
+
+  i {
+    font-size: 16px;
+  }
+  .filename {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* Letter quote box */
+.letter-quote {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-radius: 8px;
+  max-width: 250px;
+  border-left: 3px solid #cbd5e1;
+
+  i {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-top: 2px;
+  }
+
+  .text {
+    font-size: 12.5px;
+    color: #64748b;
+    line-height: 1.4;
+  }
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 12px;
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  &.en_attente {
+    background: #fffbeb;
+    color: #b45309;
+    .dot { background: #f59e0b; }
+  }
+
+  &.acceptee {
+    background: #ecfdf5;
+    color: #047857;
+    .dot { background: #10b981; }
+  }
+
+  &.rejetee {
+    background: #fff1f2;
+    color: #be123c;
+    .dot { background: #f43f5e; }
+  }
+}
+
+/* ── Decision Buttons ───────────────────────────────────────────────── */
+
+.btn-group-decisions {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.btn-decision {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  i {
+    font-size: 16px;
+  }
+
+  &.btn-accept {
+    background: #10b981;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(16, 105, 129, 0.15);
+
+    &:hover {
+      background: #059669;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(16, 105, 129, 0.25);
+    }
+  }
+
+  &.btn-reject {
+    background: #fff;
+    color: #e11d48;
+    border: 1.5px solid #fecaca;
+
+    &:hover {
+      background: #fff1f2;
+      border-color: #fda4af;
+      transform: translateY(-1px);
+    }
+  }
+}
+
+.decision-made-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  i {
+    font-size: 18px;
+  }
+
+  &.text-danger-soft {
+    color: #be123c;
+  }
+}
+
+/* ── Empty State ────────────────────────────────────────────────────── */
+
+.empty-state-card {
+  text-align: center;
+  padding: 60px 40px;
+
+  .empty-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: #94a3b8;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+
+  h4 {
+    font-size: 18px;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 6px;
+  }
+
+  p {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 24px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .btn-back-dashboard {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    border-radius: 10px;
+    background: #6366f1;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    transition: all 0.2s;
+
+    &:hover {
+      background: #4f46e5;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+    }
+  }
+}
+
+.alert-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #ef4444;
+  font-size: 13.5px;
+  font-weight: 500;
+  i {
+    font-size: 18px;
+  }
+}
+
+/* ── Expandable Details Rows ────────────────────────────────────────── */
+
+.active-row {
+  background-color: rgba(99, 102, 241, 0.02) !important;
+  td {
+    border-bottom-color: transparent !important;
+  }
+}
+
+.details-row {
+  &:hover {
+    background: transparent !important;
+  }
+  td {
+    border-top: none !important;
+    border-bottom: 1.5px solid #f1f5f9 !important;
+  }
+}
+
+.candidate-profile-drawer {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(99, 102, 241, 0.08);
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: inset 0 2px 4px rgba(15, 23, 42, 0.01), 0 4px 15px rgba(15, 23, 42, 0.02);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

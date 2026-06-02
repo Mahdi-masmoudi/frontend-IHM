@@ -35,4 +35,14 @@ export class CandidaturesComponent implements OnInit {
     }
     return 'badge bg-warning text-dark';
   }
+
+  get totalCount(): number {
+    return this.candidatures().length;
+  }
+  get pendingCount(): number {
+    return this.candidatures().filter(c => c.statut === 'EN_ATTENTE').length;
+  }
+  get acceptedCount(): number {
+    return this.candidatures().filter(c => c.statut === 'ACCEPTEE').length;
+  }
 }

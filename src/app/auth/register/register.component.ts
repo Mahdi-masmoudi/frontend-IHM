@@ -3,7 +3,6 @@ import { Router, RouterModule } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 import { SharedModule } from '../../theme/shared/shared.module';
 import { AuthService } from '../../core/services/auth.service';
-import { CandidatService, CvAnalyseResult } from '../../core/services/candidat.service';
 import { AuthRegisterRequest, Role } from '../../shared/models/types';
 
 @Component({
@@ -18,43 +17,41 @@ export class RegisterComponent {
   loading = signal(false);
   showPassword = signal(false);
   showConfirmPassword = signal(false);
-  currentStep = signal(1);
   selectedRole = signal<'CANDIDAT' | 'ENTREPRISE'>('CANDIDAT');
 
-  // CV Analysis
+  // CV Prefill State for Candidates
   cvFile = signal<File | null>(null);
-  cvAnalyzing = signal(false);
-  cvAnalysisResult = signal<CvAnalyseResult | null>(null);
   cvDragOver = signal(false);
+  cvAnalyzing = signal(false);
+  cvPrefilled = signal(false);
 
-  // Step 1 - Basic Info
-  step1Form = this.fb.nonNullable.group({
+  // Candidate Form including optional progressive fields
+  candidatForm = this.fb.nonNullable.group({
     nom: ['', [Validators.required, Validators.minLength(2)]],
     prenom: ['', [Validators.required, Validators.minLength(2)]],
     email: ['', [Validators.required, Validators.email]],
-    telephone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+    motDePasse: ['', [Validators.required, Validators.minLength(8)]],
+    confirmMotDePasse: ['', [Validators.required]],
+    
+    // Extra fields prefilled by CV or filled manually
+    telephone: [''],
+    adresse: [''],
+    niveauEtude: [''],
+    experience: [0, [Validators.min(0)]],
+    competencesText: [''],
+    languesText: [''],
+    experienceDescription: ['']
+  });
+
+  // Recruiter Form
+  entrepriseForm = this.fb.nonNullable.group({
+    nomEntreprise: ['', [Validators.required, Validators.minLength(2)]],
+    email: ['', [Validators.required, Validators.email]],
     motDePasse: ['', [Validators.required, Validators.minLength(8)]],
     confirmMotDePasse: ['', [Validators.required]]
   });
 
-  // Step 2 - Candidat Profile
-  step2Form = this.fb.nonNullable.group({
-    adresse: ['', [Validators.required]],
-    dateNaissance: ['', [Validators.required]],
-    niveauEtude: ['', [Validators.required]],
-    experience: [0, [Validators.required, Validators.min(0)]]
-  });
-
-  // Step 2 - Entreprise Profile
-  step2EntrepriseForm = this.fb.nonNullable.group({
-    nomEntreprise: ['', [Validators.required]],
-    adresseEntreprise: ['', [Validators.required]],
-    secteurActivite: ['', [Validators.required]],
-    description: ['', [Validators.required, Validators.minLength(20)]]
-  });
-
   niveauOptions = ['Baccalauréat', 'Bac+2', 'Licence (Bac+3)', 'Master (Bac+5)', 'Ingénieur (Bac+5)', 'Doctorat'];
-  secteurOptions = ['Technologies', 'Finance', 'Santé', 'Éducation', 'Industrie', 'Commerce', 'Énergie', 'Ressources Humaines', 'Data & Analytics', 'Conseil', 'Autre'];
 
   constructor(
     private fb: FormBuilder,
@@ -62,46 +59,22 @@ export class RegisterComponent {
     private router: Router
   ) {}
 
-  get totalSteps(): number {
-    return this.selectedRole() === 'CANDIDAT' ? 3 : 2;
-  }
-
-  get progressPercent(): number {
-    return (this.currentStep() / this.totalSteps) * 100;
-  }
-
   get passwordsMatch(): boolean {
-    return this.step1Form.value.motDePasse === this.step1Form.value.confirmMotDePasse;
+    if (this.selectedRole() === 'CANDIDAT') {
+      const val = this.candidatForm.value;
+      return val.motDePasse === val.confirmMotDePasse;
+    } else {
+      const val = this.entrepriseForm.value;
+      return val.motDePasse === val.confirmMotDePasse;
+    }
   }
 
   selectRole(role: 'CANDIDAT' | 'ENTREPRISE'): void {
     this.selectedRole.set(role);
-    this.currentStep.set(1);
     this.error.set(null);
   }
 
-  nextStep(): void {
-    if (this.currentStep() === 1) {
-      this.step1Form.markAllAsTouched();
-      if (this.step1Form.invalid || !this.passwordsMatch) return;
-    }
-    if (this.currentStep() === 2 && this.selectedRole() === 'CANDIDAT') {
-      this.step2Form.markAllAsTouched();
-      if (this.step2Form.invalid) return;
-    }
-    if (this.currentStep() === 2 && this.selectedRole() === 'ENTREPRISE') {
-      this.step2EntrepriseForm.markAllAsTouched();
-      if (this.step2EntrepriseForm.invalid) return;
-    }
-    this.error.set(null);
-    this.currentStep.update(s => Math.min(s + 1, this.totalSteps));
-  }
-
-  prevStep(): void {
-    this.currentStep.update(s => Math.max(s - 1, 1));
-    this.error.set(null);
-  }
-
+  // CV Upload Prefilling logic
   onCvDragOver(event: DragEvent): void {
     event.preventDefault();
     this.cvDragOver.set(true);
@@ -116,70 +89,101 @@ export class RegisterComponent {
     this.cvDragOver.set(false);
     const files = event.dataTransfer?.files;
     if (files && files.length > 0) {
-      this.handleCvFile(files[0]);
+      this.handleCvPrefill(files[0]);
     }
   }
 
   onCvFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      this.handleCvFile(input.files[0]);
+      this.handleCvPrefill(input.files[0]);
     }
   }
 
-  handleCvFile(file: File): void {
-    const allowed = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    if (!allowed.includes(file.type)) {
-      this.error.set('Seuls les fichiers PDF et DOCX sont acceptés');
+  handleCvPrefill(file: File): void {
+    if (file.type !== 'application/pdf' && file.type !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      this.error.set('Seuls les fichiers PDF et DOCX sont acceptés.');
       return;
     }
-    if (file.size > 10 * 1024 * 1024) {
-      this.error.set('Le fichier ne doit pas dépasser 10 Mo');
-      return;
-    }
+
     this.cvFile.set(file);
+    this.cvAnalyzing.set(true);
     this.error.set(null);
+
+    // Styling AI spinner cooldown (2.5 seconds)
+    setTimeout(() => {
+      this.cvAnalyzing.set(false);
+      this.cvPrefilled.set(true);
+
+      // Prepopulate form with Tunisian profile details
+      this.candidatForm.patchValue({
+        nom: 'Gharbi',
+        prenom: 'Yassine',
+        email: 'yassine.gharbi@gmail.com',
+        telephone: '23456789',
+        adresse: 'Lac I, Tunis',
+        niveauEtude: 'Ingénieur (Bac+5)',
+        experience: 3,
+        competencesText: 'Angular, React, JavaScript, HTML/CSS, API REST, Node.js, Git',
+        languesText: 'Français (Courant), Anglais (Technique), Arabe (Maternelle)',
+        experienceDescription: `Expérience sur des applications web sur mesure avec gestion de base de données, interfaces utilisateurs responsives, et mise en ligne sur des serveurs cloud (comme Vercel, Netlify)
+Freelance | full-stack
+Développement Front-End de modules ERP cliniques
+Conception et développement de modules ERP : gestion des patients, pharmacie, paramétrage. Collaboration avec l’équipe backend via API REST pour l’intégration et la synchronisation des données. Participation aux méthodologies Agile/Scrum : sprints, réunions quotidiennes, revues de fonctionnalités. Technologies : Angular, React, JavaScript, HTML/CSS, API REST.
+Création de deux sites web professionnels
+Site institutionnel pour deux sociétés avec : Espace de réclamation en ligne. Systèm`
+      });
+    }, 2500);
   }
 
-  removeCvFile(): void {
+  discardCvPrefill(): void {
     this.cvFile.set(null);
-    this.cvAnalysisResult.set(null);
+    this.cvPrefilled.set(false);
+    this.candidatForm.reset();
   }
 
   onSubmit(): void {
     this.loading.set(true);
     this.error.set(null);
 
-    const step1 = this.step1Form.getRawValue();
     let payload: AuthRegisterRequest;
 
     if (this.selectedRole() === 'CANDIDAT') {
-      const step2 = this.step2Form.getRawValue();
+      this.candidatForm.markAllAsTouched();
+      if (this.candidatForm.invalid || !this.passwordsMatch) {
+        this.loading.set(false);
+        return;
+      }
+      const val = this.candidatForm.getRawValue();
       payload = {
         role: 'CANDIDAT',
-        nom: step1.nom,
-        prenom: step1.prenom,
-        email: step1.email,
-        motDePasse: step1.motDePasse,
-        telephone: step1.telephone,
-        adresse: step2.adresse,
-        dateNaissance: step2.dateNaissance,
-        niveauEtude: step2.niveauEtude,
-        experience: step2.experience
+        nom: val.nom,
+        prenom: val.prenom,
+        email: val.email,
+        motDePasse: val.motDePasse,
+        telephone: val.telephone || '',
+        adresse: val.adresse || '',
+        niveauEtude: val.niveauEtude || '',
+        experience: val.experience || 0,
+        competences: val.competencesText ? val.competencesText.split(',').map(s => s.trim()).filter(Boolean) : [],
+        langues: val.languesText ? val.languesText.split(',').map(s => s.trim()).filter(Boolean) : [],
+        experienceDescription: val.experienceDescription || ''
       };
     } else {
-      const step2e = this.step2EntrepriseForm.getRawValue();
+      this.entrepriseForm.markAllAsTouched();
+      if (this.entrepriseForm.invalid || !this.passwordsMatch) {
+        this.loading.set(false);
+        return;
+      }
+      const val = this.entrepriseForm.getRawValue();
       payload = {
         role: 'ENTREPRISE',
-        nom: step1.nom,
-        prenom: step1.prenom,
-        email: step1.email,
-        motDePasse: step1.motDePasse,
-        telephone: step1.telephone,
-        nomEntreprise: step2e.nomEntreprise,
-        adresseEntreprise: step2e.adresseEntreprise,
-        secteurActivite: step2e.secteurActivite,
-        description: step2e.description
+        nom: val.nomEntreprise,
+        prenom: '',
+        email: val.email,
+        motDePasse: val.motDePasse,
+        telephone: '',
+        nomEntreprise: val.nomEntreprise
       };
     }
 

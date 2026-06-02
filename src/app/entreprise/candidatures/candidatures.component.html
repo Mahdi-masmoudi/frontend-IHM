@@ -1,49 +1,263 @@
-<div class="card candidatures-card">
-  <div class="card-body">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <div>
-        <h4 class="mb-1">Candidatures recues</h4>
-        <p class="text-muted mb-0">Gerez vos candidats et prenez une decision rapide.</p>
+<div class="entreprise-offres-page">
+  <div class="offres-container">
+    <!-- Header -->
+    <div class="header-row mb-4">
+      <div class="header-info d-flex justify-content-between align-items-center w-100">
+        <div>
+          <h2>Gestion des Candidatures 👥</h2>
+          <p>Suivez en temps réel les postulants pour vos offres d'emploi, filtrez par compétences et recrutez les meilleurs talents.</p>
+        </div>
       </div>
     </div>
-    <div class="table-responsive">
-      <table class="table align-middle">
-        <thead>
-          <tr>
-            <th>Candidat</th>
-            <th>Offre</th>
-            <th>Date</th>
-            <th>Statut</th>
-            <th>CV</th>
-            <th>Lettre</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of candidatures()">
-            <td>
-              <div class="fw-semibold">{{ item.nom }} {{ item.prenom }}</div>
-              <div class="text-muted small">{{ item.email }}</div>
-            </td>
-            <td>
-              <div class="fw-semibold">{{ item.titre || 'Offre' }}</div>
-              <div class="text-muted small">{{ item.localisation }} · {{ item.typeContrat }}</div>
-            </td>
-            <td>{{ item.datePostulation | date: 'short' }}</td>
-            <td><span [class]="statusClass(item.statut)">{{ item.statut }}</span></td>
-            <td class="text-muted small">{{ item.cvNomFichier || '-' }}</td>
-            <td class="text-muted small">{{ item.lettreContenu | slice: 0: 40 }}</td>
-            <td class="text-end">
-              <button class="btn btn-sm btn-outline-success me-2" (click)="accept(item.idCandidature)">Accepter</button>
-              <button class="btn btn-sm btn-outline-danger" (click)="reject(item.idCandidature)">Rejeter</button>
-            </td>
-          </tr>
-          <tr *ngIf="candidatures().length === 0">
-            <td colspan="7" class="text-center text-muted">Aucune candidature</td>
-          </tr>
-        </tbody>
-      </table>
+
+    <!-- 3 Dashboard Stats Cards -->
+    <div class="stats-counter-grid compact-stats mb-4" *ngIf="candidatures().length > 0">
+      <div class="counter-card card-blue">
+        <div class="card-icon"><i class="ti ti-users"></i></div>
+        <div class="card-info">
+          <h3>{{ totalCount }}</h3>
+          <p>Candidatures reçues</p>
+        </div>
+      </div>
+      <div class="counter-card card-amber">
+        <div class="card-icon"><i class="ti ti-clock"></i></div>
+        <div class="card-info">
+          <h3>{{ pendingCount }}</h3>
+          <p>En attente d'évaluation</p>
+        </div>
+      </div>
+      <div class="counter-card card-green">
+        <div class="card-icon"><i class="ti ti-discount-check"></i></div>
+        <div class="card-info">
+          <h3>{{ acceptedCount }}</h3>
+          <p>Profils acceptés</p>
+        </div>
+      </div>
     </div>
-    <div class="alert alert-danger mt-3" *ngIf="error()">{{ error() }}</div>
+
+    <!-- Main Workspace Grid -->
+    <div class="row">
+      <!-- LEFT COLUMN: Career Ad & Filtering Info -->
+      <div class="col-lg-4 mb-4">
+        <!-- Premium Advertising Card -->
+        <div class="premium-promo-ad-card mb-4" style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #1e293b 100%); margin-top: 0;">
+          <div class="ad-badge" style="background: rgba(99, 102, 241, 0.15); border-color: rgba(99, 102, 241, 0.3); color: #818cf8;">Smart Hire</div>
+          <div class="ad-content">
+            <h4>Filtrez par compétences ⚡</h4>
+            <p>Utilisez la recherche instantanée pour isoler directement les profils maîtrisant les stacks requises pour vos projets.</p>
+            <span class="ad-btn" style="background: #6366f1; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); color: #ffffff; cursor: default;">Recherche en temps réel</span>
+          </div>
+          <div class="ad-pattern"></div>
+        </div>
+
+        <!-- Recruitment Compact Tips -->
+        <div class="premium-card">
+          <div class="card-header-clean">
+            <h3>Astuces Recruteur 💡</h3>
+          </div>
+          <div class="card-body">
+            <p class="small text-muted mb-2"><strong>1. Évaluation rapide :</strong> Cliquez sur le nom de n'importe quel candidat pour déplier instantanément l'intégralité de sa fiche (Compétences, Expérience Détaillée, Langues et Adresse).</p>
+            <p class="small text-muted mb-0"><strong>2. Suivi régulier :</strong> Répondre aux candidats sous 5 jours améliore la réputation de votre entreprise de +30% sur le marché tunisien.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Interactive SaaS Table -->
+      <div class="col-lg-8">
+        <div class="premium-card">
+          <div class="card-header-clean d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
+            <div>
+              <h3>Toutes vos candidatures ({{ filteredCandidatures.length }})</h3>
+            </div>
+            <!-- Live Search Bar -->
+            <div class="position-relative" style="max-width: 280px; width: 100%;">
+              <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" style="font-size: 15px;"></i>
+              <input
+                type="text"
+                class="form-control ps-5"
+                placeholder="Compétence, nom, diplôme..."
+                [ngModel]="searchQuery()"
+                (ngModelChange)="searchQuery.set($event)"
+                style="border-radius: 8px; font-size: 13px; border: 1px solid #e2e8f0; height: 38px; box-shadow: none;"
+              />
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="table-responsive" *ngIf="filteredCandidatures.length > 0">
+              <table class="table table-hover align-middle custom-candidatures-table" style="margin: 0;">
+                <thead>
+                  <tr>
+                    <th>Candidat</th>
+                    <th>Poste ciblé</th>
+                    <th>Date</th>
+                    <th>Statut</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let item of filteredCandidatures">
+                    <!-- Standard Row -->
+                    <tr class="candidature-row" [class.active-row]="expandedCandidatureId() === item.idCandidature">
+                      <!-- Candidate Cell -->
+                      <td class="candidate-cell" (click)="toggleDetails(item.idCandidature)" style="cursor: pointer;">
+                        <div class="avatar-bubble">
+                          {{ (item.nom || 'C').charAt(0) | uppercase }}{{ (item.prenom || 'N').charAt(0) | uppercase }}
+                        </div>
+                        <div class="candidate-info">
+                          <span class="name" style="display: flex; align-items: center; gap: 6px; font-weight: 700; color: #1e293b; font-size: 13.5px;">
+                            {{ item.nom }} {{ item.prenom }}
+                            <i class="ti" [class.ti-chevron-down]="expandedCandidatureId() !== item.idCandidature" [class.ti-chevron-up]="expandedCandidatureId() === item.idCandidature" style="font-size: 12px; color: #6366f1;"></i>
+                          </span>
+                          <span class="subtext text-muted small">{{ item.email }}</span>
+                        </div>
+                      </td>
+
+                      <!-- Job / Offer Cell -->
+                      <td>
+                        <div class="fw-semibold" style="font-size: 13px; color: #334155;">{{ item.titre || 'Offre d\'emploi' }}</div>
+                        <div class="text-muted small" style="font-size: 11px;">{{ item.nomEntreprise }}</div>
+                      </td>
+
+                      <!-- Date -->
+                      <td style="font-size: 12px; color: #64748b;">{{ item.datePostulation | date: 'dd/MM/yyyy' }}</td>
+
+                      <!-- Status Badge -->
+                      <td>
+                        <span class="status-badge" [class]="item.statut.toLowerCase()">
+                          <span class="dot"></span>
+                          {{ item.statut === 'EN_ATTENTE' ? 'En attente' : item.statut === 'ACCEPTEE' ? 'Accepté' : 'Refusé' }}
+                        </span>
+                      </td>
+
+                      <!-- Actions -->
+                      <td class="text-end">
+                        <div class="btn-group-custom d-inline-flex gap-2" *ngIf="item.statut === 'EN_ATTENTE'">
+                          <button class="btn btn-sm btn-outline-success" (click)="accept(item.idCandidature)" style="border-radius: 6px; font-weight: 600;" title="Accepter la candidature">
+                            <i class="ti ti-circle-check"></i>
+                          </button>
+                          <button class="btn btn-sm btn-outline-danger" (click)="reject(item.idCandidature)" style="border-radius: 6px; font-weight: 600;" title="Rejeter la candidature">
+                            <i class="ti ti-circle-x"></i>
+                          </button>
+                        </div>
+                        <span style="font-size: 11.5px; font-weight: 700; color: #10b981;" *ngIf="item.statut === 'ACCEPTEE'">
+                          <i class="ti ti-discount-check-filled"></i> Accepté
+                        </span>
+                        <span style="font-size: 11.5px; font-weight: 700; color: #ef4444;" *ngIf="item.statut === 'REJETEE'">
+                          <i class="ti ti-circle-x-filled"></i> Refusé
+                        </span>
+                      </td>
+                    </tr>
+
+                    <!-- Collapsible Drawer Details Row -->
+                    <tr *ngIf="expandedCandidatureId() === item.idCandidature" class="details-row">
+                      <td colspan="5" class="details-cell" style="padding: 20px 24px; background: rgba(99, 102, 241, 0.015); border-left: 4px solid #6366f1; border-top: none;">
+                        <div class="candidate-profile-drawer" style="animation: fadeIn 0.25s ease-out;">
+                          <div class="row g-4">
+                            <!-- Left panel: Info and attachments -->
+                            <div class="col-md-6">
+                              <h4 style="margin: 0 0 12px; font-size: 12px; font-weight: 800; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+                                <i class="ti ti-id"></i> Coordonnées & Parcours
+                              </h4>
+                              <ul style="list-style: none; padding: 0; margin: 0 0 16px 0; display: flex; flex-direction: column; gap: 8px;">
+                                <li style="font-size: 13px; color: #334155; display: flex; align-items: center; gap: 8px;">
+                                  <i class="ti ti-phone" style="color: #64748b; font-size: 15px;"></i>
+                                  <strong>Téléphone:</strong> {{ item.telephone || 'Non renseigné' }}
+                                </li>
+                                <li style="font-size: 13px; color: #334155; display: flex; align-items: center; gap: 8px;">
+                                  <i class="ti ti-map-pin" style="color: #64748b; font-size: 15px;"></i>
+                                  <strong>Adresse:</strong> {{ item.adresse || 'Non renseignée' }}
+                                </li>
+                                <li style="font-size: 13px; color: #334155; display: flex; align-items: center; gap: 8px;">
+                                  <i class="ti ti-school" style="color: #64748b; font-size: 15px;"></i>
+                                  <strong>Niveau d'études:</strong> {{ item.niveauEtude || 'Non renseigné' }}
+                                </li>
+                                <li style="font-size: 13px; color: #334155; display: flex; align-items: center; gap: 8px;">
+                                  <i class="ti ti-calendar" style="color: #64748b; font-size: 15px;"></i>
+                                  <strong>Expérience:</strong> {{ item.experience != null ? item.experience + ' ans' : 'Débutant' }}
+                                </li>
+                              </ul>
+
+                              <!-- File Attachments (CV / Lettre) -->
+                              <h4 style="margin: 0 0 10px; font-size: 12px; font-weight: 800; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+                                <i class="ti ti-paperclip"></i> Documents joints
+                              </h4>
+                              <div class="d-flex flex-column gap-2">
+                                <div class="p-2 border rounded d-flex align-items-center justify-content-between bg-white" style="font-size: 12.5px;">
+                                  <span class="text-truncate" style="max-width: 220px;">
+                                    <i class="ti ti-file-text text-danger me-2" style="font-size: 16px;"></i> 
+                                    <strong>CV:</strong> {{ item.cvNomFichier || 'Aucun CV joint' }}
+                                  </span>
+                                  <span class="text-muted small" *ngIf="!item.cvNomFichier">Inexistant</span>
+                                  <span class="badge bg-success-soft text-success px-2 py-1" *ngIf="item.cvNomFichier" style="font-weight: 600; border-radius: 4px;">Disponible</span>
+                                </div>
+
+                                <div class="p-2 border rounded bg-white" style="font-size: 12.5px;">
+                                  <div class="mb-1"><strong>Lettre de motivation:</strong></div>
+                                  <div class="text-muted" style="font-style: italic; white-space: pre-line; line-height: 1.5; font-size: 12px; max-height: 100px; overflow-y: auto; background: #fafafa; padding: 8px; border-radius: 4px;">
+                                    {{ item.lettreContenu || 'Aucune lettre de motivation fournie.' }}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Right panel: Skills and Experience Description -->
+                            <div class="col-md-6">
+                              <h4 style="margin: 0 0 12px; font-size: 12px; font-weight: 800; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+                                <i class="ti ti-cpu"></i> Compétences & Langues
+                              </h4>
+                              <div style="margin-bottom: 12px;">
+                                <span style="font-size: 12px; color: #64748b; display: block; margin-bottom: 6px;">Compétences clés :</span>
+                                <div style="display: flex; flex-wrap: wrap; gap: 6px;" *ngIf="item.competences && item.competences.length > 0">
+                                  <span style="background: #e0e7ff; color: #4f46e5; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600;" *ngFor="let comp of item.competences">{{ comp }}</span>
+                                </div>
+                                <span style="font-size: 12px; color: #94a3b8; font-style: italic;" *ngIf="!item.competences || item.competences.length === 0">Aucune compétence déclarée</span>
+                              </div>
+                              <div style="margin-bottom: 20px;">
+                                <span style="font-size: 12px; color: #64748b; display: block; margin-bottom: 6px;">Langues maîtrisées :</span>
+                                <div style="display: flex; flex-wrap: wrap; gap: 6px;" *ngIf="item.langues && item.langues.length > 0">
+                                  <span style="background: #f1f5f9; color: #475569; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px;" *ngFor="let lang of item.langues">
+                                    <i class="ti ti-world" style="font-size: 12px;"></i> {{ lang }}
+                                  </span>
+                                </div>
+                                <span style="font-size: 12px; color: #94a3b8; font-style: italic;" *ngIf="!item.langues || item.langues.length === 0">Aucune langue déclarée</span>
+                              </div>
+
+                              <h4 style="margin: 0 0 10px; font-size: 12px; font-weight: 800; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+                                <i class="ti ti-file-description"></i> Expérience Professionnelle (Extrait CV)
+                              </h4>
+                              <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px; font-size: 12.5px; color: #334155; line-height: 1.5; white-space: pre-line; max-height: 160px; overflow-y: auto;" *ngIf="item.experienceDescription">
+                                {{ item.experienceDescription }}
+                              </div>
+                              <div style="font-size: 12px; color: #94a3b8; font-style: italic;" *ngIf="!item.experienceDescription">
+                                Aucun détail d'expérience supplémentaire n'a été extrait.
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Empty State for Search or Database -->
+            <div class="empty-state-card py-5 text-center" *ngIf="filteredCandidatures.length === 0">
+              <div class="empty-icon mb-3" style="font-size: 40px; color: #cbd5e1;"><i class="ti ti-users-minus"></i></div>
+              <h4 style="font-weight: 700; color: #475569;">Aucune candidature trouvée</h4>
+              <p class="text-muted px-4" style="font-size: 13.5px; max-width: 480px; margin: 0 auto 15px;">
+                {{ searchQuery() ? 'Ajustez votre recherche en modifiant le mot-clé pour explorer d\'autres profils.' : 'Vous n\'avez reçu aucune candidature pour le moment.' }}
+              </p>
+            </div>
+
+            <div class="alert alert-danger mt-3" *ngIf="error()">
+              {{ error() }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+

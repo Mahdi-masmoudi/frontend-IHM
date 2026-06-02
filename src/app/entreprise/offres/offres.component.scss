@@ -1,0 +1,71 @@
+/* ── Mes Offres Premium Recruteur ───────────────────────────────── */
+
+.entreprise-offres-page {
+  min-height: calc(100vh - 100px);
+  padding: 40px 24px;
+  background: radial-gradient(circle at 12% 12%, rgba(16, 185, 129, 0.02), transparent 40%),
+              radial-gradient(circle at 88% 88%, rgba(99, 102, 241, 0.02), transparent 40%),
+              #f8fafc;
+}
+
+.offres-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-row {
+  h2 {
+    font-size: 26px;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0 0 6px;
+    letter-spacing: -0.5px;
+  }
+
+  p {
+    font-size: 14.5px;
+    color: #64748b;
+    margin: 0;
+  }
+}
+
+.premium-card {
+  background: #ffffff;
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.025);
+  overflow: hidden;
+}
+
+.card-header-clean {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+
+  h3 {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+  }
+}
+
+.card-body {
+  padding: 24px;
+}
+
+.candidature-row {
+  transition: all 0.2s;
+  &:hover {
+    background-color: rgba(99, 102, 241, 0.01);
+  }
+}
+
+.bg-indigo-soft {
+  background: rgba(99, 102, 241, 0.1);
+  color: #4f46e5;
+  transition: all 0.2s;
+  &:hover {
+    background: #4f46e5;
+    color: #ffffff !important;
+  }
+}

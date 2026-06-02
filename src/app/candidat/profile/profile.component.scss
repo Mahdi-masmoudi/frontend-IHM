@@ -1,0 +1,175 @@
+/* ── Mon Profil Premium ─────────────────────────────────────────── */
+
+.candidat-profile-page {
+  min-height: calc(100vh - 100px);
+  padding: 40px 24px;
+  background: radial-gradient(circle at 12% 12%, rgba(6, 182, 212, 0.02), transparent 40%),
+              radial-gradient(circle at 88% 88%, rgba(99, 102, 241, 0.02), transparent 40%),
+              #f8fafc;
+}
+
+.profile-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-row {
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #6366f1;
+    text-decoration: none;
+    margin-bottom: 12px;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateX(-4px);
+    }
+  }
+
+  h2 {
+    font-size: 26px;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0 0 6px;
+    letter-spacing: -0.5px;
+  }
+
+  p {
+    font-size: 14.5px;
+    color: #64748b;
+    margin: 0;
+  }
+}
+
+.premium-card {
+  background: #ffffff;
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.025);
+  overflow: hidden;
+}
+
+.card-header-clean {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+
+  h3 {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+  }
+}
+
+.card-body {
+  padding: 24px;
+}
+
+/* Avatar identidad */
+.profile-avatar-center {
+  text-align: center;
+  
+  .avatar-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 800;
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.25);
+  }
+
+  h4 {
+    font-size: 18px;
+    font-weight: 800;
+    color: #0f172a;
+  }
+  
+  .badge {
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 20px;
+  }
+}
+
+.bg-indigo-soft {
+  background: rgba(99, 102, 241, 0.1);
+  color: #4f46e5;
+}
+
+/* Compact SaaS Form Inputs */
+.compact-saas-form {
+  .form-label-saas {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #475569;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .input-wrapper-saas {
+    position: relative;
+    
+    i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 15px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px 12px 10px 38px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #334155;
+      background: #ffffff;
+      outline: none;
+      transition: all 0.2s;
+
+      &:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+    }
+  }
+
+  textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #334155;
+    background: #ffffff;
+    outline: none;
+    resize: vertical;
+    min-height: 100px;
+    transition: all 0.2s;
+
+    &:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+  }
+}
+
+.cv-compact-item {
+  transition: all 0.2s;
+  &:hover {
+    background-color: #f1f5f9 !important;
+    border-color: #cbd5e1 !important;
+  }
+}

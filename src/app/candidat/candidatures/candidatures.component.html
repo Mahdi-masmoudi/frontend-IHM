@@ -1,41 +1,126 @@
-<div class="card candidatures-card">
-  <div class="card-body">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <div>
-        <h4 class="mb-1">Mes candidatures</h4>
-        <p class="text-muted mb-0">Suivez vos postulations et leurs statuts.</p>
+<div class="candidat-candidatures-page">
+  <div class="candidatures-container">
+    <div class="header-row">
+      <div class="header-info">
+        <a routerLink="/candidat/dashboard" class="back-link"><i class="ti ti-arrow-left"></i> Retour au tableau de bord</a>
+        <h2>Mes Candidatures 💼</h2>
+        <p>Suivez en temps réel l'avancement et les décisions de vos candidatures auprès des recruteurs tunisiens.</p>
       </div>
     </div>
-    <div class="table-responsive">
-      <table class="table align-middle">
-        <thead>
-          <tr>
-            <th>Offre</th>
-            <th>Entreprise</th>
-            <th>Date</th>
-            <th>Statut</th>
-            <th>CV</th>
-            <th>Lettre</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of candidatures()">
-            <td>
-              <div class="fw-semibold">{{ item.titre || 'Offre' }}</div>
-              <div class="text-muted small">{{ item.localisation }} · {{ item.typeContrat }}</div>
-            </td>
-            <td>{{ item.nomEntreprise || '-' }}</td>
-            <td>{{ item.datePostulation | date: 'short' }}</td>
-            <td><span [class]="statusClass(item.statut)">{{ item.statut }}</span></td>
-            <td class="text-muted small">{{ item.cvNomFichier || '-' }}</td>
-            <td class="text-muted small">{{ item.lettreContenu | slice: 0: 40 }}</td>
-          </tr>
-          <tr *ngIf="candidatures().length === 0">
-            <td colspan="6" class="text-center text-muted">Aucune candidature</td>
-          </tr>
-        </tbody>
-      </table>
+
+    <!-- 3 Dashboard Cards -->
+    <div class="stats-counter-grid compact-stats mb-4" *ngIf="candidatures().length > 0">
+      <div class="counter-card card-blue">
+        <div class="card-icon"><i class="ti ti-file-text"></i></div>
+        <div class="card-info">
+          <h3>{{ totalCount }}</h3>
+          <p>Total Postulé</p>
+        </div>
+      </div>
+      <div class="counter-card card-amber">
+        <div class="card-icon"><i class="ti ti-clock"></i></div>
+        <div class="card-info">
+          <h3>{{ pendingCount }}</h3>
+          <p>En Attente</p>
+        </div>
+      </div>
+      <div class="counter-card card-green">
+        <div class="card-icon"><i class="ti ti-circle-check"></i></div>
+        <div class="card-info">
+          <h3>{{ acceptedCount }}</h3>
+          <p>Accepté</p>
+        </div>
+      </div>
     </div>
-    <div class="alert alert-danger mt-3" *ngIf="error()">{{ error() }}</div>
+
+    <!-- Main List Card -->
+    <div class="premium-card">
+      <div class="card-header-clean">
+        <h3>Historique de mes postulations ({{ candidatures().length }})</h3>
+      </div>
+
+      <div class="card-body">
+        <div class="table-responsive" *ngIf="candidatures().length > 0">
+          <table class="table align-middle custom-candidatures-table">
+            <thead>
+              <tr>
+                <th>Poste & Offre</th>
+                <th>Entreprise</th>
+                <th>Date de postulation</th>
+                <th>Document CV</th>
+                <th>Lettre de motivation</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of candidatures()" class="candidature-row">
+                <!-- Position details -->
+                <td class="position-cell">
+                  <div class="position-icon"><i class="ti ti-briefcase"></i></div>
+                  <div class="position-details">
+                    <span class="title">{{ item.titre || 'Offre d\'emploi' }}</span>
+                    <span class="subtext">{{ item.typeContrat }} · {{ item.localisation }}</span>
+                  </div>
+                </td>
+
+                <!-- Company -->
+                <td class="company-cell">
+                  <div class="company-avatar" *ngIf="item.logo">
+                    <img [src]="item.logo" alt="Logo" class="company-logo-img" />
+                  </div>
+                  <div class="company-avatar empty" *ngIf="!item.logo">
+                    {{ (item.nomEntreprise || 'E').charAt(0) | uppercase }}
+                  </div>
+                  <span class="company-name">{{ item.nomEntreprise || 'Entreprise' }}</span>
+                </td>
+
+                <!-- Postulation Date -->
+                <td>
+                  <span class="date-text"><i class="ti ti-calendar"></i> {{ item.datePostulation | date: 'dd MMMM yyyy à HH:mm' }}</span>
+                </td>
+
+                <!-- CV -->
+                <td>
+                  <div class="attachment-badge" *ngIf="item.cvNomFichier">
+                    <i class="ti ti-file-text"></i>
+                    <span class="filename" [title]="item.cvNomFichier">{{ item.cvNomFichier | slice:0:15 }}...</span>
+                  </div>
+                  <span class="text-muted text-italic small" *ngIf="!item.cvNomFichier">-</span>
+                </td>
+
+                <!-- Cover letter -->
+                <td>
+                  <div class="letter-quote" [title]="item.lettreContenu || 'Aucune lettre'" *ngIf="item.lettreContenu">
+                    <i class="ti ti-quote"></i>
+                    <span class="text">{{ item.lettreContenu | slice:0:45 }}...</span>
+                  </div>
+                  <span class="text-muted text-italic small" *ngIf="!item.lettreContenu">-</span>
+                </td>
+
+                <!-- Status -->
+                <td>
+                  <span class="status-badge" [class]="item.statut.toLowerCase()">
+                    <span class="dot"></span>
+                    {{ item.statut === 'EN_ATTENTE' ? 'En attente' : item.statut === 'ACCEPTEE' ? 'Accepté' : 'Refusé' }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state-card" *ngIf="candidatures().length === 0">
+          <div class="empty-icon"><i class="ti ti-briefcase-off"></i></div>
+          <h4>Aucune candidature en cours</h4>
+          <p>Vous n'avez pas encore postulé à des offres d'emploi. Parcourez la liste des offres disponibles pour postuler !</p>
+          <a routerLink="/offres" class="btn-discover-jobs"><i class="ti ti-search"></i> Découvrir les offres d'emploi</a>
+        </div>
+
+        <div class="alert-error-banner mt-3" *ngIf="error()">
+          <i class="ti ti-alert-triangle"></i> {{ error() }}
+        </div>
+      </div>
+    </div>
   </div>
 </div>

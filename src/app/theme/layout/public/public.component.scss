@@ -7,15 +7,16 @@
   background: #f8fafc;
 }
 
-/* ── Navbar ─────────────────────────────────────────────────────────── */
+/* ── Navbar (TheJobs Premium White Theme) ─────────────────────────── */
 .public-navbar {
-  background: #1e293b;
-  color: #fff;
+  background: #ffffff;
+  color: #1e293b;
   padding: 0 24px;
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .navbar-container {
@@ -33,25 +34,25 @@
     align-items: center;
     gap: 12px;
     text-decoration: none;
-    color: #fff;
+    color: #1e293b;
     
     .logo-icon {
       width: 40px;
       height: 40px;
       border-radius: 10px;
-      background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+      background: #3b82f6; /* Premium Blue */
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 24px;
       color: #fff;
-      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
     }
 
     .logo-text {
-      font-size: 22px;
-      font-weight: 700;
+      font-size: 26px;
+      font-weight: 800;
       letter-spacing: -0.5px;
+      color: #0f172a;
     }
   }
 }
@@ -62,15 +63,15 @@
   gap: 32px;
 
   a {
-    color: #cbd5e1;
+    color: #475569;
     text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 15px;
+    font-weight: 600;
     transition: color 0.2s;
     position: relative;
 
     &:hover, &.active {
-      color: #0ea5e9;
+      color: #3b82f6; /* Blue */
     }
 
     &.active::after {
@@ -80,7 +81,7 @@
       left: 0;
       width: 100%;
       height: 3px;
-      background: #0ea5e9;
+      background: #3b82f6;
       border-radius: 3px 3px 0 0;
     }
   }
@@ -96,34 +97,34 @@
     align-items: center;
     gap: 6px;
     padding: 10px 20px;
-    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    background: #eff6ff;
+    border: none;
     border-radius: 8px;
-    color: #fff;
+    color: #3b82f6;
     text-decoration: none;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     transition: all 0.2s;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.3);
+      background: #dbeafe;
     }
   }
 
   .btn-signup {
     padding: 10px 24px;
     border-radius: 8px;
-    background: #fb7185; /* Pink/Red like screenshot */
+    background: #3b82f6; /* Blue */
     color: #fff;
     text-decoration: none;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     transition: all 0.2s;
-    box-shadow: 0 4px 12px rgba(251, 113, 133, 0.3);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 
     &:hover {
-      background: #f43f5e;
-      transform: translateY(-1px);
+      background: #2563eb;
+      transform: translateY(-2px);
     }
   }
 }
@@ -142,7 +143,7 @@
 .btn-user {
   background: none;
   border: none;
-  color: #fff;
+  color: #0f172a;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -151,22 +152,23 @@
   border-radius: 8px;
   transition: background 0.2s;
 
-  &:hover { background: rgba(255, 255, 255, 0.1); }
+  &:hover { background: #f8fafc; }
 
   .avatar {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+    background: #3b82f6;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 600;
     font-size: 13px;
+    color: #fff;
   }
 
-  span { font-size: 14px; font-weight: 500; }
-  i { font-size: 14px; color: #94a3b8; }
+  span { font-size: 14px; font-weight: 600; }
+  i { font-size: 14px; color: #64748b; }
 }
 
 .dropdown-menu {
@@ -248,14 +250,103 @@
   margin: 0 auto;
 }
 
-.footer-top {
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.5fr 1.5fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.footer-col {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  margin-bottom: 40px;
 
-  p { margin: 16px 0 24px; font-size: 15px; }
+  &.brand-col {
+    p { margin: 16px 0 24px; font-size: 14px; line-height: 1.6; color: #cbd5e1; }
+  }
+
+  h4 {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 20px;
+    position: relative;
+    padding-bottom: 12px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 40px;
+      height: 3px;
+      background: #3b82f6;
+      border-radius: 2px;
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    
+    li {
+      margin-bottom: 12px;
+      
+      a {
+        color: #94a3b8;
+        text-decoration: none;
+        font-size: 14px;
+        transition: all 0.2s;
+        
+        &:hover {
+          color: #3b82f6;
+          padding-left: 4px;
+        }
+      }
+    }
+  }
+
+  .contact-info {
+    li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: #94a3b8;
+      font-size: 14px;
+      line-height: 1.5;
+      
+      i {
+        font-size: 18px;
+        color: #3b82f6;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+    }
+  }
+
+  .tags-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .footer-tag {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        background: #3b82f6;
+        border-color: #3b82f6;
+        color: #fff;
+      }
+    }
+  }
 }
 
 .footer-brand {
@@ -267,7 +358,7 @@
     width: 36px;
     height: 36px;
     border-radius: 8px;
-    background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+    background: #3b82f6;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -315,4 +406,16 @@
 
 @media (max-width: 991px) {
   .navbar-menu { display: none; } /* Could add a hamburger menu later */
+  
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 576px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
 }

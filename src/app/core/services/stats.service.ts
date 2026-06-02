@@ -35,6 +35,7 @@ export interface CandidatStats {
   recentCandidatures: any[];
   profileCompletion: number;
   suggestions: ProfileSuggestion[];
+  niveau: string;
 }
 
 export interface EntrepriseStats {
@@ -45,6 +46,9 @@ export interface EntrepriseStats {
   acceptees: number;
   recentCandidatures: any[];
   candidaturesByOffre: { titre: string; count: number }[];
+  profileCompletion: number;
+  suggestions: ProfileSuggestion[];
+  niveau: string;
 }
 
 @Injectable({ providedIn: 'root' })
