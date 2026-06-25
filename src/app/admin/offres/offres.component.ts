@@ -24,6 +24,30 @@ export class OffresComponent implements OnInit {
       (o.statut || '').toLowerCase().includes(term)
     );
   });
+
+  // Pagination
+  currentPage = signal(1);
+  itemsPerPage = 10;
+  Math = Math;
+
+  paginatedOffres = computed(() => {
+    const filtered = this.filteredOffres();
+    const startIndex = (this.currentPage() - 1) * this.itemsPerPage;
+    return filtered.slice(startIndex, startIndex + this.itemsPerPage);
+  });
+
+  totalPages = computed(() => Math.ceil(this.filteredOffres().length / this.itemsPerPage));
+
+  setPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages()) {
+      this.currentPage.set(page);
+    }
+  }
+
+  // Stats
+  totalOffres = computed(() => this.offres().length);
+  activeOffres = computed(() => this.offres().filter(o => o.statut === 'ACTIVE').length);
+  closedOffres = computed(() => this.offres().filter(o => o.statut === 'FERMEE').length);
   showConfirmModal = signal(false);
   idToDelete = signal<string | null>(null);
   confirmMessage = signal<string>('');

@@ -16,14 +16,21 @@ export class AdminComponent {
   sidebarOpen = signal(true);
   profileMenuOpen = signal(false);
   mobileMenuOpen = signal(false);
-  userProfile = signal<AuthProfile | null>(null);
+  userProfile = this.authService.currentUser;
+
+  get isNoPaddingPage(): boolean {
+    const url = this.router.url;
+    return url.includes('/offres/nouveau') || url.includes('/edit') || url.includes('/entreprise/candidatures') || url.includes('/entreprise/offres');
+  }
 
   constructor(
     private tokenService: TokenService,
     private authService: AuthService,
     private router: Router
   ) {
-    this.loadProfile();
+    if (!this.userProfile()) {
+      this.loadProfile();
+    }
   }
 
   get isAdmin(): boolean {
@@ -60,13 +67,7 @@ export class AdminComponent {
   }
 
   loadProfile(): void {
-    this.authService.getProfile().subscribe({
-      next: (profile) => this.userProfile.set(profile),
-      error: () => {
-        // Don't logout here — it causes an infinite loop.
-        // The auth guard already protects routes.
-      }
-    });
+    this.authService.loadProfile();
   }
 
   toggleSidebar(): void {
@@ -94,7 +95,7 @@ export class AdminComponent {
   }
 
   logout(): void {
-    this.tokenService.clearToken();
+    this.authService.logout();
     this.router.navigate(['/login']);
   }
 }

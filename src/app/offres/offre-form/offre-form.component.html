@@ -1,39 +1,40 @@
 <div class="job-form-page">
   <div class="job-form-container">
-    <div class="form-card">
+    <form [formGroup]="form" (ngSubmit)="save()" class="form-card">
       <div class="form-header-premium">
-        <div class="header-icon"><i class="ti ti-briefcase"></i></div>
-        <div class="header-details">
-          <h2>{{ offreId ? 'Modifier l\'Offre d\'Emploi' : 'Publier une Nouvelle Offre' }} 💼</h2>
-          <p>Remplissez les détails ci-dessous pour publier votre opportunité auprès des talents tunisiens.</p>
+        <div class="header-left-side">
+          <div class="header-icon"><i class="ti ti-briefcase"></i></div>
+          <div class="header-details">
+            <h2>{{ offreId ? 'Modifier l\'Offre d\'Emploi' : 'Publier une Nouvelle Offre' }} 💼</h2>
+            <p>Remplissez les détails ci-dessous pour publier votre opportunité auprès des talents tunisiens.</p>
+          </div>
+        </div>
+        <!-- Actions moved to the top -->
+        <div class="form-actions-top">
+          <a routerLink="/entreprise/dashboard" class="btn-cancel">Annuler</a>
+          <button type="submit" class="btn-submit" [disabled]="loading()">
+            <span *ngIf="!loading()"><i class="ti ti-send"></i> {{ offreId ? 'Sauvegarder' : 'Publier l\'offre' }}</span>
+            <span *ngIf="loading()"><i class="ti ti-loader-2 spin"></i> ...</span>
+          </button>
         </div>
       </div>
 
-      <form [formGroup]="form" (ngSubmit)="save()" class="premium-form">
-        <!-- Titre de l'offre -->
-        <div class="form-group mb-4">
-          <label for="titre">Titre de l'offre *</label>
-          <div class="input-wrapper">
-            <i class="ti ti-typography input-icon"></i>
-            <input type="text" id="titre" placeholder="Ex: Développeur Full-Stack Angular / Node.js" formControlName="titre"
-              [class.is-invalid]="form.get('titre')?.invalid && form.get('titre')?.touched" />
+      <div class="premium-form">
+        <!-- Row 1: Titre, Type de contrat, Localisation (3 inputs) -->
+        <div class="form-row-grid-3 mb-4">
+          <!-- Titre de l'offre -->
+          <div class="form-group">
+            <label for="titre">Titre de l'offre *</label>
+            <div class="input-wrapper">
+              <i class="ti ti-typography input-icon"></i>
+              <input type="text" id="titre" placeholder="Ex: Développeur Full-Stack Angular / Node.js" formControlName="titre"
+                [class.is-invalid]="form.get('titre')?.invalid && form.get('titre')?.touched" />
+            </div>
+            <div class="field-error" *ngIf="form.get('titre')?.invalid && form.get('titre')?.touched">
+              Le titre de l'offre est requis.
+            </div>
           </div>
-          <div class="field-error" *ngIf="form.get('titre')?.invalid && form.get('titre')?.touched">
-            Le titre de l'offre est requis.
-          </div>
-        </div>
 
-        <!-- Description -->
-        <div class="form-group mb-4">
-          <label for="description">Description détaillée du poste *</label>
-          <textarea id="description" class="form-textarea" placeholder="Décrivez les missions principales, la culture d'entreprise, et les responsabilités du poste..." formControlName="description" rows="6"
-            [class.is-invalid]="form.get('description')?.invalid && form.get('description')?.touched"></textarea>
-          <div class="field-error" *ngIf="form.get('description')?.invalid && form.get('description')?.touched">
-            La description du poste est requise.
-          </div>
-        </div>
-
-        <div class="form-row-grid">
           <!-- Type de contrat -->
           <div class="form-group">
             <label for="typeContrat">Type de contrat *</label>
@@ -48,6 +49,9 @@
                 <option value="Intérim">Intérim</option>
               </select>
             </div>
+            <div class="field-error" *ngIf="form.get('typeContrat')?.invalid && form.get('typeContrat')?.touched">
+              Le type de contrat est requis.
+            </div>
           </div>
 
           <!-- Localisation -->
@@ -58,10 +62,24 @@
               <input type="text" id="localisation" placeholder="Ex: Tunis, Les Berges du Lac" formControlName="localisation"
                 [class.is-invalid]="form.get('localisation')?.invalid && form.get('localisation')?.touched" />
             </div>
+            <div class="field-error" *ngIf="form.get('localisation')?.invalid && form.get('localisation')?.touched">
+              La localisation est requise.
+            </div>
           </div>
         </div>
 
-        <div class="form-row-grid mt-2">
+        <!-- Row 2: Description (1 textarea) -->
+        <div class="form-group mb-4">
+          <label for="description">Description détaillée du poste *</label>
+          <textarea id="description" class="form-textarea" placeholder="Décrivez les missions principales, la culture d'entreprise, et les responsabilités du poste..." formControlName="description" rows="6"
+            [class.is-invalid]="form.get('description')?.invalid && form.get('description')?.touched"></textarea>
+          <div class="field-error" *ngIf="form.get('description')?.invalid && form.get('description')?.touched">
+            La description du poste est requise.
+          </div>
+        </div>
+
+        <!-- Row 3: Salaire, Expérience, Statut (3 inputs) -->
+        <div class="form-row-grid-3-equal mb-4">
           <!-- Salaire -->
           <div class="form-group">
             <label for="salaire">Salaire Mensuel Proposé (DT) *</label>
@@ -69,6 +87,9 @@
               <i class="ti ti-coin input-icon"></i>
               <input type="number" id="salaire" placeholder="Ex: 2500" formControlName="salaire" min="0"
                 [class.is-invalid]="form.get('salaire')?.invalid && form.get('salaire')?.touched" />
+            </div>
+            <div class="field-error" *ngIf="form.get('salaire')?.invalid && form.get('salaire')?.touched">
+              Le salaire proposé est requis.
             </div>
           </div>
 
@@ -80,16 +101,8 @@
               <input type="number" id="experienceDemandee" placeholder="Ex: 2" formControlName="experienceDemandee" min="0"
                 [class.is-invalid]="form.get('experienceDemandee')?.invalid && form.get('experienceDemandee')?.touched" />
             </div>
-          </div>
-        </div>
-
-        <div class="form-row-grid mt-2">
-          <!-- Compétences requises -->
-          <div class="form-group">
-            <label for="competences">Compétences clés (séparées par des virgules)</label>
-            <div class="input-wrapper">
-              <i class="ti ti-cpu input-icon"></i>
-              <input type="text" id="competences" placeholder="Ex: Angular, Node.js, MongoDB, Docker" formControlName="competences" />
+            <div class="field-error" *ngIf="form.get('experienceDemandee')?.invalid && form.get('experienceDemandee')?.touched">
+              L'expérience requise est requise.
             </div>
           </div>
 
@@ -103,22 +116,25 @@
                 <option value="FERMEE">Fermée (Brouillon)</option>
               </select>
             </div>
+            <div class="field-error" *ngIf="form.get('statut')?.invalid && form.get('statut')?.touched">
+              Le statut est requis.
+            </div>
           </div>
         </div>
 
-        <!-- Boutons d'action -->
-        <div class="form-actions mt-4">
-          <a routerLink="/entreprise/dashboard" class="btn-cancel">Annuler</a>
-          <button type="submit" class="btn-submit" [disabled]="loading()">
-            <span *ngIf="!loading()"><i class="ti ti-send"></i> {{ offreId ? 'Sauvegarder les modifications' : 'Publier l\'offre d\'emploi' }}</span>
-            <span *ngIf="loading()"><i class="ti ti-loader-2 spin"></i> Traitement...</span>
-          </button>
+        <!-- Row 4: Compétences clés (1 input) -->
+        <div class="form-group mb-4">
+          <label for="competences">Compétences clés (séparées par des virgules)</label>
+          <div class="input-wrapper">
+            <i class="ti ti-cpu input-icon"></i>
+            <input type="text" id="competences" placeholder="Ex: Angular, Node.js, MongoDB, Docker" formControlName="competences" />
+          </div>
         </div>
 
         <div class="alert-error-banner mt-3" *ngIf="error()">
           <i class="ti ti-alert-triangle"></i> {{ error() }}
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
 </div>

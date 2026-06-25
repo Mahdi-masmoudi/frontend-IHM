@@ -10,8 +10,8 @@
       </div>
     </div>
 
-    <!-- 3 Dashboard Stats Cards -->
-    <div class="stats-counter-grid compact-stats mb-4" *ngIf="candidatures().length > 0">
+    <!-- 4 Dashboard Stats Cards -->
+    <div class="stats-counter-grid compact-stats mb-4" *ngIf="candidatures()">
       <div class="counter-card card-blue">
         <div class="card-icon"><i class="ti ti-users"></i></div>
         <div class="card-info">
@@ -33,22 +33,12 @@
           <p>Profils acceptés</p>
         </div>
       </div>
-    </div>
+
 
     <!-- Main Workspace Grid -->
     <div class="row">
       <!-- LEFT COLUMN: Career Ad & Filtering Info -->
       <div class="col-lg-4 mb-4">
-        <!-- Premium Advertising Card -->
-        <div class="premium-promo-ad-card mb-4" style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #1e293b 100%); margin-top: 0;">
-          <div class="ad-badge" style="background: rgba(99, 102, 241, 0.15); border-color: rgba(99, 102, 241, 0.3); color: #818cf8;">Smart Hire</div>
-          <div class="ad-content">
-            <h4>Filtrez par compétences ⚡</h4>
-            <p>Utilisez la recherche instantanée pour isoler directement les profils maîtrisant les stacks requises pour vos projets.</p>
-            <span class="ad-btn" style="background: #6366f1; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); color: #ffffff; cursor: default;">Recherche en temps réel</span>
-          </div>
-          <div class="ad-pattern"></div>
-        </div>
 
         <!-- Recruitment Compact Tips -->
         <div class="premium-card">
@@ -56,7 +46,7 @@
             <h3>Astuces Recruteur 💡</h3>
           </div>
           <div class="card-body">
-            <p class="small text-muted mb-2"><strong>1. Évaluation rapide :</strong> Cliquez sur le nom de n'importe quel candidat pour déplier instantanément l'intégralité de sa fiche (Compétences, Expérience Détaillée, Langues et Adresse).</p>
+            <p class="small text-muted mb-2"><strong>1. Évaluation rapide :</strong> Cliquez sur le nom de n'importe quel candidat pour déplier instantanément l'intégralité de sa fiche (Compétences, Expérience).</p>
             <p class="small text-muted mb-0"><strong>2. Suivi régulier :</strong> Répondre aux candidats sous 5 jours améliore la réputation de votre entreprise de +30% sur le marché tunisien.</p>
           </div>
         </div>
@@ -66,8 +56,8 @@
       <div class="col-lg-8">
         <div class="premium-card">
           <div class="card-header-clean d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
-            <div>
-              <h3>Toutes vos candidatures ({{ filteredCandidatures.length }})</h3>
+            <div class="d-flex align-items-center gap-3">
+              <h3>Toutes vos candidatures ({{ filteredCandidatures().length }})</h3>
             </div>
             <!-- Live Search Bar -->
             <div class="position-relative" style="max-width: 280px; width: 100%;">
@@ -84,19 +74,18 @@
           </div>
 
           <div class="card-body">
-            <div class="table-responsive" *ngIf="filteredCandidatures.length > 0">
+            <div class="table-responsive" *ngIf="filteredCandidatures().length > 0">
               <table class="table table-hover align-middle custom-candidatures-table" style="margin: 0;">
                 <thead>
                   <tr>
                     <th>Candidat</th>
                     <th>Poste ciblé</th>
-                    <th>Date</th>
                     <th>Statut</th>
                     <th class="text-end">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <ng-container *ngFor="let item of filteredCandidatures">
+                  <ng-container *ngFor="let item of paginatedCandidatures(); let i = index">
                     <!-- Standard Row -->
                     <tr class="candidature-row" [class.active-row]="expandedCandidatureId() === item.idCandidature">
                       <!-- Candidate Cell -->
@@ -116,11 +105,10 @@
                       <!-- Job / Offer Cell -->
                       <td>
                         <div class="fw-semibold" style="font-size: 13px; color: #334155;">{{ item.titre || 'Offre d\'emploi' }}</div>
-                        <div class="text-muted small" style="font-size: 11px;">{{ item.nomEntreprise }}</div>
+                        <div class="text-muted small" style="font-size: 11px;">{{ item.datePostulation | date: 'dd/MM/yyyy' }}</div>
                       </td>
 
-                      <!-- Date -->
-                      <td style="font-size: 12px; color: #64748b;">{{ item.datePostulation | date: 'dd/MM/yyyy' }}</td>
+
 
                       <!-- Status Badge -->
                       <td>
@@ -151,7 +139,7 @@
 
                     <!-- Collapsible Drawer Details Row -->
                     <tr *ngIf="expandedCandidatureId() === item.idCandidature" class="details-row">
-                      <td colspan="5" class="details-cell" style="padding: 20px 24px; background: rgba(99, 102, 241, 0.015); border-left: 4px solid #6366f1; border-top: none;">
+                      <td colspan="6" class="details-cell" style="padding: 20px 24px; background: rgba(99, 102, 241, 0.015); border-left: 4px solid #6366f1; border-top: none;">
                         <div class="candidate-profile-drawer" style="animation: fadeIn 0.25s ease-out;">
                           <div class="row g-4">
                             <!-- Left panel: Info and attachments -->
@@ -186,9 +174,12 @@
                                 <div class="p-2 border rounded d-flex align-items-center justify-content-between bg-white" style="font-size: 12.5px;">
                                   <span class="text-truncate" style="max-width: 220px;">
                                     <i class="ti ti-file-text text-danger me-2" style="font-size: 16px;"></i> 
-                                    <strong>CV:</strong> {{ item.cvNomFichier || 'Aucun CV joint' }}
+                                    <strong>CV:</strong> 
+                                    <a *ngIf="item.cvNomFichier" [href]="getCvUrl(item.cvNomFichier)" target="_blank" class="text-blue-600 hover:underline">
+                                      {{ item.cvNomFichier }}
+                                    </a>
+                                    <span *ngIf="!item.cvNomFichier" class="text-muted">Aucun CV joint</span>
                                   </span>
-                                  <span class="text-muted small" *ngIf="!item.cvNomFichier">Inexistant</span>
                                   <span class="badge bg-success-soft text-success px-2 py-1" *ngIf="item.cvNomFichier" style="font-weight: 600; border-radius: 4px;">Disponible</span>
                                 </div>
 
@@ -201,7 +192,7 @@
                               </div>
                             </div>
 
-                            <!-- Right panel: Skills and Experience Description -->
+                            <!-- Right panel: Skills, Languages + AI Analysis -->
                             <div class="col-md-6">
                               <h4 style="margin: 0 0 12px; font-size: 12px; font-weight: 800; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
                                 <i class="ti ti-cpu"></i> Compétences & Langues
@@ -213,7 +204,7 @@
                                 </div>
                                 <span style="font-size: 12px; color: #94a3b8; font-style: italic;" *ngIf="!item.competences || item.competences.length === 0">Aucune compétence déclarée</span>
                               </div>
-                              <div style="margin-bottom: 20px;">
+                              <div style="margin-bottom: 16px;">
                                 <span style="font-size: 12px; color: #64748b; display: block; margin-bottom: 6px;">Langues maîtrisées :</span>
                                 <div style="display: flex; flex-wrap: wrap; gap: 6px;" *ngIf="item.langues && item.langues.length > 0">
                                   <span style="background: #f1f5f9; color: #475569; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px;" *ngFor="let lang of item.langues">
@@ -223,7 +214,7 @@
                                 <span style="font-size: 12px; color: #94a3b8; font-style: italic;" *ngIf="!item.langues || item.langues.length === 0">Aucune langue déclarée</span>
                               </div>
 
-                              <h4 style="margin: 0 0 10px; font-size: 12px; font-weight: 800; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+                              <h4 style="margin: 16px 0 10px; font-size: 12px; font-weight: 800; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
                                 <i class="ti ti-file-description"></i> Expérience Professionnelle (Extrait CV)
                               </h4>
                               <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px; font-size: 12.5px; color: #334155; line-height: 1.5; white-space: pre-line; max-height: 160px; overflow-y: auto;" *ngIf="item.experienceDescription">
@@ -242,8 +233,43 @@
               </table>
             </div>
 
+            <!-- Pagination -->
+            <div class="flex items-center justify-between border-t border-slate-200 p-4">
+              <div class="text-sm text-slate-500">
+                Affichage de <span class="font-medium text-slate-900">{{ (currentPage() - 1) * itemsPerPage + 1 }}</span> à
+                <span class="font-medium text-slate-900">{{ Math.min(currentPage() * itemsPerPage, filteredCandidatures().length) }}</span> sur
+                <span class="font-medium text-slate-900">{{ filteredCandidatures().length }}</span> résultats
+              </div>
+              <div class="flex items-center gap-2">
+                <button
+                  class="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  [disabled]="currentPage() === 1"
+                  (click)="setPage(currentPage() - 1)"
+                >
+                  Précédent
+                </button>
+                <div class="flex items-center gap-1">
+                  <button
+                    *ngFor="let p of [].constructor(totalPages()); let i = index"
+                    class="inline-flex h-9 w-9 items-center justify-center rounded-lg border text-sm font-medium transition-colors"
+                    [class]="currentPage() === (i + 1) ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'"
+                    (click)="setPage(i + 1)"
+                  >
+                    {{ i + 1 }}
+                  </button>
+                </div>
+                <button
+                  class="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  [disabled]="currentPage() === totalPages()"
+                  (click)="setPage(currentPage() + 1)"
+                >
+                  Suivant
+                </button>
+              </div>
+            </div>
+
             <!-- Empty State for Search or Database -->
-            <div class="empty-state-card py-5 text-center" *ngIf="filteredCandidatures.length === 0">
+            <div class="empty-state-card py-5 text-center" *ngIf="filteredCandidatures().length === 0">
               <div class="empty-icon mb-3" style="font-size: 40px; color: #cbd5e1;"><i class="ti ti-users-minus"></i></div>
               <h4 style="font-weight: 700; color: #475569;">Aucune candidature trouvée</h4>
               <p class="text-muted px-4" style="font-size: 13.5px; max-width: 480px; margin: 0 auto 15px;">
@@ -260,4 +286,3 @@
     </div>
   </div>
 </div>
-

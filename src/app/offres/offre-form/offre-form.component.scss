@@ -1,4 +1,9 @@
-/* ── Premium Job Form Styles (RecruteIHM Style) ────────────────────── */
+/* ── Premium Job Form Styles (Emploi Connect Style) ────────────────────── */
+
+:host {
+  display: block;
+  width: 100%;
+}
 
 .job-form-page {
   min-height: calc(100vh - 100px);
@@ -13,7 +18,7 @@
 
 .job-form-container {
   width: 100%;
-  max-width: 800px;
+  max-width: 1300px;
 }
 
 .form-card {
@@ -38,10 +43,24 @@
 .form-header-premium {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
   gap: 20px;
   border-bottom: 1.5px solid #f1f5f9;
   padding-bottom: 24px;
   margin-bottom: 32px;
+
+  .header-left-side {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .form-actions-top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
 
   .header-icon {
     width: 56px;
@@ -181,6 +200,29 @@
 
     @media (min-width: 768px) {
       grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .form-row-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+
+    @media (min-width: 992px) {
+      grid-template-columns: 1.5fr 1fr 1fr;
+    }
+    @media (min-width: 768px) and (max-width: 991px) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .form-row-grid-3-equal {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+
+    @media (min-width: 768px) {
+      grid-template-columns: 1fr 1fr 1fr;
     }
   }
 

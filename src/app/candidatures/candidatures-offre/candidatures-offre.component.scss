@@ -1,15 +1,16 @@
-/* ── Recruiter Candidature Review Style (RecruteIHM Style) ────────────── */
+/* ── Recruiter Candidature Review Style (Emploi Connect Style) ────────────── */
+
+:host {
+  display: block;
+  width: 100%;
+}
 
 .candidatures-page {
-  min-height: calc(100vh - 100px);
-  padding: 40px 24px;
-  background: radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.03), transparent 40%),
-              radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.03), transparent 40%),
-              #f8fafc;
+  padding: 40px 0;
 }
 
 .candidatures-container {
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
 }
 
@@ -400,6 +401,7 @@
   box-shadow: inset 0 2px 4px rgba(15, 23, 42, 0.01), 0 4px 15px rgba(15, 23, 42, 0.02);
 }
 
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -409,4 +411,123 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ── Sort Toggle Button ────────────────────────────────────────────── */
+
+.sort-toggle-btn {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #64748b;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  &:hover {
+    background: #e0e7ff;
+    color: #4f46e5;
+    border-color: #c7d2fe;
+  }
+
+  &.active {
+    background: #4f46e5;
+    color: #fff;
+    border-color: #4f46e5;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+  }
+}
+
+/* ── Rank Badge ────────────────────────────────────────────────────── */
+
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  background: #f1f5f9;
+  color: #64748b;
+
+  &.rank-gold {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+  }
+
+  &.rank-silver {
+    background: linear-gradient(135deg, #94a3b8, #64748b);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(100, 116, 139, 0.3);
+  }
+
+  &.rank-bronze {
+    background: linear-gradient(135deg, #d97706, #b45309);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(180, 83, 9, 0.3);
+  }
+}
+
+/* ── AI Score Display ──────────────────────────────────────────────── */
+
+.score-display {
+  .score-value {
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+
+  .score-bar {
+    width: 60px;
+    height: 4px;
+    border-radius: 4px;
+    background: #f1f5f9;
+    overflow: hidden;
+
+    .score-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+  }
+
+  &.score-excellent {
+    .score-value { color: #059669; }
+    .score-bar-fill { background: linear-gradient(90deg, #10b981, #059669); }
+  }
+
+  &.score-good {
+    .score-value { color: #d97706; }
+    .score-bar-fill { background: linear-gradient(90deg, #fbbf24, #d97706); }
+  }
+
+  &.score-low {
+    .score-value { color: #dc2626; }
+    .score-bar-fill { background: linear-gradient(90deg, #f87171, #dc2626); }
+  }
+}
+
+.ai-pending-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 500;
+  i {
+    font-size: 13px;
+    animation: spin 2s linear infinite;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

@@ -15,7 +15,8 @@
   <div class="welcome-hero-banner recruiter-banner">
     <div class="hero-content">
       <h1>Bonjour, {{ profile()?.nomEntreprise }} 🏢</h1>
-      <p>Gérez vos offres d'emploi, suivez les candidatures de vos talents, et trouvez les profils parfaits en Tunisie.</p>
+      <p>Gérez vos offres d'emploi, suivez les candidatures de vos talents, et trouvez les profils parfaits en Tunisie.
+      </p>
       <div class="visibilité-score-pill">
         <i class="ti ti-building"></i> Complétion Profil : <strong>{{ stats()!.profileCompletion }}%</strong>
       </div>
@@ -78,8 +79,7 @@
           <div class="progress-ring-container">
             <svg class="progress-ring" viewBox="0 0 120 120">
               <circle class="ring-bg" cx="60" cy="60" r="50"></circle>
-              <circle class="ring-fg" cx="60" cy="60" r="50"
-                [attr.stroke-dasharray]="314.15"
+              <circle class="ring-fg" cx="60" cy="60" r="50" [attr.stroke-dasharray]="314.15"
                 [attr.stroke-dashoffset]="314.15 - (314.15 * stats()!.profileCompletion / 100)"></circle>
             </svg>
             <div class="progress-text">
@@ -99,13 +99,15 @@
           <!-- Visibility Statement -->
           <div class="visibility-booster-banner">
             <p *ngIf="stats()!.profileCompletion < 50">
-              <i class="ti ti-alert-triangle"></i> Complétez votre profil à +50% pour donner plus de confiance aux candidats !
+              <i class="ti ti-alert-triangle"></i> Complétez votre profil à +50% pour donner plus de confiance aux
+              candidats !
             </p>
             <p *ngIf="stats()!.profileCompletion >= 50 && stats()!.profileCompletion < 90" class="good">
               <i class="ti ti-discount-check"></i> Votre profil entreprise est attractif ! Ajoutez le logo pour +15%.
             </p>
             <p *ngIf="stats()!.profileCompletion >= 90" class="expert">
-              <i class="ti ti-sparkles"></i> <strong>Recruteur Superstar !</strong> Votre marque entreprise est extrêmement attractive.
+              <i class="ti ti-sparkles"></i> <strong>Recruteur Superstar !</strong> Votre marque entreprise est
+              extrêmement attractive.
             </p>
           </div>
         </div>
@@ -132,12 +134,17 @@
       </div>
 
       <!-- Advertising Recruiter Promo Banner -->
-      <div class="premium-promo-ad-card" style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #1e293b 100%);">
-        <div class="ad-badge" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); color: #10b981;">Recruteur</div>
+      <div class="premium-promo-ad-card"
+        style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #1e293b 100%);">
+        <div class="ad-badge"
+          style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); color: #10b981;">Recruteur
+        </div>
         <div class="ad-content">
           <h4>Recruter Plus Vite <i class="ti ti-bolt"></i></h4>
           <p>Boostez la visibilité de vos offres d'emploi pour toucher 100% de profils tunisiens qualifiés.</p>
-          <a href="#" class="ad-btn" style="background: #10b981; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); color: #ffffff;">Booster <i class="ti ti-arrow-right"></i></a>
+          <a href="#" class="ad-btn"
+            style="background: #10b981; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); color: #ffffff;">Booster <i
+              class="ti ti-arrow-right"></i></a>
         </div>
         <div class="ad-pattern"></div>
       </div>
@@ -159,10 +166,8 @@
         <div class="card-body">
           <div class="onboarding-wizard">
             <div class="onboarding-steps-list">
-              <button class="step-select-btn" 
-                *ngFor="let s of stats()!.suggestions"
-                [class.active]="activeOnboardingField() === s.field"
-                (click)="setActiveField(s.field)">
+              <button class="step-select-btn" *ngFor="let s of stats()!.suggestions"
+                [class.active]="activeOnboardingField() === s.field" (click)="setActiveField(s.field)">
                 <span class="points">+{{ s.points }}%</span>
                 <span class="msg">{{ s.message }}</span>
                 <i class="ti ti-chevron-right"></i>
@@ -174,13 +179,15 @@
               <!-- ADRESSE ENTREPRISE -->
               <div class="wizard-form-step" *ngIf="activeOnboardingField() === 'adresseEntreprise'">
                 <h4>Adresse de l'entreprise</h4>
-                <p class="step-desc">Indiquez la ville ou l'adresse du siège social (ex: Avenue Habib Bourguiba, Tunis).</p>
+                <p class="step-desc">Indiquez la ville ou l'adresse du siège social (ex: Avenue Habib Bourguiba, Tunis).
+                </p>
                 <div class="inline-input-group">
                   <div class="input-wrapper">
                     <i class="ti ti-map-pin input-icon"></i>
                     <input type="text" placeholder="Ex: Lac I, Tunis" formControlName="adresseEntreprise" />
                   </div>
-                  <button class="btn-save-inline" (click)="saveOnboardingField('adresseEntreprise')" [disabled]="onboardingLoading()">
+                  <button class="btn-save-inline" (click)="saveOnboardingField('adresseEntreprise')"
+                    [disabled]="onboardingLoading()">
                     <span *ngIf="!onboardingLoading()">Enregistrer <i class="ti ti-check"></i></span>
                     <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
                   </button>
@@ -199,7 +206,8 @@
                       <option *ngFor="let opt of secteurOptions" [value]="opt">{{ opt }}</option>
                     </select>
                   </div>
-                  <button class="btn-save-inline" (click)="saveOnboardingField('secteurActivite')" [disabled]="onboardingLoading()">
+                  <button class="btn-save-inline" (click)="saveOnboardingField('secteurActivite')"
+                    [disabled]="onboardingLoading()">
                     <span *ngIf="!onboardingLoading()">Enregistrer <i class="ti ti-check"></i></span>
                     <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
                   </button>
@@ -209,13 +217,17 @@
               <!-- DESCRIPTION -->
               <div class="wizard-form-step" *ngIf="activeOnboardingField() === 'description'">
                 <h4>Description de l'entreprise (min 100 caractères)</h4>
-                <p class="step-desc">Rédigez une présentation attractive de votre entreprise, votre culture et vos valeurs.</p>
-                <textarea class="form-textarea-dashboard" rows="4" placeholder="Présentez votre entreprise en 100 caractères minimum..." formControlName="description"></textarea>
+                <p class="step-desc">Rédigez une présentation attractive de votre entreprise, votre culture et vos
+                  valeurs.</p>
+                <textarea class="form-textarea-dashboard" rows="4"
+                  placeholder="Présentez votre entreprise en 100 caractères minimum..."
+                  formControlName="description"></textarea>
                 <div class="d-flex justify-content-between align-items-center mt-2">
                   <span class="char-counter" [class.valid]="onboardingForm.value.description!.length >= 100">
                     Caractères : {{ onboardingForm.value.description?.length || 0 }} / 100
                   </span>
-                  <button class="btn-save-inline" (click)="saveOnboardingField('description')" [disabled]="onboardingLoading() || onboardingForm.value.description!.length < 100">
+                  <button class="btn-save-inline" (click)="saveOnboardingField('description')"
+                    [disabled]="onboardingLoading() || onboardingForm.value.description!.length < 100">
                     <span *ngIf="!onboardingLoading()">Enregistrer <i class="ti ti-check"></i></span>
                     <span *ngIf="onboardingLoading()"><i class="ti ti-loader-2 spin"></i></span>
                   </button>
@@ -225,7 +237,8 @@
               <!-- LOGO -->
               <div class="wizard-form-step" *ngIf="activeOnboardingField() === 'logo'">
                 <h4>Télécharger le logo de votre entreprise</h4>
-                <p class="step-desc">Ajoutez le logo de l'entreprise dans le volet latéral gauche pour compléter cette action.</p>
+                <p class="step-desc">Ajoutez le logo de l'entreprise dans le volet latéral gauche pour compléter cette
+                  action.</p>
                 <div class="logo-reminder-box">
                   <i class="ti ti-photo-up"></i>
                   <p>Utilisez le bouton "Changer le logo" sous l'aperçu à gauche.</p>
@@ -273,10 +286,10 @@
                   <td class="text-end">
                     <div class="btn-group-custom">
                       <a class="btn-table btn-table-secondary" [routerLink]="['/offres', offre.idOffre, 'edit']">
-                        <i class="ti ti-edit"></i> Éditer
+                        <i class="ti ti-edit"></i>
                       </a>
                       <a class="btn-table btn-table-primary" [routerLink]="['/candidatures/offre', offre.idOffre]">
-                        <i class="ti ti-users"></i> Candidats
+                        <i class="ti ti-users"></i>
                       </a>
                     </div>
                   </td>

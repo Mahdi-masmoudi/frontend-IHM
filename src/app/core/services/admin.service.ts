@@ -11,6 +11,7 @@ export interface AdminUser {
   email: string;
   telephone: string;
   role: string;
+  isActive?: boolean;
 }
 
 export interface AdminCandidat {
@@ -23,6 +24,7 @@ export interface AdminCandidat {
   dateNaissance: string;
   niveauEtude: string;
   experience: number;
+  isActive?: boolean;
 }
 
 export interface AdminEntreprise {
@@ -36,6 +38,7 @@ export interface AdminEntreprise {
   secteurActivite: string;
   description: string;
   logo?: string | null;
+  isActive?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -66,5 +69,17 @@ export class AdminService {
 
   listEntreprises(): Observable<AdminEntreprise[]> {
     return this.http.get<AdminEntreprise[]>(`${this.baseUrl}/admin/entreprises`);
+  }
+
+  toggleUserStatus(id: string): Observable<{ message: string, isActive: boolean }> {
+    return this.http.patch<{ message: string, isActive: boolean }>(`${this.baseUrl}/admin/users/${id}/status`, {});
+  }
+
+  getCandidatApplications(candidatId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/admin/candidats/${candidatId}/candidatures`);
+  }
+
+  getEntrepriseOffres(entrepriseId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/admin/entreprises/${entrepriseId}/offres`);
   }
 }

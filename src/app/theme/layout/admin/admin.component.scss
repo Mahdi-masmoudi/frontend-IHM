@@ -378,6 +378,10 @@
   padding: 24px;
   scroll-behavior: smooth;
 
+  &.no-padding {
+    padding: 0;
+  }
+
   &::-webkit-scrollbar {
     width: 6px;
   }

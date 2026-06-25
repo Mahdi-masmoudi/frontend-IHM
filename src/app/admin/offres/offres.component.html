@@ -1,12 +1,54 @@
-<div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+  <!-- Total -->
+  <div class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md flex items-center gap-4">
+    <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-purple-50 text-purple-600 text-2xl">
+      <i class="ti ti-briefcase"></i>
+    </div>
+    <div class="relative z-10">
+      <div class="text-3xl font-black text-slate-900 mb-1 leading-none">{{ totalOffres() }}</div>
+      <div class="text-sm font-semibold text-slate-500">Total Offres</div>
+    </div>
+    <div class="absolute -bottom-3 -right-3 text-[80px] text-purple-600 opacity-5 pointer-events-none">
+      <i class="ti ti-briefcase"></i>
+    </div>
+  </div>
+  <!-- Actives -->
+  <div class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md flex items-center gap-4">
+    <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 text-2xl">
+      <i class="ti ti-check"></i>
+    </div>
+    <div class="relative z-10">
+      <div class="text-3xl font-black text-slate-900 mb-1 leading-none">{{ activeOffres() }}</div>
+      <div class="text-sm font-semibold text-slate-500">Offres Actives</div>
+    </div>
+    <div class="absolute -bottom-3 -right-3 text-[80px] text-emerald-600 opacity-5 pointer-events-none">
+      <i class="ti ti-check"></i>
+    </div>
+  </div>
+  <!-- Fermées -->
+  <div class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md flex items-center gap-4">
+    <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-slate-50 text-slate-600 text-2xl">
+      <i class="ti ti-lock"></i>
+    </div>
+    <div class="relative z-10">
+      <div class="text-3xl font-black text-slate-900 mb-1 leading-none">{{ closedOffres() }}</div>
+      <div class="text-sm font-semibold text-slate-500">Offres Fermées</div>
+    </div>
+    <div class="absolute -bottom-3 -right-3 text-[80px] text-slate-600 opacity-5 pointer-events-none">
+      <i class="ti ti-lock"></i>
+    </div>
+  </div>
+</div>
+
+<div class="rounded-2xl border border-slate-200 bg-white px-5 py-3 shadow-sm mb-6">
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
     <div class="flex items-center gap-3">
-      <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
-        <i class="ti ti-briefcase text-xl"></i>
+      <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
+        <i class="ti ti-briefcase text-lg"></i>
       </div>
       <div>
-        <h4 class="text-lg font-semibold text-slate-900">Offres (admin)</h4>
-        <p class="text-sm text-slate-500">Controle global des offres publiees.</p>
+        <h4 class="text-base font-semibold text-slate-900 leading-tight">Offres (admin)</h4>
+        <p class="text-xs text-slate-500">Controle global des offres publiees.</p>
       </div>
     </div>
     <div class="relative w-full md:w-80">
@@ -29,39 +71,84 @@
       </button>
     </div>
   </div>
+</div>
+
+<div class="rounded-2xl border border-slate-200 bg-white p-0 shadow-sm">
   <div class="overflow-x-auto">
     <table class="min-w-full text-sm">
       <thead class="text-left text-slate-500">
-        <tr class="border-b border-slate-200">
-          <th class="py-3 font-medium">Titre</th>
-          <th class="py-3 font-medium">Localisation</th>
-          <th class="py-3 font-medium">Statut</th>
-          <th class="py-3 text-right font-medium">Actions</th>
+        <tr class="border-b border-slate-200 bg-slate-50/50">
+          <th class="py-3 px-4 font-medium">Titre</th>
+          <th class="py-3 px-4 font-medium">Localisation</th>
+          <th class="py-3 px-4 font-medium">Statut</th>
+          <th class="py-3 px-4 text-right font-medium">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let offre of filteredOffres()" class="border-b border-slate-100">
-          <td class="py-3 font-semibold text-slate-900">{{ offre.titre }}</td>
-          <td class="py-3 text-slate-600">{{ offre.localisation }}</td>
-          <td class="py-3">
-            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">{{ offre.statut }}</span>
+        <tr *ngFor="let offre of paginatedOffres()" class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
+          <td class="py-2 px-4 font-semibold text-slate-900">{{ offre.titre }}</td>
+          <td class="py-2 px-4 text-slate-600">{{ offre.localisation }}</td>
+          <td class="py-2 px-4">
+            <span class="px-2 py-1 rounded-md text-xs font-semibold"
+              [ngClass]="offre.statut === 'ACTIVE' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-700'">
+              {{ offre.statut }}
+            </span>
           </td>
-          <td class="py-3 text-right">
+          <td class="py-2 px-4 text-right">
             <button
-              class="inline-flex items-center justify-center rounded-lg border border-red-100 p-2 text-red-600 hover:border-red-400 hover:bg-red-50 transition-colors"
+              class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-red-500 hover:bg-red-200 transition-colors border-0"
               (click)="confirmRemove(offre.idOffre, offre.titre)"
               title="Supprimer"
             >
-              <i class="ti ti-trash text-base"></i>
+              <i class="ti ti-trash"></i>
             </button>
           </td>
         </tr>
-        <tr *ngIf="filteredOffres().length === 0">
-          <td colspan="4" class="py-6 text-center text-slate-400">Aucune offre trouvée</td>
+        <tr *ngIf="paginatedOffres().length === 0">
+          <td colspan="4" class="py-8 text-center text-slate-400">
+            <i class="ti ti-search text-3xl mb-2 block"></i>
+            Aucune offre trouvée
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
+
+  <!-- Pagination -->
+  <div class="flex items-center justify-between border-t border-slate-200 p-4">
+    <div class="text-sm text-slate-500">
+      Affichage de <span class="font-medium text-slate-900">{{ (currentPage() - 1) * itemsPerPage + 1 }}</span> à
+      <span class="font-medium text-slate-900">{{ Math.min(currentPage() * itemsPerPage, filteredOffres().length) }}</span> sur
+      <span class="font-medium text-slate-900">{{ filteredOffres().length }}</span> résultats
+    </div>
+    <div class="flex items-center gap-2">
+      <button
+        class="inline-flex h-8 items-center justify-center rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="currentPage() === 1"
+        (click)="setPage(currentPage() - 1)"
+      >
+        Précédent
+      </button>
+      <div class="flex items-center gap-1">
+        <button
+          *ngFor="let p of [].constructor(totalPages()); let i = index"
+          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border text-sm font-medium transition-colors"
+          [class]="currentPage() === (i + 1) ? 'border-transparent bg-blue-600 text-white' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'"
+          (click)="setPage(i + 1)"
+        >
+          {{ i + 1 }}
+        </button>
+      </div>
+      <button
+        class="inline-flex h-8 items-center justify-center rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="currentPage() === totalPages()"
+        (click)="setPage(currentPage() + 1)"
+      >
+        Suivant
+      </button>
+    </div>
+  </div>
+
   <div class="mt-4 rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600" *ngIf="error()">
     {{ error() }}
   </div>

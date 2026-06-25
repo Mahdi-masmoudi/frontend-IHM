@@ -72,7 +72,7 @@ export interface Candidature {
   idCandidature: string;
   candidat_id?: string;
   offre_id?: string;
-  candidatId?: string;
+  candidatId?: any;
   offreId?: string;
   cv_id?: string | null;
   lettre_id?: string | null;
@@ -101,6 +101,7 @@ export interface Candidature {
   adresse?: string;
   niveauEtude?: string;
   experience?: number;
+  score?: number;
 }
 
 export interface Cv {

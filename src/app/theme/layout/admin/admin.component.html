@@ -5,9 +5,9 @@
     <div class="sidebar-header">
       <a routerLink="/offres" class="sidebar-brand">
         <span class="brand-icon">
-          <img src="/assets/images/logoIHM.png" alt="RecruteIHM Logo" class="brand-logo-img" />
+          <img src="/assets/images/logoIHM.png" alt="Emploi Connect Logo" class="brand-logo-img" />
         </span>
-        <span class="brand-text" *ngIf="sidebarOpen()">RecruteIHM</span>
+        <span class="brand-text" *ngIf="sidebarOpen()">Emploi Connect</span>
       </a>
       <button class="sidebar-toggle d-none d-lg-flex" (click)="toggleSidebar()">
         <i class="ti" [class.ti-chevrons-left]="sidebarOpen()" [class.ti-chevrons-right]="!sidebarOpen()"></i>
@@ -148,7 +148,7 @@
     </header>
 
     <!-- Page Content -->
-    <main class="app-content">
+    <main class="app-content" [class.no-padding]="isNoPaddingPage">
       <router-outlet></router-outlet>
     </main>
   </div>

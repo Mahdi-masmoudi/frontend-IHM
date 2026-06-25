@@ -4,13 +4,13 @@
     <div class="navbar-container">
       <div class="navbar-brand">
         <a routerLink="/" class="logo">
-          <img src="/assets/images/logoIHM.png" alt="RecruteIHM Logo" class="brand-logo-img" />
+          <img src="/assets/images/logoIHM.png" alt="Emploi Connect Logo" class="brand-logo-img" />
         </a>
       </div>
 
       <nav class="navbar-menu">
-        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
-        <a routerLink="/offres" routerLinkActive="active">Jobs</a>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Accueil</a>
+        <a routerLink="/offres" routerLinkActive="active">Offres</a>
         <!-- Private candidate links -->
         <ng-container *ngIf="isLoggedIn() && currentUser()?.role === 'CANDIDAT'">
           <a routerLink="/candidat/dashboard" routerLinkActive="active">Dashboard</a>
@@ -22,8 +22,8 @@
       <div class="navbar-actions">
         <!-- Guest Actions -->
         <ng-container *ngIf="!isLoggedIn()">
-          <a routerLink="/login" class="btn-login"><i class="ti ti-user"></i> LOGIN</a>
-          <a routerLink="/register" class="btn-signup">SIGN UP</a>
+          <a routerLink="/login" class="btn-login"><i class="ti ti-user"></i> CONNEXION</a>
+          <a routerLink="/register" class="btn-signup">INSCRIPTION</a>
         </ng-container>
 
         <!-- Authenticated Actions -->
@@ -77,7 +77,7 @@
         <!-- Column 1: Brand & Social -->
         <div class="footer-col brand-col">
           <div class="footer-brand">
-            <img src="/assets/images/logoIHM.png" alt="RecruteIHM Logo" class="brand-logo-img" />
+            <img src="/assets/images/logoIHM.png" alt="Emploi Connect Logo" class="brand-logo-img" />
           </div>
           <p>Votre tremplin professionnel intelligent en Tunisie. Trouvez l'emploi de vos rêves en quelques clics.</p>
           <div class="social-links">
@@ -124,7 +124,7 @@
       </div>
 
       <div class="footer-bottom">
-        <p>&copy; 2026 RecruteIHM Platform. Tous droits réservés.</p>
+        <p>&copy; 2026 Emploi Connect Platform. Tous droits réservés.</p>
       </div>
     </div>
   </footer>

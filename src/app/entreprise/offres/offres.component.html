@@ -7,14 +7,15 @@
           <h2>Mes Offres d'Emploi 💼</h2>
           <p>Gérez vos publications, suivez le nombre de postulants en direct, et éditez vos offres.</p>
         </div>
-        <a class="btn btn-primary px-4 py-2" [routerLink]="['/offres/nouveau']" style="font-weight: 700; border-radius: 8px;">
+        <a class="btn px-4 py-2" [routerLink]="['/offres/nouveau']"
+          style="font-weight: 700; border-radius: 8px; background-color: #293847; color: white; border: none;">
           <i class="ti ti-plus"></i> Nouvelle offre
         </a>
       </div>
     </div>
 
     <!-- 3 Dashboard Stats Cards -->
-    <div class="stats-counter-grid compact-stats mb-4" *ngIf="offres().length > 0">
+    <div class="stats-counter-grid compact-stats mb-4" *ngIf="offres()">
       <div class="counter-card card-blue">
         <div class="card-icon"><i class="ti ti-briefcase"></i></div>
         <div class="card-info">
@@ -39,100 +40,306 @@
     </div>
 
     <!-- Main Grid -->
-    <div class="row">
-      <!-- LEFT COLUMN: Career Ad & Tips -->
-      <div class="col-lg-4 mb-4">
-        <!-- Advertising Card -->
-        <div class="premium-promo-ad-card mb-4" style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #1e293b 100%); margin-top: 0;">
-          <div class="ad-badge" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); color: #10b981;">Premium</div>
-          <div class="ad-content">
-            <h4>Trouver Plus Vite <i class="ti ti-bolt"></i></h4>
-            <p>Mettez en avant vos offres d'emploi urgentes pour attirer 100% de profils tunisiens hautement qualifiés.</p>
-            <a href="#" class="ad-btn" style="background: #10b981; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); color: #ffffff;">Mettre à la une <i class="ti ti-arrow-right"></i></a>
+    <!-- Main Content -->
+    <div class="rounded-2xl border border-slate-200 bg-white px-5 py-3 shadow-sm mt-6 mb-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+            <i class="ti ti-briefcase text-lg"></i>
           </div>
-          <div class="ad-pattern"></div>
-        </div>
-
-        <!-- Compact tips card -->
-        <div class="premium-card">
-          <div class="card-header-clean">
-            <h3>Conseils de Recrutement</h3>
-          </div>
-          <div class="card-body">
-            <p class="small text-muted mb-2"><strong>1. Soignez votre description :</strong> Les offres d'emploi avec une description de poste de plus de 150 mots attirent 3x plus de candidats qualifiés en Tunisie.</p>
-            <p class="small text-muted mb-0"><strong>2. Indiquez le salaire :</strong> L'affichage transparent du salaire en DT augmente le taux de postulation directe de 45%.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- RIGHT COLUMN: Compact SaaS Table -->
-      <div class="col-lg-8">
-        <div class="premium-card">
-          <div class="card-header-clean">
-            <h3>Liste de mes publications</h3>
-          </div>
-          <div class="card-body">
-            <div class="table-responsive" *ngIf="offres().length > 0">
-              <table class="table table-hover align-middle custom-candidatures-table" style="margin: 0;">
-                <thead>
-                  <tr>
-                    <th>Détails du poste</th>
-                    <th>Candidatures</th>
-                    <th>Statut</th>
-                    <th class="text-end">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let offre of offres()" class="candidature-row">
-                    <td>
-                      <div class="fw-bold" style="color: #1e293b; font-size: 13.5px;">{{ offre.titre }}</div>
-                      <div class="text-muted small">
-                        <i class="ti ti-map-pin"></i> {{ offre.localisation }} · <i class="ti ti-coin"></i> {{ offre.salaire | number }} DT
-                      </div>
-                    </td>
-                    <td>
-                      <a class="badge bg-indigo-soft px-3 py-2 text-decoration-none" [routerLink]="['/candidatures/offre', offre.idOffre]" style="display: inline-flex; align-items: center; gap: 4px; font-weight: 700; font-size: 12px; border-radius: 8px;">
-                        <i class="ti ti-users"></i> {{ offre.candidaturesCount || 0 }} postulants
-                      </a>
-                    </td>
-                    <td>
-                      <span class="status-badge" [class]="offre.statut === 'ACTIVE' ? 'acceptee' : 'en_attente'" style="font-size: 11px; padding: 4px 10px;">
-                        <span class="dot"></span>
-                        {{ offre.statut === 'ACTIVE' ? 'Active' : 'Brouillon' }}
-                      </span>
-                    </td>
-                    <td class="text-end">
-                      <div class="btn-group-custom d-inline-flex gap-2">
-                        <a class="btn btn-sm btn-outline-primary" [routerLink]="['/offres', offre.idOffre, 'edit']" style="border-radius: 6px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
-                          <i class="ti ti-edit"></i> Éditer
-                        </a>
-                        <button class="btn btn-sm btn-outline-danger" (click)="remove(offre.idOffre)" style="border-radius: 6px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
-                          <i class="ti ti-trash"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <!-- Empty State -->
-            <div class="empty-state-card py-5" *ngIf="offres().length === 0">
-              <div class="empty-icon"><i class="ti ti-briefcase-off"></i></div>
-              <h4>Aucune offre publiée pour le moment</h4>
-              <p>Commencez à recruter dès maintenant en créant votre première offre d'emploi sur RecruteIHM.</p>
-              <a [routerLink]="['/offres/nouveau']" class="btn btn-primary px-4 py-2 mt-2" style="font-weight: 700; border-radius: 8px;">
-                Créer une offre d'emploi
-              </a>
-            </div>
-
-            <div class="alert alert-danger mt-3" *ngIf="error()">
-              {{ error() }}
-            </div>
+          <div>
+            <h4 class="text-base font-semibold text-slate-900 leading-tight">Mes Offres</h4>
+            <p class="text-xs text-slate-500">Gérez et suivez vos annonces.</p>
           </div>
         </div>
       </div>
     </div>
 
+    <div class="rounded-2xl border border-slate-200 bg-white p-0 shadow-sm">
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead class="text-left text-slate-500">
+            <tr class="border-b border-slate-200 bg-slate-50/50">
+              <th class="py-3 px-4 font-medium">Détails du poste</th>
+              <th class="py-3 px-4 font-medium">Candidatures</th>
+              <th class="py-3 px-4 font-medium">Statut</th>
+              <th class="py-3 px-4 text-right font-medium">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let offre of paginatedOffres()">
+              <tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors"
+                [class.bg-slate-50]="expandedOffreId() === offre.idOffre">
+                <td class="py-2 px-4">
+                  <div class="font-semibold text-slate-900">{{ offre.titre }}</div>
+                  <div class="text-xs text-slate-400">
+                    <i class="ti ti-map-pin"></i> {{ offre.localisation }} · <i class="ti ti-coin"></i> {{ offre.salaire
+                    | number }} DT
+                  </div>
+                </td>
+                <td class="py-2 px-4">
+                  <span class="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
+                    <i class="ti ti-users"></i> {{ offre.candidaturesCount || 0 }} postulants
+                  </span>
+                </td>
+                <td class="py-2 px-4">
+                  <span class="rounded-full px-3 py-1 text-xs font-semibold"
+                    [ngClass]="offre.statut === 'ACTIVE' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'">
+                    <span class="dot"></span> {{ offre.statut === 'ACTIVE' ? 'Active' : 'Brouillon' }}
+                  </span>
+                </td>
+                <td class="py-2 px-4 text-right">
+                  <div class="flex items-center justify-end gap-2">
+                    <button
+                      class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-blue-600 hover:bg-blue-200 transition-colors border-0"
+                      (click)="toggleExpanded(offre.idOffre)" title="Voir candidatures">
+                      <i class="ti"
+                        [ngClass]="expandedOffreId() === offre.idOffre ? 'ti-chevron-up' : 'ti-chevron-down'"></i>
+                    </button>
+                    <a class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-teal-600 hover:bg-teal-200 transition-colors border-0"
+                      [routerLink]="['/offres', offre.idOffre, 'edit']" title="Modifier">
+                      <i class="ti ti-edit"></i>
+                    </a>
+                    <button
+                      class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-red-500 hover:bg-red-200 transition-colors border-0"
+                      (click)="remove(offre.idOffre)" title="Supprimer">
+                      <i class="ti ti-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <!-- Sub-table for candidatures -->
+              <tr *ngIf="expandedOffreId() === offre.idOffre" class="bg-slate-50 border-b border-slate-200">
+                <td colspan="4" class="p-6">
+                  <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                    <h5 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+                      <i class="ti ti-users text-blue-600"></i> Liste des postulants
+                    </h5>
+                    <div *ngIf="candidaturesLoading()" class="text-sm text-slate-500 py-4 flex items-center gap-2">
+                      <i class="ti ti-loader animate-spin"></i> Chargement...
+                    </div>
+                    <div *ngIf="!candidaturesLoading() && offreCandidatures().length === 0"
+                      class="text-sm text-slate-500 py-4">
+                      Aucun candidat n'a encore postulé à cette offre.
+                    </div>
+                    <table class="w-full text-sm" *ngIf="!candidaturesLoading() && offreCandidatures().length > 0">
+                      <thead class="bg-slate-50 text-slate-500 text-left">
+                        <tr>
+                          <th class="py-2 px-3 font-medium rounded-l-lg">Candidat</th>
+                          <th class="py-2 px-3 font-medium">Date</th>
+                          <th class="py-2 px-3 font-medium">Statut</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let cand of offreCandidatures()" class="border-b border-slate-100 last:border-0">
+                          <td class="py-2 px-3">
+                            <div class="font-medium text-slate-800" style="cursor: pointer;"
+                              (click)="openCandidateModal(cand)">
+                              <span class="hover:underline">{{ cand.prenom }} {{ cand.nom }}</span>
+                            </div>
+                            <div class="text-xs text-slate-500">{{ cand.email }}</div>
+                          </td>
+                          <td class="py-2 px-3 text-slate-600">{{ cand.datePostulation | date:'dd/MM/yyyy' }}</td>
+                          <td class="py-2 px-3">
+                            <span class="px-2 py-1 rounded-md text-xs font-semibold" [ngClass]="{
+                                'bg-amber-100 text-amber-700': cand.statut === 'EN_ATTENTE',
+                                'bg-emerald-100 text-emerald-700': cand.statut === 'ACCEPTEE',
+                                'bg-red-100 text-red-700': cand.statut === 'REJETEE'
+                              }">
+                              {{ cand.statut }}
+                            </span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="mt-4 text-right">
+                      <a class="text-sm text-blue-600 hover:underline"
+                        [routerLink]="['/candidatures/offre', offre.idOffre]">Voir les détails complets <i
+                          class="ti ti-arrow-right"></i></a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+            <tr *ngIf="paginatedOffres().length === 0 && !loading()">
+              <td colspan="4" class="py-8 text-center text-slate-400">
+                <i class="ti ti-briefcase-off text-3xl mb-2 block"></i>
+                Aucune offre publiée pour le moment
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="flex items-center justify-between border-t border-slate-200 p-4">
+        <div class="text-sm text-slate-500">
+          Affichage de <span class="font-medium text-slate-900">{{ (currentPage() - 1) * itemsPerPage + 1 }}</span> à
+          <span class="font-medium text-slate-900">{{ Math.min(currentPage() * itemsPerPage, offres().length) }}</span>
+          sur
+          <span class="font-medium text-slate-900">{{ offres().length }}</span> résultats
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            class="inline-flex h-8 items-center justify-center rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            [disabled]="currentPage() === 1" (click)="setPage(currentPage() - 1)">
+            Précédent
+          </button>
+          <div class="flex items-center gap-1">
+            <button *ngFor="let p of [].constructor(totalPages()); let i = index"
+              class="inline-flex h-8 w-8 items-center justify-center rounded-lg border text-sm font-medium transition-colors"
+              [style.background-color]="currentPage() === (i + 1) ? '#293847' : ''"
+              [style.border-color]="currentPage() === (i + 1) ? '#293847' : 'rgb(226, 232, 240)'"
+              [style.color]="currentPage() === (i + 1) ? 'white' : 'rgb(51, 65, 85)'"
+              [class]="currentPage() === (i + 1) ? '' : 'bg-white hover:bg-slate-50'" (click)="setPage(i + 1)">
+              {{ i + 1 }}
+            </button>
+          </div>
+          <button
+            class="inline-flex h-8 items-center justify-center rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            [disabled]="currentPage() === totalPages()" (click)="setPage(currentPage() + 1)">
+            Suivant
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Candidate Details Modal -->
+<div class="modal fade show d-block" tabindex="-1" role="dialog" *ngIf="selectedCandidature()"
+  style="background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);">
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content"
+      style="border: none; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+      <div class="modal-header" style="background: #ffffff; border-bottom: 1px solid #f1f5f9; padding: 20px 24px;">
+        <h5 class="modal-title"
+          style="font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 10px;">
+          <div class="avatar-bubble"
+            style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #e0e7ff, #c7d2fe); color: #4f46e5; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px;">
+            {{ (selectedCandidature()?.nom || 'C').charAt(0) | uppercase }}{{ (selectedCandidature()?.prenom ||
+            'N').charAt(0) | uppercase }}
+          </div>
+          {{ selectedCandidature()?.nom }} {{ selectedCandidature()?.prenom }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeCandidateModal()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="background: rgba(99, 102, 241, 0.015); padding: 30px;">
+        <div class="row g-4" *ngIf="selectedCandidature() as item">
+          <!-- Left panel: Info and attachments -->
+          <div class="col-md-6">
+            <h4
+              style="margin: 0 0 12px; font-size: 13px; font-weight: 800; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+              <i class="ti ti-id"></i> Coordonnées & Parcours
+            </h4>
+            <ul
+              style="list-style: none; padding: 0; margin: 0 0 20px 0; display: flex; flex-direction: column; gap: 10px; background: #fff; padding: 16px; border-radius: 12px; border: 1px solid #e2e8f0;">
+              <li style="font-size: 14px; color: #334155; display: flex; align-items: center; gap: 10px;">
+                <i class="ti ti-phone" style="color: #64748b; font-size: 16px;"></i>
+                <strong>Téléphone:</strong> {{ item.telephone || 'Non renseigné' }}
+              </li>
+              <li style="font-size: 14px; color: #334155; display: flex; align-items: center; gap: 10px;">
+                <i class="ti ti-map-pin" style="color: #64748b; font-size: 16px;"></i>
+                <strong>Adresse:</strong> {{ item.adresse || 'Non renseignée' }}
+              </li>
+              <li style="font-size: 14px; color: #334155; display: flex; align-items: center; gap: 10px;">
+                <i class="ti ti-school" style="color: #64748b; font-size: 16px;"></i>
+                <strong>Niveau d'études:</strong> {{ item.niveauEtude || 'Non renseigné' }}
+              </li>
+              <li style="font-size: 14px; color: #334155; display: flex; align-items: center; gap: 10px;">
+                <i class="ti ti-calendar" style="color: #64748b; font-size: 16px;"></i>
+                <strong>Expérience:</strong> {{ item.experience != null ? item.experience + ' ans' : 'Débutant' }}
+              </li>
+            </ul>
+
+            <!-- File Attachments (CV / Lettre) -->
+            <h4
+              style="margin: 0 0 12px; font-size: 13px; font-weight: 800; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+              <i class="ti ti-paperclip"></i> Documents joints
+            </h4>
+            <div class="d-flex flex-column gap-3">
+              <div class="p-3 border rounded d-flex align-items-center justify-content-between bg-white shadow-sm"
+                style="font-size: 14px; border-radius: 12px !important; border-color: #e2e8f0 !important;">
+                <span class="text-truncate" style="max-width: 300px; display: flex; align-items: center; gap: 8px;">
+                  <i class="ti ti-file-text text-danger" style="font-size: 20px;"></i>
+                  <strong class="text-slate-700">CV:</strong>
+                  <a *ngIf="item.cvNomFichier" [href]="getCvUrl(item.cvNomFichier)" target="_blank"
+                    class="text-blue-600 hover:underline">
+                    {{ item.cvNomFichier }}
+                  </a>
+                  <span *ngIf="!item.cvNomFichier" class="text-slate-400">Aucun CV joint</span>
+                </span>
+                <span class="badge bg-success-soft text-success px-3 py-1.5" *ngIf="item.cvNomFichier"
+                  style="font-weight: 700; border-radius: 6px; background: #dcfce7; color: #166534;">Disponible</span>
+              </div>
+
+              <div class="p-3 border rounded bg-white shadow-sm"
+                style="font-size: 14px; border-radius: 12px !important; border-color: #e2e8f0 !important;">
+                <div class="mb-2 text-slate-700"><strong>Lettre de motivation:</strong></div>
+                <div class="text-slate-600"
+                  style="font-style: italic; white-space: pre-line; line-height: 1.6; font-size: 13px; max-height: 150px; overflow-y: auto; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #f1f5f9;">
+                  {{ item.lettreContenu || 'Aucune lettre de motivation fournie.' }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right panel: Skills and Experience Description -->
+          <div class="col-md-6">
+            <h4
+              style="margin: 0 0 12px; font-size: 13px; font-weight: 800; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+              <i class="ti ti-cpu"></i> Compétences & Langues
+            </h4>
+            <div
+              style="background: #fff; padding: 16px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
+              <div style="margin-bottom: 16px;">
+                <span
+                  style="font-size: 13px; color: #64748b; display: block; margin-bottom: 8px; font-weight: 500;">Compétences
+                  clés :</span>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;"
+                  *ngIf="item.competences && item.competences.length > 0">
+                  <span
+                    style="background: #e0e7ff; color: #4f46e5; padding: 4px 12px; border-radius: 9999px; font-size: 12px; font-weight: 600;"
+                    *ngFor="let comp of item.competences">{{ comp }}</span>
+                </div>
+                <span style="font-size: 13px; color: #94a3b8; font-style: italic;"
+                  *ngIf="!item.competences || item.competences.length === 0">Aucune compétence déclarée</span>
+              </div>
+              <div>
+                <span
+                  style="font-size: 13px; color: #64748b; display: block; margin-bottom: 8px; font-weight: 500;">Langues
+                  maîtrisées :</span>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;" *ngIf="item.langues && item.langues.length > 0">
+                  <span
+                    style="background: #f1f5f9; color: #475569; padding: 4px 12px; border-radius: 9999px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px;"
+                    *ngFor="let lang of item.langues">
+                    <i class="ti ti-world" style="font-size: 14px;"></i> {{ lang }}
+                  </span>
+                </div>
+                <span style="font-size: 13px; color: #94a3b8; font-style: italic;"
+                  *ngIf="!item.langues || item.langues.length === 0">Aucune langue déclarée</span>
+              </div>
+            </div>
+
+            <h4
+              style="margin: 0 0 12px; font-size: 13px; font-weight: 800; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+              <i class="ti ti-file-description"></i> Expérience Professionnelle (Extrait CV)
+            </h4>
+            <div
+              style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; font-size: 13.5px; color: #334155; line-height: 1.6; white-space: pre-line; max-height: 220px; overflow-y: auto;"
+              *ngIf="item.experienceDescription">
+              {{ item.experienceDescription }}
+            </div>
+            <div
+              style="font-size: 13px; color: #94a3b8; font-style: italic; background: #fff; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 20px; text-align: center;"
+              *ngIf="!item.experienceDescription">
+              <i class="ti ti-file-unknown mb-2 block" style="font-size: 24px;"></i>
+              Aucun détail d'expérience supplémentaire n'a été extrait.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

@@ -33,4 +33,5 @@ export class CandidaturesService {
   reject(id: string): Observable<Candidature> {
     return this.http.put<Candidature>(`${this.baseUrl}/candidatures/${id}/rejeter`, {});
   }
+
 }

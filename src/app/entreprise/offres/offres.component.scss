@@ -1,5 +1,10 @@
 /* ── Mes Offres Premium Recruteur ───────────────────────────────── */
 
+:host {
+  display: block;
+  width: 100%;
+}
+
 .entreprise-offres-page {
   min-height: calc(100vh - 100px);
   padding: 40px 24px;
@@ -9,7 +14,7 @@
 }
 
 .offres-container {
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
 }
 

@@ -4,6 +4,7 @@ import { SharedModule } from '../../theme/shared/shared.module';
 import { CandidaturesService } from '../../core/services/candidatures.service';
 import { OffresService } from '../../core/services/offres.service';
 import { Candidature, Offre } from '../../shared/models/types';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-candidatures-offre',
@@ -16,8 +17,8 @@ export class CandidaturesOffreComponent implements OnInit {
   jobOffer = signal<Offre | null>(null);
   error = signal<string | null>(null);
   offreId: string | null = null;
-  expandedCandidatureId = signal<string | null>(null);
   searchQuery = signal<string>('');
+  selectedCandidature = signal<Candidature | null>(null);
 
   constructor(
     private route: ActivatedRoute, 
@@ -25,9 +26,19 @@ export class CandidaturesOffreComponent implements OnInit {
     private offresService: OffresService
   ) {}
 
-  toggleDetails(id: string): void {
-    this.expandedCandidatureId.set(this.expandedCandidatureId() === id ? null : id);
+  openCandidateModal(cand: Candidature): void {
+    this.selectedCandidature.set(cand);
   }
+
+  closeCandidateModal(): void {
+    this.selectedCandidature.set(null);
+  }
+
+  getCvUrl(filename: string): string {
+    return `${environment.apiBaseUrl}/uploads/cv/${filename}`;
+  }
+
+
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -78,6 +89,8 @@ export class CandidaturesOffreComponent implements OnInit {
     });
   }
 
+
+
   statusClass(statut: string): string {
     if (statut === 'ACCEPTEE') {
       return 'badge bg-success';
@@ -88,26 +101,33 @@ export class CandidaturesOffreComponent implements OnInit {
     return 'badge bg-warning text-dark';
   }
 
+
+
   get filteredCandidatures(): Candidature[] {
     const query = this.searchQuery().toLowerCase().trim();
-    if (!query) {
-      return this.candidatures();
+    let list = this.candidatures();
+
+    if (query) {
+      list = list.filter(c => {
+        const nomComplet = `${c.nom || ''} ${c.prenom || ''}`.toLowerCase();
+        const prenomComplet = `${c.prenom || ''} ${c.nom || ''}`.toLowerCase();
+        const email = (c.email || '').toLowerCase();
+        const competences = c.competences || [];
+        const experience = c.experience != null ? `${c.experience} ans` : 'débutant';
+        const niveauEtude = (c.niveauEtude || '').toLowerCase();
+
+        return nomComplet.includes(query) ||
+               prenomComplet.includes(query) ||
+               email.includes(query) ||
+               niveauEtude.includes(query) ||
+               experience.includes(query) ||
+               competences.some(s => s.toLowerCase().includes(query));
+      });
     }
-    return this.candidatures().filter(c => {
-      const nomComplet = `${c.nom || ''} ${c.prenom || ''}`.toLowerCase();
-      const prenomComplet = `${c.prenom || ''} ${c.nom || ''}`.toLowerCase();
-      const email = (c.email || '').toLowerCase();
-      const competences = c.competences || [];
-      const experience = c.experience != null ? `${c.experience} ans` : 'débutant';
-      const niveauEtude = (c.niveauEtude || '').toLowerCase();
-      
-      return nomComplet.includes(query) ||
-             prenomComplet.includes(query) ||
-             email.includes(query) ||
-             niveauEtude.includes(query) ||
-             experience.includes(query) ||
-             competences.some(s => s.toLowerCase().includes(query));
-    });
+
+    // Sort by date
+    list = [...list].sort((a, b) => new Date(b.datePostulation).getTime() - new Date(a.datePostulation).getTime());
+
+    return list;
   }
 }
-
